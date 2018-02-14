@@ -6,11 +6,11 @@ const equipmentSchema = new mongoose.Schema({
   model: String,
   description: String,
   features: [{
-    key: String, 
+    key: String,
     value: String
   }],
   price: Number,
-  timeUnit: String  
+  timeUnit: String
 })
 
 const Equipment = mongoose.model('Equipment', equipmentSchema)
