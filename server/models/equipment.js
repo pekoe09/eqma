@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const equipmentSchema = new mongoose.Schema({
-  name: String,
+  name: { type: String, isRequired: true },
   make: String,
   model: String,
   description: String,

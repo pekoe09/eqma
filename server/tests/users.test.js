@@ -190,6 +190,7 @@ describe('POST /api/users', () => {
   })
 })
 
-afterAll(() => {
-  server.close()
+afterAll(async () => {
+  await server.close()
+  console.log('user test server closed')
 })
