@@ -1,35 +1,28 @@
 import React from 'react'
-import userService from './services/users'
+import { Container } from 'semantic-ui-react'
+import { Route, withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { initializeUsers } from './reducers/userReducer'
+import NavBar from './components/structure/navbar'
 import Users from './components/users'
 
 class App extends React.Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      users: []
-    }
-  }
-
-  componentWillMount() {
-    userService
-      .getAll()
-      .then(response => {
-        this.setState({ users: response })
-      })
+  componentDidMount = async () => {
+    this.props.initializeUsers()
   }
 
   render() {
-    console.log(this.state.users)
-    const users = this.state.users.map(u => <div>{u.username} {u.lastName}, {u.firstName}</div>)
-
     return (
-      <div>
-        <Users users={this.state.users} />
-      </div>
+      <Container>
+        <NavBar />
+        <Route exact path='/users' render={() => <Users />} />
+      </Container>
     )
   }
-
 }
 
-export default App
+export default withRouter(connect(
+  null,
+  { initializeUsers }
+)(App))

@@ -1,5 +1,6 @@
 import React from 'react'
 import User from './user'
+import { connect } from 'react-redux'
 
 const Users = ({ users }) => (
   <div>
@@ -20,4 +21,12 @@ const Users = ({ users }) => (
   </div>
 )
 
-export default Users
+const mapStateToProps = (store) => {
+  return {
+    users: store.users
+  }
+}
+
+export default connect(
+  mapStateToProps
+)(Users)

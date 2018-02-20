@@ -31,7 +31,8 @@
     "dotenv": "^5.0.0",
     "express": "^4.16.2",
     "jsonwebtoken": "^8.1.1",
-    "mongoose": "^5.0.4"
+    "mongoose": "^5.0.4",
+    "react-router-dom": "^4.2.2"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
