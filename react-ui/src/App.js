@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { initializeUsers } from './reducers/userReducer'
 import NavBar from './components/structure/navbar'
 import Users from './components/users'
+import UserCreate from './components/userCreate'
 
 class App extends React.Component {
 
@@ -17,6 +18,9 @@ class App extends React.Component {
       <Container>
         <NavBar />
         <Route exact path='/users' render={() => <Users />} />
+        <Route exact path='/users/create' render={({ history }) =>
+          <UserCreate history={history} />}
+        />
       </Container>
     )
   }
