@@ -42,7 +42,6 @@ class UserCreate extends React.Component {
       lastName: this.state.lastName,
       status: this.state.status
     }
-    console.log('Creating user', user)
     this.props.createUser(user)
     this.props.history.push('/users')
   }
