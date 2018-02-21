@@ -132,5 +132,4 @@ describe('POST /api/equipment', () => {
 
 afterAll(async () => {
   await server.close()
-  console.log('equipment test server closed')
 })

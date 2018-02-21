@@ -2,7 +2,7 @@ const supertest = require('supertest')
 const { app, server } = require('../index')
 const api = supertest(app)
 const User = require('../models/user')
-const { initialUsers, usersInDb } = require('./usertesthelper')
+const { initialUsers, usersInDb, nonExistingId } = require('./usertesthelper')
 
 describe('GET /api/users', () => {
   beforeAll(async () => {
@@ -202,11 +202,10 @@ describe('PUT /api/users/:id', () => {
     const usersBefore = await usersInDb()
 
     const target = usersBefore[1]
-    target.username = 'UpdatedUsername',
-    target.firstName = 'New first',
-    target.lastName = 'New last',
+    target.username = 'UpdatedUsername'
+    target.firstName = 'New first'
+    target.lastName = 'New last'
     target.status = 'newstatus'
-    console.log('Sending ', target)
 
     await api
       .put(`/api/users/${target._id}`)
@@ -216,29 +215,121 @@ describe('PUT /api/users/:id', () => {
 
     const usersAfter = await usersInDb()
     const match = usersAfter.find(u => u._id.toString() === target._id.toString())
-    console.log('Matching: ', match)
     expect(usersAfter.length).toBe(usersBefore.length)
-    expect(match).toEqual(target)
+    expect(match.toJSON()).toEqual(target.toJSON())
   })
 
   it('returns error for nonexisting id', async () => {
+    const nonId = await nonExistingId()
+    const usersBefore = await usersInDb()
 
+    const target = usersBefore[1]
+    target.username = 'anothername'
+
+    await api
+      .put(`/api/users/${nonId}`)
+      .send(target)
+      .expect(400)
+
+    const usersAfter = await usersInDb()
+    const usernames = usersAfter.map(user => user.username)
+    expect(usersAfter.length).toBe(usersBefore.length)
+    expect(usernames).not.toContain(target.username)
   })
 
   it('does not accept user without a username', async () => {
+    const usersBefore = await usersInDb()
 
+    const originalTarget = usersBefore[1]
+    const target = {
+      firstName: 'New first',
+      lastName: 'New last',
+      status: 'newstatus'
+    }
+
+    await api
+      .put(`/api/users/${originalTarget._id}`)
+      .send(target)
+      .expect(400)
+
+    const usersAfter = await usersInDb()
+    const match = usersAfter.find(u => u._id.toString() === originalTarget._id.toString())
+    expect(usersAfter.length).toBe(usersBefore.length)
+    expect(match.toJSON()).toEqual(originalTarget.toJSON())
   })
 
   it('does not accept user with an empty string as a username', async () => {
+    const usersBefore = await usersInDb()
 
+    const originalTarget = usersBefore[1]
+    const target = {
+      username: '',
+      firstName: 'New first',
+      lastName: 'New last',
+      status: 'newstatus'
+    }
+
+    await api
+      .put(`/api/users/${originalTarget._id}`)
+      .send(target)
+      .expect(400)
+
+    const usersAfter = await usersInDb()
+    const match = usersAfter.find(u => u._id.toString() === originalTarget._id.toString())
+    expect(usersAfter.length).toBe(usersBefore.length)
+    expect(match.toJSON()).toEqual(originalTarget.toJSON())
   })
 
   it('does not accept user with an existing username', async () => {
+    const usersBefore = await usersInDb()
 
+    const originalTarget = usersBefore[1]
+    const target = {
+      username: usersBefore[0].username,
+      firstName: 'New first',
+      lastName: 'New last',
+      status: 'newstatus'
+    }
+
+    await api
+      .put(`/api/users/${originalTarget._id}`)
+      .send(target)
+      .expect(400)
+
+    const usersAfter = await usersInDb()
+    const match = usersAfter.find(u => u._id.toString() === originalTarget._id.toString())
+    expect(usersAfter.length).toBe(usersBefore.length)
+    expect(match.toJSON()).toEqual(originalTarget.toJSON())
+  })
+})
+
+describe('DELETE /api/users/:id', () => {
+  it('deletes the correct user', async () => {
+    const usersBefore = await usersInDb()
+
+    await api
+      .delete(`/api/users/${usersBefore[1]._id}`)
+      .expect(204)
+
+    const usersAfter = await usersInDb()
+    const ids = usersAfter.map(u => u._id.toString())
+    expect(usersAfter.length).toBe(usersBefore.length - 1)
+    expect(ids).not.toContain(usersBefore[1]._id.toString())
+  })
+
+  it('returns error for nonexisting id', async () => {
+    const nonId = await nonExistingId()
+    const usersBefore = await usersInDb()
+
+    await api
+      .delete(`/api/users/${nonId}`)
+      .expect(400)
+
+    const usersAfter = await usersInDb()
+    expect(usersAfter.length).toBe(usersBefore.length)
   })
 })
 
 afterAll(async () => {
   await server.close()
-  console.log('user test server closed')
 })

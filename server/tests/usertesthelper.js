@@ -29,4 +29,18 @@ const usersInDb = async () => {
   return users
 }
 
-module.exports = { initialUsers, usersInDb }
+const nonExistingId = async () => {
+  const user = new User({
+    username: 'nonuser',
+    firstName: 'nonuser',
+    lastName: 'nonuser',
+    passwordHash: '$2y$10$PUusFleLGs1bnROiXLG9zum9I/01tcSEJWkWRDYwSUVBWRS4hLjIC',
+    status: 'user'
+  })
+  const savedUser = await user.save()
+  const id = savedUser._id
+  await User.findByIdAndRemove(id)
+  return id
+}
+
+module.exports = { initialUsers, usersInDb, nonExistingId }

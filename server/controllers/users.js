@@ -45,7 +45,7 @@ usersRouter.put('/:id', async (req, res) => {
   try {
     const match = await User.findById(req.params.id)
     if (!match) {
-      return res.status(400).send({ error: 'nonexistent id' })
+      return res.status(400).json({ error: 'nonexistent id' })
     }
 
     const body = req.body
@@ -53,11 +53,15 @@ usersRouter.put('/:id', async (req, res) => {
       return res.status(400).json({ error: 'username is missing' })
     }
     const nameMatch = await User.find({ username: body.username })
+    let foundName = false
     nameMatch.forEach(nm => {
-      if(nm._id !== req.params.id) {
-        return res.status(400).json({ error: 'username is already in use' })
+      if (nm._id.toString() !== req.params.id.toString()) {
+        foundName = true
       }
     })
+    if (foundName) {
+      return res.status(400).json({ error: 'username is already in use' })
+    }
 
     const user = {
       username: body.username,
@@ -66,9 +70,7 @@ usersRouter.put('/:id', async (req, res) => {
       lastName: body.lastName,
       status: body.status === undefined ? 'user' : body.status
     }
-    console.log('Updating ', user)
-    const updatedUser = await User.findOneAndUpdate(req.params.id, user, { new: true })
-    console.log('Updated ', updatedUser)
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, user, { new: true })
     res.json(updatedUser)
   } catch (exception) {
     console.log(exception)
@@ -78,23 +80,23 @@ usersRouter.put('/:id', async (req, res) => {
 
 usersRouter.delete('/:id', async (req, res) => {
   try {
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
-    if (!req.token || !decodedToken.id) {
-      return res.status(401).json({ error: 'token missing or invalid' })
-    }
+    // const decodedToken = jwt.verify(request.token, process.env.SECRET)
+    // if (!req.token || !decodedToken.id) {
+    //   return res.status(401).json({ error: 'token missing or invalid' })
+    // }
 
     const user = await User.findById(req.params.id)
     if (!user) {
-      return res.status(400).send({ error: 'nonexistent id' })
+      return res.status(400).json({ error: 'nonexistent id' })
     }
     await User.findByIdAndRemove(req.params.id)
     res.status(204).end()
   } catch (exception) {
     if (exception.name === 'JsonWebTokenError') {
-      response.status(401).json({ error: exception.message })
+      res.status(401).json({ error: exception.message })
     } else {
       console.log(exception)
-      response.status(500).send({ error: 'encountered an error while trying to delete a user' })
+      res.status(500).json({ error: 'encountered an error while trying to delete a user' })
     }
   }
 })
