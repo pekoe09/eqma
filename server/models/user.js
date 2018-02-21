@@ -1,11 +1,31 @@
 const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema({
-  username: String,
-  passwordHash: String,
-  lastName: String,
-  firstName: String,
-  status: String
+  username: { 
+    type: String,
+    required: true,
+    unique: true
+  },
+  passwordHash: { 
+    type:String,
+    required: true,
+    select: false
+  },
+  lastName: {
+    type: String,
+    required: true,
+    select: true
+  },
+  firstName: {
+    type: String,
+    required: true,
+    select: true
+  },
+  status: {
+    type: String,
+    required: true,
+    select: true
+  }
 })
 
 userSchema.statics.fullName = (user) => {

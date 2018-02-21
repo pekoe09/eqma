@@ -46,7 +46,6 @@ class EquipmentCreate extends React.Component {
       price: this.state.price ? Number(this.state.price) : null,
       timeUnit: this.state.timeUnit
     }
-    console.log('Creating equipment ', equipment)
     this.props.createEquipment(equipment)
     this.props.history.push('/equipment')
   }

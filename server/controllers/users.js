@@ -41,4 +41,62 @@ usersRouter.post('/', async (req, res) => {
   }
 })
 
+usersRouter.put('/:id', async (req, res) => {
+  try {
+    const match = await User.findById(req.params.id)
+    if (!match) {
+      return res.status(400).send({ error: 'nonexistent id' })
+    }
+
+    const body = req.body
+    if (!body.username) {
+      return res.status(400).json({ error: 'username is missing' })
+    }
+    const nameMatch = await User.find({ username: body.username })
+    nameMatch.forEach(nm => {
+      if(nm._id !== req.params.id) {
+        return res.status(400).json({ error: 'username is already in use' })
+      }
+    })
+
+    const user = {
+      username: body.username,
+      passwordHash: match.passwordHash,
+      firstName: body.firstName,
+      lastName: body.lastName,
+      status: body.status === undefined ? 'user' : body.status
+    }
+    console.log('Updating ', user)
+    const updatedUser = await User.findOneAndUpdate(req.params.id, user, { new: true })
+    console.log('Updated ', updatedUser)
+    res.json(updatedUser)
+  } catch (exception) {
+    console.log(exception)
+    res.status(500).json({ error: 'encountered an error while trying to update a user' })
+  }
+})
+
+usersRouter.delete('/:id', async (req, res) => {
+  try {
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
+    if (!req.token || !decodedToken.id) {
+      return res.status(401).json({ error: 'token missing or invalid' })
+    }
+
+    const user = await User.findById(req.params.id)
+    if (!user) {
+      return res.status(400).send({ error: 'nonexistent id' })
+    }
+    await User.findByIdAndRemove(req.params.id)
+    res.status(204).end()
+  } catch (exception) {
+    if (exception.name === 'JsonWebTokenError') {
+      response.status(401).json({ error: exception.message })
+    } else {
+      console.log(exception)
+      response.status(500).send({ error: 'encountered an error while trying to delete a user' })
+    }
+  }
+})
+
 module.exports = usersRouter

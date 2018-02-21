@@ -190,6 +190,54 @@ describe('POST /api/users', () => {
   })
 })
 
+describe('PUT /api/users/:id', () => {
+  beforeEach(async () => {
+    await User.remove({})
+    const userObjects = initialUsers.map(user => new User(user))
+    const promiseArray = userObjects.map(user => user.save())
+    await Promise.all(promiseArray)
+  })
+
+  it('updates an existing user', async () => {
+    const usersBefore = await usersInDb()
+
+    const target = usersBefore[1]
+    target.username = 'UpdatedUsername',
+    target.firstName = 'New first',
+    target.lastName = 'New last',
+    target.status = 'newstatus'
+    console.log('Sending ', target)
+
+    await api
+      .put(`/api/users/${target._id}`)
+      .send(target)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAfter = await usersInDb()
+    const match = usersAfter.find(u => u._id.toString() === target._id.toString())
+    console.log('Matching: ', match)
+    expect(usersAfter.length).toBe(usersBefore.length)
+    expect(match).toEqual(target)
+  })
+
+  it('returns error for nonexisting id', async () => {
+
+  })
+
+  it('does not accept user without a username', async () => {
+
+  })
+
+  it('does not accept user with an empty string as a username', async () => {
+
+  })
+
+  it('does not accept user with an existing username', async () => {
+
+  })
+})
+
 afterAll(async () => {
   await server.close()
   console.log('user test server closed')
