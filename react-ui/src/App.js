@@ -21,7 +21,8 @@ class App extends React.Component {
     return (
       <Container>
         <NavBar />
-        <Route exact path='/users' render={() => <Users />} />
+        <Route exact path='/users' render={({ history }) =>
+          <Users history={history} />} />
         <Route exact path='/users/create' render={({ history }) =>
           <UserCreate history={history} />}
         />

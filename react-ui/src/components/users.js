@@ -3,32 +3,59 @@ import { connect } from 'react-redux'
 import ReactTable from 'react-table'
 import ViewHeader from './structure/viewHeader'
 import LinkButton from './structure/linkButton'
+import { Button } from 'semantic-ui-react'
+import { removeUser } from '../reducers/userReducer'
 
 class Users extends React.Component {
+
+  handleRemove = (id) => {
+    console.log('Removing ', id)
+    this.props.removeUser(id)
+  }
 
   render() {
 
     const columns = [
       {
         Header: 'Username',
-        accessor: 'username'
+        accessor: 'username',
+        headerStyle: {
+          textAlign: 'left'
+        }
       },
       {
         Header: 'First name',
-        accessor: 'firstName'
+        accessor: 'firstName',
+        headerStyle: {
+          textAlign: 'left'
+        }
       },
       {
         Header: 'Last name',
-        accessor: 'lastName'
+        accessor: 'lastName',
+        headerStyle: {
+          textAlign: 'left'
+        }
       },
       {
         Header: 'Status',
-        accessor: 'status'
+        accessor: 'status',
+        headerStyle: {
+          textAlign: 'left'
+        }
+      },
+      {
+        Header: '',
+        accessor: 'delete',
+        Cell: (row) => (
+          <Button negative basic className='mini' onClick={() => this.handleRemove(row.original._id)}>Delete</Button>
+        )
       }
     ]
 
     const tableStyle = {
-      marginTop: 10
+      marginTop: 10,
+      lineHeight: 2
     }
 
     return (
@@ -54,5 +81,6 @@ const mapStateToProps = (store) => {
 }
 
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  { removeUser }
 )(Users)

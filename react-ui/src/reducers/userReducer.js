@@ -6,6 +6,8 @@ const userReducer = (store = [], action) => {
       return action.users
     case 'CREATE_USER':
       return store.concat(action.newUser)
+    case 'REMOVE_USER':
+      return store.filter(u => u._id !== action.id)
     default:
       return store
   }
@@ -27,6 +29,16 @@ export const initializeUsers = () => {
     dispatch({
       type: 'INIT_USERS',
       users
+    })
+  }
+}
+
+export const removeUser = (id) => {
+  return async (dispatch) => {
+    await userService.remove(id)
+    dispatch({
+      type: 'REMOVE_USER',
+      id
     })
   }
 }

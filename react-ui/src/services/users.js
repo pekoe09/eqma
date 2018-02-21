@@ -11,4 +11,9 @@ const createNew = async (user) => {
   return response.data
 }
 
-export default { getAll, createNew }
+const remove = async (id) => {
+  const response = await axios.delete(`${baseUrl}/${id}`)
+  return response.data
+}
+
+export default { getAll, createNew, remove }

@@ -3,19 +3,27 @@ module.exports = {
     "es6": true,
     "node": true
   },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
+  "parser": "babel-eslint",
   "parserOptions" : {
     "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true,
-      "modules": true
+      "modules": true,
+      "experimentalObjectRestSpread": true
     }
   },
-  "parser": "babel-eslint",
-  "extends": "eslint:recommended",
+  "plugins": [
+    "react"
+  ],
   "rules": {
     "indent": [
       "error",
-      2
+      2,
+      { "SwitchCase": 1 }
     ],
     "quotes": [
       "error",
@@ -34,6 +42,7 @@ module.exports = {
       "error", { "before": true, "after": true }
     ],
     "no-console": 0,
+    "react/prop-types": 0
   },
   "globals": {
     "document": true,

@@ -11,19 +11,31 @@ class Equipments extends React.Component {
     const columns = [
       {
         Header: 'Name',
-        accessor: 'name'
+        accessor: 'name',
+        headerStyle: {
+          textAlign: 'left'
+        }
       },
       {
         Header: 'Make and model',
-        accessor: 'makeAndModel'
+        accessor: 'makeAndModel',
+        headerStyle: {
+          textAlign: 'left'
+        }
       },
       {
         Header: 'Rate',
-        accessor: 'price'
+        accessor: 'price',
+        style: {
+          textAlign: 'center'
+        }
       },
       {
         Header: 'Rented by',
-        accessor: 'timeUnit'
+        accessor: 'timeUnit',
+        style: {
+          textAlign: 'center'
+        }
       }
     ]
 
