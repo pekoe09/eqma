@@ -57,4 +57,16 @@ const nonExistingId = async () => {
   return id
 }
 
-module.exports = { initialEquipment, equipmentInDb, nonExistingId }
+const initEquipments = async () => {
+  await Equipment.remove({})
+  const equipmentObjects = initialEquipment.map(e => new Equipment(e))
+  const promiseArray = equipmentObjects.map(e => e.save())
+  await Promise.all(promiseArray)
+}
+
+module.exports = {
+  initialEquipment,
+  equipmentInDb,
+  nonExistingId,
+  initEquipments
+}

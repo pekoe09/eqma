@@ -1,12 +1,14 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 
-import userReducer from './reducers/userReducer'
+import assetTransactionReducer from './reducers/assetTransactionReducer'
 import equipmentReducer from './reducers/equipmentReducer'
+import userReducer from './reducers/userReducer'
 
 const reducer = combineReducers({
-  users: userReducer,
-  equipments: equipmentReducer 
+  assetTransactions: assetTransactionReducer,
+  equipments: equipmentReducer,
+  users: userReducer
 })
 
 const store = createStore(

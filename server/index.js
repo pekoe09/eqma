@@ -8,15 +8,17 @@ const config = require('./utils/config')
 const { tokenExtractor } = require('./utils/tokenExtractor')
 const mongo = require('./mongo')
 
-const usersRouter = require('./controllers/users')
+const assetTransactionsRouter = require('./controllers/assetTransactions')
 const equipmentsRouter = require('./controllers/equipments')
+const usersRouter = require('./controllers/users')
 
 app.use(cors())
 app.use(bodyParser.json())
 app.use(tokenExtractor)
 
-app.use('/api/users', usersRouter)
+app.use('/api/assettransactions', assetTransactionsRouter)
 app.use('/api/equipment', equipmentsRouter)
+app.use('/api/users', usersRouter)
 
 const server = http.createServer(app)
 

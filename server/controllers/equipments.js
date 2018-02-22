@@ -1,5 +1,4 @@
 const equipmentRouter = require('express').Router()
-//const jwt = require('jsonwebtoken')
 const Equipment = require('../models/equipment')
 
 equipmentRouter.get('/', async (req, res) => {
@@ -35,17 +34,13 @@ equipmentRouter.post('/', async (req, res) => {
 
 equipmentRouter.put('/:id', async (req, res) => {
   try {
-    console.log('Requesting ', req.params.id)
     const match = await Equipment.findById(req.params.id)
-    console.log('Matched ', match)
     if (!match) {
       return res.status(400).json({ error: 'nonexistent id' })
     }
 
     const body = req.body
-    console.log('Name ', req.body.name)
     if (!body.name) {
-      console.log('Name not accepted')
       return res.status(400).json({ error: 'name is missing' })
     }
 
@@ -71,10 +66,6 @@ equipmentRouter.put('/:id', async (req, res) => {
 
 equipmentRouter.delete('/:id', async (req, res) => {
   try {
-    // const decodedToken = jwt.verify(req.token, process.env.SECRET)
-    // if (!req.token || !decodedToken.id) {
-    //   return res.status(401).json({ error: 'token missing or invalid' })
-    // }
     const equipment = await Equipment.findById(req.params.id)
     if (!equipment) {
       return res.status(400).json({ error: 'nonexistent id' })

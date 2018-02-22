@@ -54,7 +54,7 @@ class EquipmentCreate extends React.Component {
     return (
       <div>
         <ViewHeader text={'Add a piece of equipment'} />
-        <LinkButton text={'cancel'} to={'/equipment'} type={'default'} />
+        <LinkButton text={'Cancel'} to={'/equipment'} type={'default'} />
         <Form style={formStyle} onSubmit={this.handleSubmit}>
           <Form.Field required control={Input} width={6} label='Name' name='name'
             value={this.state.name} onChange={this.handleChange} />

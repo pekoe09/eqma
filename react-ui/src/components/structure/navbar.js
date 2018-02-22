@@ -9,9 +9,14 @@ const NavBar = () => (
     </Menu.Header>
     <Dropdown item text='Equipment'>
       <Dropdown.Menu>
+        <Dropdown.Header content='Equipment' />
         <Dropdown.Item><NavLink to='/equipment'>Browse</NavLink></Dropdown.Item>
         <Dropdown.Item><NavLink to='/equipment/create'>Create new</NavLink></Dropdown.Item>
         <Dropdown.Item><NavLink to='/equipment/services'>Services</NavLink></Dropdown.Item>
+        <Dropdown.Divider/>
+        <Dropdown.Header content='Asset transactions' />
+        <Dropdown.Item><NavLink to='/assettransactions'>Browse</NavLink></Dropdown.Item>
+        <Dropdown.Item><NavLink to='/assettransactions/create'>Create new</NavLink></Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
     <Dropdown item text='Reports'>

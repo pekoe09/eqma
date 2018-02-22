@@ -10,7 +10,11 @@ const equipmentSchema = new mongoose.Schema({
     value: String
   }],
   price: Number,
-  timeUnit: String
+  timeUnit: String,
+  transactions: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'AssetTransaction'
+  }]
 })
 
 const Equipment = mongoose.model('Equipment', equipmentSchema)

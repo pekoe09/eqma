@@ -2,14 +2,11 @@ const supertest = require('supertest')
 const { app, server } = require('../index')
 const api = supertest(app)
 const Equipment = require('../models/equipment')
-const { initialEquipment, equipmentInDb, nonExistingId } = require('./equipmentstesthelper')
+const { initialEquipment, equipmentInDb, nonExistingId, initEquipments } = require('./equipmentstesthelper')
 
 describe('GET /api/equipment', () => {
   beforeAll(async () => {
-    await Equipment.remove({})
-    const equipmentObjects = initialEquipment.map(e => new Equipment(e))
-    const promiseArray = equipmentObjects.map(e => e.save())
-    await Promise.all(promiseArray)
+    await initEquipments()
   })
 
   it('works', async () => {
@@ -43,10 +40,7 @@ describe('GET /api/equipment', () => {
 
 describe('POST /api/equipment', () => {
   beforeEach(async () => {
-    await Equipment.remove({})
-    const equipmentObjects = initialEquipment.map(e => new Equipment(e))
-    const promiseArray = equipmentObjects.map(e => e.save())
-    await Promise.all(promiseArray)
+    await initEquipments()
   })
 
   it('adds an equipment', async () => {
@@ -132,10 +126,7 @@ describe('POST /api/equipment', () => {
 
 describe('PUT /api/equipment/:id', () => {
   beforeEach(async () => {
-    await Equipment.remove({})
-    const equipmentObjects = initialEquipment.map(e => new Equipment(e))
-    const promiseArray = equipmentObjects.map(e => e.save())
-    await Promise.all(promiseArray)
+    await initEquipments()
   })
 
   it('updates an existing equipment', async () => {
@@ -228,6 +219,10 @@ describe('PUT /api/equipment/:id', () => {
 })
 
 describe('DELETE /api/equipment/:id', () => {
+  beforeEach(async () => {
+    await initEquipments()
+  })
+
   it('deletes the correct equipment', async () => {
     const equipmentBefore = await equipmentInDb()
 
