@@ -3,6 +3,7 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const path = require('path')
 
 const config = require('./utils/config')
 const { tokenExtractor } = require('./utils/tokenExtractor')
@@ -19,6 +20,10 @@ app.use(tokenExtractor)
 app.use('/api/assettransactions', assetTransactionsRouter)
 app.use('/api/equipment', equipmentsRouter)
 app.use('/api/users', usersRouter)
+
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../react-ui/build', 'index.html'))
+})
 
 const server = http.createServer(app)
 
