@@ -2,7 +2,7 @@ const supertest = require('supertest')
 const { app, server } = require('../index')
 const api = supertest(app)
 const Equipment = require('../models/equipment')
-const { initialEquipment, equipmentInDb } = require('./equipmentstesthelper')
+const { initialEquipment, equipmentInDb, nonExistingId } = require('./equipmentstesthelper')
 
 describe('GET /api/equipment', () => {
   beforeAll(async () => {
@@ -127,6 +127,130 @@ describe('POST /api/equipment', () => {
     const equipmentAfter = await equipmentInDb()
     expect(equipmentAfter.length).toBe(equipmentBefore.length)
     expect(response.body).toEqual({ error: 'name is missing' })
+  })
+})
+
+describe('PUT /api/equipment/:id', () => {
+  beforeEach(async () => {
+    await Equipment.remove({})
+    const equipmentObjects = initialEquipment.map(e => new Equipment(e))
+    const promiseArray = equipmentObjects.map(e => e.save())
+    await Promise.all(promiseArray)
+  })
+
+  it('updates an existing equipment', async () => {
+    const equipmentBefore = await equipmentInDb()
+
+    const target = equipmentBefore[1]
+    target.name = 'Updatedname'
+    target.make = 'Updatedmake'
+    target.model = 'Updatedmodel'
+    target.description = 'Updateddescription'
+    target.price = 1
+    target.timeUnit = 'year'
+
+    await api
+      .put(`/api/equipment/${target._id}`)
+      .send(target)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const equipmentAfter = await equipmentInDb()
+    const match = equipmentAfter.find(e => e._id.toString() === target._id.toString())
+    expect(equipmentAfter.length).toBe(equipmentBefore.length)
+    expect(match.toJSON()).toEqual(target.toJSON())
+  })
+
+  it('returns error for nonexisting id', async () => {
+    const nonId = await nonExistingId()
+    const equipmentBefore = await equipmentInDb()
+
+    const target = equipmentBefore[1]
+    target.name = 'Updatedname'
+
+    await api
+      .put(`/api/equipment/${nonId}`)
+      .send(target)
+      .expect(400)
+
+    const equipmentAfter = await equipmentInDb()
+    const names = equipmentAfter.map(e => e.name)
+    expect(equipmentAfter.length).toBe(equipmentBefore.length)
+    expect(names).not.toContain(target.name)
+  })
+
+  it('does not accept equipment without a name', async () => {
+    const equipmentBefore = await equipmentInDb()
+
+    const originalTarget = equipmentBefore[1]
+    const target = {
+      make: 'Updatedmake',
+      model: 'Updatedmodel',
+      description: 'Updateddescription',
+      price: 1,
+      timeUnit: 'year'
+    }
+
+    await api
+      .put(`/api/equipment/${originalTarget._id}`)
+      .send(target)
+      .expect(400)
+
+    const equipmentAfter = await equipmentInDb()
+    const match = equipmentAfter.find(e => e._id.toString() === originalTarget._id.toString())
+    expect(equipmentAfter.length).toBe(equipmentBefore.length)
+    expect(match.toJSON()).toEqual(originalTarget.toJSON())
+  })
+
+  it('does not accept equipment with an empty string as a name', async () => {
+    const equipmentBefore = await equipmentInDb()
+
+    const originalTarget = equipmentBefore[1]
+    const target = {
+      name: '',
+      make: 'Updatedmake',
+      model: 'Updatedmodel',
+      description: 'Updateddescription',
+      price: 1,
+      timeUnit: 'year'
+    }
+
+    await api
+      .put(`/api/equipment/${originalTarget._id}`)
+      .send(target)
+      .expect(400)
+
+    const equipmentAfter = await equipmentInDb()
+    const match = equipmentAfter.find(e => e._id.toString() === originalTarget._id.toString())
+    expect(equipmentAfter.length).toBe(equipmentBefore.length)
+    expect(match.toJSON()).toEqual(originalTarget.toJSON())
+  })
+})
+
+describe('DELETE /api/equipment/:id', () => {
+  it('deletes the correct equipment', async () => {
+    const equipmentBefore = await equipmentInDb()
+
+    await api
+      .delete(`/api/equipment/${equipmentBefore[1]._id}`)
+      .expect(204)
+
+    const equipmentAfter = await equipmentInDb()
+    const ids = equipmentAfter.map(e => e._id.toString())
+    expect(equipmentAfter.length).toBe(equipmentBefore.length - 1)
+    expect(ids).not.toContain(equipmentBefore[1]._id.toString())
+  })
+
+  it('returns error for nonexisting id', async () => {
+    const nonId = await nonExistingId()
+    const equipmentBefore = await equipmentInDb()
+
+    await api
+      .delete(`/api/equipment/${nonId}`)
+      .expect(400)
+
+    const equipmentAfter = await equipmentInDb()
+    expect(equipmentAfter.length).toBe(equipmentBefore.length)
   })
 })
 

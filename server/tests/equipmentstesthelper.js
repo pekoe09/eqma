@@ -44,4 +44,17 @@ const equipmentInDb = async () => {
   return equipment
 }
 
-module.exports = { initialEquipment, equipmentInDb }
+const nonExistingId = async () => {
+  const equipment = new Equipment({
+    name: 'nonequip',
+    make: 'nonequip',
+    price: 1,
+    timeUnit: 'day'
+  })
+  const savedEquip = await equipment.save()
+  const id = savedEquip._id
+  await Equipment.findByIdAndRemove(id)
+  return id
+}
+
+module.exports = { initialEquipment, equipmentInDb, nonExistingId }

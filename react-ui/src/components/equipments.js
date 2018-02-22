@@ -3,8 +3,14 @@ import { connect } from 'react-redux'
 import ReactTable from 'react-table'
 import ViewHeader from './structure/viewHeader'
 import LinkButton from './structure/linkButton'
+import { Button } from 'semantic-ui-react'
+import { removeEquipment } from '../reducers/equipmentReducer'
 
 class Equipments extends React.Component {
+
+  handleRemove = (id) => {
+    this.props.removeEquipment(id)
+  }
 
   render() {
 
@@ -36,11 +42,20 @@ class Equipments extends React.Component {
         style: {
           textAlign: 'center'
         }
+      },
+      {
+        Header: '',
+        accessor: 'delete',
+        Cell: (row) => (
+          <Button negative basic className='mini' onClick={() =>
+            this.handleRemove(row.original._id)}>Delete</Button>
+        )
       }
     ]
 
     const tableStyle = {
-      marginTop: 10
+      marginTop: 10,
+      lineHeight: 2
     }
 
     return (
@@ -67,5 +82,6 @@ const mapStateToProps = (store) => {
 }
 
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  { removeEquipment }
 )(Equipments)

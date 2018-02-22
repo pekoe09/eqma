@@ -9,7 +9,6 @@ import { removeUser } from '../reducers/userReducer'
 class Users extends React.Component {
 
   handleRemove = (id) => {
-    console.log('Removing ', id)
     this.props.removeUser(id)
   }
 
@@ -48,7 +47,8 @@ class Users extends React.Component {
         Header: '',
         accessor: 'delete',
         Cell: (row) => (
-          <Button negative basic className='mini' onClick={() => this.handleRemove(row.original._id)}>Delete</Button>
+          <Button negative basic className='mini' onClick={() =>
+            this.handleRemove(row.original._id)}>Delete</Button>
         )
       }
     ]
