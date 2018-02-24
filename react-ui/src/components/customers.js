@@ -4,12 +4,12 @@ import ReactTable from 'react-table'
 import ViewHeader from './structure/viewHeader'
 import LinkButton from './structure/linkButton'
 import { Button } from 'semantic-ui-react'
-import { removeEquipment } from '../reducers/equipmentReducer'
+import { removeCustomer } from '../reducers/customerReducer'
 
-class Equipments extends React.Component {
+class Customers extends React.Component {
 
   handleRemove = (id) => {
-    this.props.removeEquipment(id)
+    this.props.removeCustomer(id)
   }
 
   render() {
@@ -17,33 +17,24 @@ class Equipments extends React.Component {
     const columns = [
       {
         Header: 'Name',
-        accessor: 'name',
+        accessor: 'fullName',
         headerStyle: {
           textAlign: 'left'
         }
       },
       {
-        Header: 'Make and model',
-        accessor: 'makeAndModel',
+        Header: 'City',
+        accessor: 'billingAddress.city',
         headerStyle: {
           textAlign: 'left'
         }
       },
       {
-        Header: 'Rate',
-        accessor: 'price',
-        style: {
-          textAlign: 'center'
-        },
-        maxWidth: 100
-      },
-      {
-        Header: 'Rented by',
-        accessor: 'timeUnit',
-        style: {
-          textAlign: 'center'
-        },
-        maxWidth: 100
+        Header: 'City',
+        accessor: 'billingAddress.city',
+        headerStyle: {
+          textAlign: 'left'
+        }
       },
       {
         Header: '',
@@ -66,10 +57,10 @@ class Equipments extends React.Component {
 
     return (
       <div>
-        <ViewHeader text={'Equipment list'} />
-        <LinkButton text={'Add a piece of equipment'} to={'/equipment/create'} />
+        <ViewHeader text={'Customers'} />
+        <LinkButton text={'Add a customer'} to={'/customers/create'} />
         <ReactTable
-          data={this.props.equipments}
+          data={this.props.customers}
           columns={columns}
           defaultPageSize={10}
           minRows={1}
@@ -83,10 +74,10 @@ class Equipments extends React.Component {
 
 const mapStateToProps = (store) => {
   return {
-    equipments: store.equipments.map(e => {
+    customers: store.customers.map(c => {
       return {
-        ...e,
-        makeAndModel: (`${e.make} ${e.model}`).trim()
+        ...c,
+        fullName: c.company ? c.company : `${c.lastName}, ${c.firstNames}`
       }
     })
   }
@@ -94,5 +85,5 @@ const mapStateToProps = (store) => {
 
 export default connect(
   mapStateToProps,
-  { removeEquipment }
-)(Equipments)
+  { removeCustomer }
+)(Customers)

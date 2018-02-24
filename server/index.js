@@ -10,7 +10,9 @@ const { tokenExtractor } = require('./utils/tokenExtractor')
 const mongo = require('./mongo')
 
 const assetTransactionsRouter = require('./controllers/assetTransactions')
+const customersRouter = require('./controllers/customers')
 const equipmentsRouter = require('./controllers/equipments')
+const rentalsRouter = require('./controllers/rentals')
 const usersRouter = require('./controllers/users')
 
 app.use(cors())
@@ -18,7 +20,9 @@ app.use(bodyParser.json())
 app.use(tokenExtractor)
 
 app.use('/api/assettransactions', assetTransactionsRouter)
+app.use('/api/customers', customersRouter)
 app.use('/api/equipment', equipmentsRouter)
+app.use('/api/rentals', rentalsRouter)
 app.use('/api/users', usersRouter)
 
 app.get('*', (req, res) => {

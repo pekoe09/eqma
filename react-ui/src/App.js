@@ -4,11 +4,15 @@ import { Route, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { initializeUsers } from './reducers/userReducer'
 import { initializeAssetTransactions } from './reducers/assetTransactionReducer'
+import { initializeCustomers } from './reducers/customerReducer'
 import { initializeEquipment } from './reducers/equipmentReducer'
 import NavBar from './components/structure/navbar'
 import Users from './components/users'
 import UserCreate from './components/userCreate'
 import AssetTransactions from './components/assetTransactions'
+import Customers from './components/customers'
+import CustomerCreate from './components/customerCreate'
+
 import AssetTransactionsCreate from './components/assetTransactionCreate'
 import Equipments from './components/equipments'
 import EquipmentCreate from './components/equipmentCreate'
@@ -19,6 +23,7 @@ class App extends React.Component {
     this.props.initializeUsers()
     this.props.initializeEquipment()
     this.props.initializeAssetTransactions()
+    this.props.initializeCustomers()
   }
 
   render() {
@@ -34,6 +39,9 @@ class App extends React.Component {
         <Route exact path='/assettransactions/create' render={({ history }) =>
           <AssetTransactionsCreate history={history} />}
         />
+        <Route exact path='/customers' render={() => <Customers />} />
+        <Route exact path='/customers/create' render={({ history }) =>
+          <CustomerCreate history={history} />} />
         <Route exact path='/equipment' render={() => <Equipments />} />
         <Route exact path='/equipment/create' render={({ history }) =>
           <EquipmentCreate history={history} />}
@@ -48,6 +56,7 @@ export default withRouter(connect(
   {
     initializeUsers,
     initializeEquipment,
-    initializeAssetTransactions
+    initializeAssetTransactions,
+    initializeCustomers
   }
 )(App))

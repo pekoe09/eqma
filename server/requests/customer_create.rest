@@ -1,0 +1,15 @@
+POST http://localhost:3000/api/customers
+Content-Type: application/json
+
+{
+  "lastName": "Last1",
+  "firstNames": "First1",
+  "company": "Company1",
+  "billingAddress": {
+    "street1": "Street1",
+    "street2": "Street2",
+    "zip": "Zip",
+    "city": "City",
+    "country": "Country"
+  }
+}
