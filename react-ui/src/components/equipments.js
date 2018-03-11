@@ -83,12 +83,7 @@ class Equipments extends React.Component {
 
 const mapStateToProps = (store) => {
   return {
-    equipments: store.equipments.map(e => {
-      return {
-        ...e,
-        makeAndModel: (`${e.make} ${e.model}`).trim()
-      }
-    })
+    equipments: store.equipments
   }
 }
 

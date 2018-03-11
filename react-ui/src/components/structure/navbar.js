@@ -35,8 +35,13 @@ const NavBar = () => (
     </Dropdown>
     <Dropdown item text='Customers' style={menuDropdownStyle}>
       <Dropdown.Menu>
+        <Dropdown.Header content='Customers' />
         <Dropdown.Item><NavLink to='/customers'>Browse</NavLink></Dropdown.Item>
         <Dropdown.Item><NavLink to='/customers/create'>Create new</NavLink></Dropdown.Item>
+        <Dropdown.Divider />
+        <Dropdown.Header content='Rentals' />
+        <Dropdown.Item><NavLink to='/rentals'>Browse</NavLink></Dropdown.Item>
+        <Dropdown.Item><NavLink to='/rentals/create'>Create new</NavLink></Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
     <Dropdown item text='Reports' style={menuDropdownStyle}>

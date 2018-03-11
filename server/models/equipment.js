@@ -17,6 +17,13 @@ const equipmentSchema = new mongoose.Schema({
   }]
 })
 
+equipmentSchema.virtual('makeAndModel').get(function () {
+  return (`${this.make} ${this.model}`).trim()
+})
+
+equipmentSchema.set('toObject', { virtuals: true })
+equipmentSchema.set('toJSON', { virtuals: true })
+
 const Equipment = mongoose.model('Equipment', equipmentSchema)
 
 module.exports = Equipment

@@ -17,7 +17,7 @@ class Customers extends React.Component {
     const columns = [
       {
         Header: 'Name',
-        accessor: 'fullName',
+        accessor: 'displayName',
         headerStyle: {
           textAlign: 'left'
         }
@@ -50,6 +50,24 @@ class Customers extends React.Component {
       }
     ]
 
+    const handleRowClick = (state, rowInfo, column, instance) => {
+      const history = this.props.history.history
+      return {
+        onClick: (e, handleOriginal) => {
+          history.push(`/customers/details/${rowInfo.original._id}`)
+
+          // IMPORTANT! React-Table uses onClick internally to trigger
+          // events like expanding SubComponents and pivots.
+          // By default a custom 'onClick' handler will override this functionality.
+          // If you want to fire the original onClick handler, call the
+          // 'handleOriginal' function.
+          if (handleOriginal) {
+            handleOriginal()
+          }
+        }
+      }
+    }
+
     const tableStyle = {
       marginTop: 10,
       lineHeight: 2
@@ -62,6 +80,7 @@ class Customers extends React.Component {
         <ReactTable
           data={this.props.customers}
           columns={columns}
+          getTrProps={handleRowClick}
           defaultPageSize={10}
           minRows={1}
           style={tableStyle}
@@ -69,17 +88,11 @@ class Customers extends React.Component {
       </div>
     )
   }
-
 }
 
 const mapStateToProps = (store) => {
   return {
-    customers: store.customers.map(c => {
-      return {
-        ...c,
-        fullName: c.company ? c.company : `${c.lastName}, ${c.firstNames}`
-      }
-    })
+    customers: store.customers
   }
 }
 

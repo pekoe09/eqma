@@ -16,8 +16,13 @@ const customerSchema = new mongoose.Schema({
   isInvoicable: Boolean
 })
 
-customerSchema.statics.displayName = (customer) => 
-  company ? company : `${lastName}, ${firstNames}`
+customerSchema.virtual('displayName').get(function () {
+    return this.company ? this.company : `${this.lastName}, ${this.firstNames}`
+  }
+)
+
+customerSchema.set('toObject', { virtuals: true })
+customerSchema.set('toJSON', { virtuals: true })
 
 const Customer = mongoose.model('Customer', customerSchema)
 

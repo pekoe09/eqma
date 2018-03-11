@@ -26,6 +26,35 @@ const rentalSchema = new mongoose.Schema({
   }
 })
 
+rentalSchema.statics.format = (rental) => {
+  let totalPrice
+  if (rental.end) {
+    let duration = getDuration(rental.start, rental.end, rental.timeUnit)
+    totalPrice = duration * rental.price
+  }
+  return {
+    ...rental,
+    totalPrice
+  }
+}
+
+getDuration = (start, end, period) => {
+  switch (rental.timeUnit) {
+    case 'year':
+      return 1
+    case 'month':
+      return 1
+    case 'week':
+      return 1
+    case 'day':
+      return 1
+    case 'hour':
+      return 1
+    case 'minute':
+      return 1
+  }
+}
+
 const Rental = mongoose.model('Rental', rentalSchema)
 
 module.exports = Rental

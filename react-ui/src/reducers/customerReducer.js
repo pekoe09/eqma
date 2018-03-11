@@ -6,6 +6,8 @@ const customerReducer = (store = [], action) => {
       return action.customers
     case 'CREATE_CUSTOMER':
       return store.concat(action.newCustomer)
+    case 'UPDATE_CUSTOMER':
+      return store.map(c => c._id !== action.updatedCustomer.id ? c : action.updatedCustomer)
     case 'REMOVE_CUSTOMER':
       return store.filter(c => c._id !== action.id)
     default:
@@ -19,6 +21,16 @@ export const createCustomer = (customer) => {
     dispatch({
       type: 'CREATE_CUSTOMER',
       newCustomer
+    })
+  }
+}
+
+export const updateCustomer = (customer) => {
+  return async (dispatch) => {
+    const updatedCustomer = await customerService.update(customer)
+    dispatch({
+      type: 'UPDATE_CUSTOMER',
+      updatedCustomer
     })
   }
 }
