@@ -12,7 +12,6 @@ const formStyle = {
 class Customer extends React.Component {
 
   render() {
-    console.log(this.props.customer)
     const customer = this.props.customer
     return (
       <div>

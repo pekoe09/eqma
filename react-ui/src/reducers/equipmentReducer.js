@@ -6,6 +6,8 @@ const equipmentReducer = (store = [], action) => {
       return action.equipments
     case 'CREATE_EQUIPMENT':
       return store.concat(action.newEquipment)
+    case 'UPDATE_EQUIPMENT':
+      return store.map(e => e._id !== action.updatedEquipment.id ? e : action.updatedEquipment)
     case 'REMOVE_EQUIPMENT':
       return store.filter(e => e._id !== action.id)
     default:
@@ -19,6 +21,16 @@ export const createEquipment = (equipment) => {
     dispatch({
       type: 'CREATE_EQUIPMENT',
       newEquipment
+    })
+  }
+}
+
+export const updateEquipment = (equipment) => {
+  return async (dispatch) => {
+    const updatedEquipment = await equipmentService.update(equipment)
+    dispatch({
+      type: 'UPDATE_EQUIPMENT',
+      updatedEquipment
     })
   }
 }

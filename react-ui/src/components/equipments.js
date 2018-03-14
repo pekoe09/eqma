@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import ReactTable from 'react-table'
 import ViewHeader from './structure/viewHeader'
 import LinkButton from './structure/linkButton'
@@ -59,6 +60,18 @@ class Equipments extends React.Component {
       }
     ]
 
+    const handleRowClick = (state, rowInfo, column, instance) => {
+      const history = this.props.history
+      return {
+        onClick: (e, handleOriginal) => {
+          history.push(`/equipment/details/${rowInfo.original._id}`)
+          if (handleOriginal) {
+            handleOriginal()
+          }
+        }
+      }
+    }
+
     const tableStyle = {
       marginTop: 10,
       lineHeight: 2
@@ -71,6 +84,7 @@ class Equipments extends React.Component {
         <ReactTable
           data={this.props.equipments}
           columns={columns}
+          getTrProps={handleRowClick}
           defaultPageSize={10}
           minRows={1}
           style={tableStyle}
@@ -78,7 +92,6 @@ class Equipments extends React.Component {
       </div>
     )
   }
-
 }
 
 const mapStateToProps = (store) => {
@@ -87,7 +100,7 @@ const mapStateToProps = (store) => {
   }
 }
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   { removeEquipment }
-)(Equipments)
+)(Equipments))

@@ -17,8 +17,10 @@ import Customer from './components/customer'
 import Customers from './components/customers'
 import CustomerCreate from './components/customerCreate'
 import CustomerEdit from './components/customerEdit'
+import Equipment from './components/equipment'
 import Equipments from './components/equipments'
 import EquipmentCreate from './components/equipmentCreate'
+import EquipmentEdit from './components/equipmentEdit'
 import Rentals from './components/rentals'
 import RentalCreate from './components/rentalCreate'
 
@@ -49,14 +51,14 @@ class App extends React.Component {
           <Customers history={history} />} />
         <Route exact path='/customers/create' render={({ history }) =>
           <CustomerCreate history={history} />} />
-        <Route exact path='/customers/details/:id' render={() =>
-          <Customer />} />
-        <Route exact path='/customers/edit/:id' render={() =>
-          <CustomerEdit />} />
+        <Route exact path='/customers/details/:id' render={() => <Customer />} />
+        <Route exact path='/customers/edit/:id' render={() => <CustomerEdit />} />
         <Route exact path='/equipment' render={() => <Equipments />} />
         <Route exact path='/equipment/create' render={({ history }) =>
           <EquipmentCreate history={history} />}
         />
+        <Route exact path='/equipment/edit/:id' render={() => <EquipmentEdit />} />
+        <Route exact path='/equipment/details/:id' render={() => <Equipment />} />
         <Route exact path='/rentals' render={() => <Rentals />} />
         <Route exact path='/rentals/create' render={({ history }) =>
           <RentalCreate history={history} />}
