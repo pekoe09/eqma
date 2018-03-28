@@ -1,6 +1,8 @@
 # eqma
 *Solution for managing an equipment rental business*
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/fe4572fc220c4121b998e0a790c0cf68)](https://www.codacy.com/app/juha-kangas/eqma?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pekoe09/eqma&amp;utm_campaign=Badge_Grade)
+
 Eqma provides a solution for managing an equipment rental business.
 It provides both a customer-facing as well as an admin interface.
 
