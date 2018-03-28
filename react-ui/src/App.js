@@ -9,8 +9,10 @@ import { initializeEquipment } from './reducers/equipmentReducer'
 import { initializeRentals } from './reducers/rentalReducer'
 import NavBar from './components/structure/navbar'
 
+import User from './components/user'
 import Users from './components/users'
 import UserCreate from './components/userCreate'
+import UserEdit from './components/userEdit'
 import AssetTransactions from './components/assetTransactions'
 import AssetTransactionsCreate from './components/assetTransactionCreate'
 import Customer from './components/customer'
@@ -38,11 +40,12 @@ class App extends React.Component {
     return (
       <Container>
         <NavBar />
-        <Route exact path='/users' render={({ history }) =>
-          <Users history={history} />} />
+        <Route exact path='/users' render={() => <Users />} />
         <Route exact path='/users/create' render={({ history }) =>
           <UserCreate history={history} />}
         />
+        <Route exact path='/users/edit/:id' render={() => <UserEdit />} />
+        <Route exact path='/users/details/:id' render={() => <User />} />
         <Route exact path='/assettransactions' render={() => <AssetTransactions />} />
         <Route exact path='/assettransactions/create' render={({ history }) =>
           <AssetTransactionsCreate history={history} />}

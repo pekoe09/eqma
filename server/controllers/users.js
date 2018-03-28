@@ -29,6 +29,7 @@ usersRouter.post('/', async (req, res) => {
       passwordHash,
       firstName: body.firstName,
       lastName: body.lastName,
+      email: body.email,
       status: body.status === undefined ? 'user' : body.status
     })
 

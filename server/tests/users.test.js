@@ -55,6 +55,7 @@ describe('POST /api/users', () => {
       password: '12345',
       firstName: 'New',
       lastName: 'User',
+      email: 'new.user@test.com',
       status: 'user'
     }
 
@@ -78,7 +79,8 @@ describe('POST /api/users', () => {
       username: 'newuser',
       password: '12345',
       firstName: 'New',
-      lastName: 'User'
+      lastName: 'User',
+      email: 'new.user@test.com'
     }
 
     const response = await api
@@ -95,7 +97,8 @@ describe('POST /api/users', () => {
     const newUser = {
       password: '12345',
       firstName: 'New',
-      lastName: 'User'
+      lastName: 'User',
+      email: 'new.user@test.com'
     }
 
     const usersBefore = await usersInDb()
@@ -115,7 +118,8 @@ describe('POST /api/users', () => {
       username: '',
       password: '12345',
       firstName: 'New',
-      lastName: 'User'
+      lastName: 'User',
+      email: 'new.user@test.com'
     }
 
     const usersBefore = await usersInDb()
@@ -135,7 +139,8 @@ describe('POST /api/users', () => {
       username: initialUsers[1].username,
       password: '12345',
       firstName: 'New',
-      lastName: 'User'
+      lastName: 'User',
+      email: 'new.user@test.com'
     }
 
     const usersBefore = await usersInDb()
@@ -154,7 +159,8 @@ describe('POST /api/users', () => {
     const newUser = {
       username: 'newuser',
       firstName: 'New',
-      lastName: 'User'
+      lastName: 'User',
+      email: 'new.user@test.com'
     }
 
     const usersBefore = await usersInDb()
@@ -174,7 +180,8 @@ describe('POST /api/users', () => {
       username: 'newuser',
       password: '',
       firstName: 'New',
-      lastName: 'User'
+      lastName: 'User',
+      email: 'new.user@test.com'
     }
 
     const usersBefore = await usersInDb()
@@ -206,6 +213,7 @@ describe('PUT /api/users/:id', () => {
     target.firstName = 'New first'
     target.lastName = 'New last'
     target.status = 'newstatus'
+    target.email = 'updated.user@test.com'
 
     await api
       .put(`/api/users/${target._id}`)
@@ -244,7 +252,8 @@ describe('PUT /api/users/:id', () => {
     const target = {
       firstName: 'New first',
       lastName: 'New last',
-      status: 'newstatus'
+      status: 'newstatus',
+      email: 'new.user@test.com'
     }
 
     await api
@@ -266,7 +275,8 @@ describe('PUT /api/users/:id', () => {
       username: '',
       firstName: 'New first',
       lastName: 'New last',
-      status: 'newstatus'
+      status: 'newstatus',
+      email: 'new.user@test.com'
     }
 
     await api
@@ -288,7 +298,8 @@ describe('PUT /api/users/:id', () => {
       username: usersBefore[0].username,
       firstName: 'New first',
       lastName: 'New last',
-      status: 'newstatus'
+      status: 'newstatus',
+      email: 'new.user@test.com'
     }
 
     await api

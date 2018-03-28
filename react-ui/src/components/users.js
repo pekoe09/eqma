@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import ReactTable from 'react-table'
 import ViewHeader from './structure/viewHeader'
 import LinkButton from './structure/linkButton'
@@ -37,6 +38,13 @@ class Users extends React.Component {
         }
       },
       {
+        Header: 'Email',
+        accessor: 'email',
+        headerStyle: {
+          textAlign: 'left'
+        }
+      },
+      {
         Header: 'Status',
         accessor: 'status',
         headerStyle: {
@@ -49,9 +57,25 @@ class Users extends React.Component {
         Cell: (row) => (
           <Button negative basic className='mini' onClick={() =>
             this.handleRemove(row.original._id)}>Delete</Button>
-        )
+        ),
+        style: {
+          textAlign: 'center'
+        },
+        maxWidth: 100
       }
     ]
+
+    const handleRowClick = (state, rowInfo, column, instance) => {
+      const history = this.props.history
+      return {
+        onClick: (e, handleOriginal) => {
+          history.push(`/users/details/${rowInfo.original._id}`)
+          if (handleOriginal) {
+            handleOriginal()
+          }
+        }
+      }
+    }
 
     const tableStyle = {
       marginTop: 10,
@@ -65,6 +89,7 @@ class Users extends React.Component {
         <ReactTable
           data={this.props.users}
           columns={columns}
+          getTrProps={handleRowClick}
           defaultPageSize={10}
           minRows={1}
           style={tableStyle}
@@ -80,7 +105,7 @@ const mapStateToProps = (store) => {
   }
 }
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   { removeUser }
-)(Users)
+)(Users))

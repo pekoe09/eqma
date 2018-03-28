@@ -6,6 +6,7 @@ const initialUsers = [
     firstName: 'Test',
     lastName: 'User1',
     passwordHash: '$2y$10$LDYjZts8u.zdv0ZQRvaJLeP3umuy7XFkij8hDJ6E7NmkZmNVXtCqm',
+    email: 'test1@test.com',
     status: 'user'
   },
   {
@@ -13,6 +14,7 @@ const initialUsers = [
     firstName: 'Test',
     lastName: 'User2',
     passwordHash: '$2y$10$PUusFleLGs1bnROiXLG9zum9I/01tcSEJWkWRDYwSUVBWRS4hLjIC',
+    email: 'test2@test.com',
     status: 'user'
   },
   {
@@ -20,6 +22,7 @@ const initialUsers = [
     firstName: 'Test',
     lastName: 'Admin',
     passwordHash: '$2y$10$OH9O/6ySXZCCb3fGsOgAcOaRy740Uzq35gqXLdXd2ooOo.lpp249S',
+    email: 'test3@test.com',
     status: 'admin'
   }
 ]
@@ -35,6 +38,7 @@ const nonExistingId = async () => {
     firstName: 'nonuser',
     lastName: 'nonuser',
     passwordHash: '$2y$10$PUusFleLGs1bnROiXLG9zum9I/01tcSEJWkWRDYwSUVBWRS4hLjIC',
+    email: 'nonuser@not.com',
     status: 'user'
   })
   const savedUser = await user.save()
