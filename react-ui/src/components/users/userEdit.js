@@ -2,9 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { Form, Input, Select, Button } from 'semantic-ui-react'
-import ViewHeader from './structure/viewHeader'
-import LinkButton from './structure/linkButton'
-import { updatedUser } from '../reducers/userReducer'
+import ViewHeader from '../structure/viewHeader'
+import LinkButton from '../structure/linkButton'
+import { updatedUser } from '../../reducers/userReducer'
 
 const statusOptions = [
   { key: 'user', text: 'User', value: 'user' },

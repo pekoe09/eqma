@@ -2,9 +2,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { Form, Input, Select, Button } from 'semantic-ui-react'
-import ViewHeader from './structure/viewHeader'
-import LinkButton from './structure/linkButton'
-import { createEquipment } from '../reducers/equipmentReducer'
+import ViewHeader from '../structure/viewHeader'
+import LinkButton from '../structure/linkButton'
+import { updateEquipment } from '../../reducers/equipmentReducer'
 
 const timeUnitOptions = [
   { key: 'day', text: 'Day', value: 'day' },
@@ -19,42 +19,37 @@ const formStyle = {
   marginTop: 10
 }
 
-class EquipmentCreate extends React.Component {
+class EquipmentEdit extends React.Component {
   state = {
-    name: '',
-    make: '',
-    model: '',
-    description: '',
-    price: '',
-    timeUnit: ''
+    name: this.props.initialEquipment.name,
+    make: this.props.initialEquipment.make,
+    model: this.props.initialEquipment.model,
+    description: this.props.initialEquipment.description,
+    price: this.props.initialEquipment.price,
+    timeUnit: this.props.initialEquipment.timeUnit
   }
 
   handleChange = (event, { value }) => {
-    if (event.target.name) {
-      this.setState({ [event.target.name]: value })
-    } else {
-      this.setState({ timeUnit: value })
-    }
+    this.setState({ [event.target.name]: value })
   }
 
   handleSubmit = async (event) => {
     event.preventDefault()
-    const equipment = {
-      name: this.state.name,
-      make: this.state.make,
-      model: this.state.model,
-      description: this.state.description,
-      price: this.state.price ? Number(this.state.price) : null,
-      timeUnit: this.state.timeUnit
-    }
-    this.props.createEquipment(equipment)
+    let equipment = this.props.initialEquipment
+    equipment.name = this.state.name
+    equipment.make = this.state.make
+    equipment.model = this.state.model
+    equipment.description = this.state.description
+    equipment.price = this.state.price
+    equipment.timeUnit = this.state.timeUnit
+    await this.props.updateEquipment(equipment)
     this.props.history.push('/equipment')
   }
 
   render() {
     return (
       <div>
-        <ViewHeader text={'Add a piece of equipment'} />
+        <ViewHeader text={`Edit equipment ${this.props.initialEquipment.name} (${this.props.initialEquipment.makeAndModel})`} />
         <LinkButton text={'Cancel'} to={'/equipment'} type={'default'} />
         <Form style={formStyle} onSubmit={this.handleSubmit}>
           <Form.Field required control={Input} width={6} label='Name' name='name'
@@ -80,7 +75,14 @@ class EquipmentCreate extends React.Component {
   }
 }
 
+const mapStateToProps = (store, ownProps) => {
+  const initialEquipment = store.equipments.find(e => e._id === ownProps.match.params.id)
+  return {
+    initialEquipment
+  }
+}
+
 export default withRouter(connect(
-  null,
-  { createEquipment }
-)(EquipmentCreate))
+  mapStateToProps,
+  { updateEquipment }
+)(EquipmentEdit))

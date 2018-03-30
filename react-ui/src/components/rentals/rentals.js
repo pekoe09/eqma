@@ -2,8 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import ReactTable from 'react-table'
 import moment from 'moment'
-import ViewHeader from './structure/viewHeader'
-import LinkButton from './structure/linkButton'
+import ViewHeader from '../structure/viewHeader'
+import LinkButton from '../structure/linkButton'
 import { Button } from 'semantic-ui-react'
 
 class Rentals extends React.Component {
@@ -53,7 +53,7 @@ class Rentals extends React.Component {
         maxWidth: 150
       },
       {
-        Header: 'Total',
+        Header: 'Rent total',
         accessor: 'totalPrice',
         Cell: row => Number(Math.round(row.original.totalPrice + 'e2') + 'e-2'),
         style: {

@@ -1,8 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import ViewHeader from './structure/viewHeader'
-import LinkButton from './structure/linkButton'
+import ViewHeader from '../structure/viewHeader'
+import LinkButton from '../structure/linkButton'
 import { Form } from 'semantic-ui-react'
 
 const formStyle = {

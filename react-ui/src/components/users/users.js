@@ -2,37 +2,51 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import ReactTable from 'react-table'
-import ViewHeader from './structure/viewHeader'
-import LinkButton from './structure/linkButton'
+import ViewHeader from '../structure/viewHeader'
+import LinkButton from '../structure/linkButton'
 import { Button } from 'semantic-ui-react'
-import { removeCustomer } from '../reducers/customerReducer'
+import { removeUser } from '../../reducers/userReducer'
 
-class Customers extends React.Component {
+class Users extends React.Component {
 
   handleRemove = (id) => {
-    this.props.removeCustomer(id)
+    this.props.removeUser(id)
   }
 
   render() {
 
     const columns = [
       {
-        Header: 'Name',
-        accessor: 'displayName',
+        Header: 'Username',
+        accessor: 'username',
         headerStyle: {
           textAlign: 'left'
         }
       },
       {
-        Header: 'City',
-        accessor: 'billingAddress.city',
+        Header: 'First name',
+        accessor: 'firstName',
         headerStyle: {
           textAlign: 'left'
         }
       },
       {
-        Header: 'City',
-        accessor: 'billingAddress.city',
+        Header: 'Last name',
+        accessor: 'lastName',
+        headerStyle: {
+          textAlign: 'left'
+        }
+      },
+      {
+        Header: 'Email',
+        accessor: 'email',
+        headerStyle: {
+          textAlign: 'left'
+        }
+      },
+      {
+        Header: 'Status',
+        accessor: 'status',
         headerStyle: {
           textAlign: 'left'
         }
@@ -52,16 +66,10 @@ class Customers extends React.Component {
     ]
 
     const handleRowClick = (state, rowInfo, column, instance) => {
-      const history = this.props.history.history
+      const history = this.props.history
       return {
         onClick: (e, handleOriginal) => {
-          history.push(`/customers/details/${rowInfo.original._id}`)
-
-          // IMPORTANT! React-Table uses onClick internally to trigger
-          // events like expanding SubComponents and pivots.
-          // By default a custom 'onClick' handler will override this functionality.
-          // If you want to fire the original onClick handler, call the
-          // 'handleOriginal' function.
+          history.push(`/users/details/${rowInfo.original._id}`)
           if (handleOriginal) {
             handleOriginal()
           }
@@ -76,10 +84,10 @@ class Customers extends React.Component {
 
     return (
       <div>
-        <ViewHeader text={'Customers'} />
-        <LinkButton text={'Add a customer'} to={'/customers/create'} />
+        <ViewHeader text={'User list'} />
+        <LinkButton text={'Add a user'} to={'/users/create'} />
         <ReactTable
-          data={this.props.customers}
+          data={this.props.users}
           columns={columns}
           getTrProps={handleRowClick}
           defaultPageSize={10}
@@ -93,11 +101,11 @@ class Customers extends React.Component {
 
 const mapStateToProps = (store) => {
   return {
-    customers: store.customers
+    users: store.users
   }
 }
 
 export default withRouter(connect(
   mapStateToProps,
-  { removeCustomer }
-)(Customers))
+  { removeUser }
+)(Users))

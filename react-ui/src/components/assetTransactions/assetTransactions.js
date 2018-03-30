@@ -2,8 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import ReactTable from 'react-table'
 import moment from 'moment'
-import ViewHeader from './structure/viewHeader'
-import LinkButton from './structure/linkButton'
+import ViewHeader from '../structure/viewHeader'
+import LinkButton from '../structure/linkButton'
 
 class AssetTransactions extends React.Component {
 

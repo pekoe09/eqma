@@ -5,9 +5,9 @@ import { Form, Input, Label, Select, Button } from 'semantic-ui-react'
 import DatePicker from 'react-datepicker'
 import moment from 'moment'
 import 'react-datepicker/dist/react-datepicker.css'
-import ViewHeader from './structure/viewHeader'
-import LinkButton from './structure/linkButton'
-import { createAssetTransaction } from '../reducers/assetTransactionReducer'
+import ViewHeader from '../structure/viewHeader'
+import LinkButton from '../structure/linkButton'
+import { createAssetTransaction } from '../../reducers/assetTransactionReducer'
 
 const typeOptions = [
   { key: 'Purchase', text: 'Purchase', value: 'Purchase' },

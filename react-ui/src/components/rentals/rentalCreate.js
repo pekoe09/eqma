@@ -5,9 +5,9 @@ import DatePicker from 'react-datepicker'
 import moment from 'moment'
 import 'react-datepicker/dist/react-datepicker.css'
 import { Form, Input, Select, Button } from 'semantic-ui-react'
-import ViewHeader from './structure/viewHeader'
-import LinkButton from './structure/linkButton'
-import { createRental } from '../reducers/rentalReducer'
+import ViewHeader from '../structure/viewHeader'
+import LinkButton from '../structure/linkButton'
+import { createRental } from '../../reducers/rentalReducer'
 
 const timeUnitOptions = [
   { key: 'day', text: 'Day', value: 'day' },

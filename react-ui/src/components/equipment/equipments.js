@@ -2,54 +2,49 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import ReactTable from 'react-table'
-import ViewHeader from './structure/viewHeader'
-import LinkButton from './structure/linkButton'
+import ViewHeader from '../structure/viewHeader'
+import LinkButton from '../structure/linkButton'
 import { Button } from 'semantic-ui-react'
-import { removeUser } from '../reducers/userReducer'
+import { removeEquipment } from '../../reducers/equipmentReducer'
 
-class Users extends React.Component {
+class Equipments extends React.Component {
 
   handleRemove = (id) => {
-    this.props.removeUser(id)
+    this.props.removeEquipment(id)
   }
 
   render() {
 
     const columns = [
       {
-        Header: 'Username',
-        accessor: 'username',
+        Header: 'Name',
+        accessor: 'name',
         headerStyle: {
           textAlign: 'left'
         }
       },
       {
-        Header: 'First name',
-        accessor: 'firstName',
+        Header: 'Make and model',
+        accessor: 'makeAndModel',
         headerStyle: {
           textAlign: 'left'
         }
       },
       {
-        Header: 'Last name',
-        accessor: 'lastName',
-        headerStyle: {
-          textAlign: 'left'
-        }
+        Header: 'Rate',
+        accessor: 'price',
+        style: {
+          textAlign: 'center'
+        },
+        maxWidth: 100
       },
       {
-        Header: 'Email',
-        accessor: 'email',
-        headerStyle: {
-          textAlign: 'left'
-        }
-      },
-      {
-        Header: 'Status',
-        accessor: 'status',
-        headerStyle: {
-          textAlign: 'left'
-        }
+        Header: 'Rented by',
+        accessor: 'timeUnit',
+        style: {
+          textAlign: 'center'
+        },
+        maxWidth: 100
       },
       {
         Header: '',
@@ -69,7 +64,7 @@ class Users extends React.Component {
       const history = this.props.history
       return {
         onClick: (e, handleOriginal) => {
-          history.push(`/users/details/${rowInfo.original._id}`)
+          history.push(`/equipment/details/${rowInfo.original._id}`)
           if (handleOriginal) {
             handleOriginal()
           }
@@ -84,10 +79,10 @@ class Users extends React.Component {
 
     return (
       <div>
-        <ViewHeader text={'User list'} />
-        <LinkButton text={'Add a user'} to={'/users/create'} />
+        <ViewHeader text={'Equipment list'} />
+        <LinkButton text={'Add a piece of equipment'} to={'/equipment/create'} />
         <ReactTable
-          data={this.props.users}
+          data={this.props.equipments}
           columns={columns}
           getTrProps={handleRowClick}
           defaultPageSize={10}
@@ -101,11 +96,11 @@ class Users extends React.Component {
 
 const mapStateToProps = (store) => {
   return {
-    users: store.users
+    equipments: store.equipments
   }
 }
 
 export default withRouter(connect(
   mapStateToProps,
-  { removeUser }
-)(Users))
+  { removeEquipment }
+)(Equipments))
