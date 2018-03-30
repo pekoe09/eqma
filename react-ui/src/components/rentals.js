@@ -12,7 +12,7 @@ class Rentals extends React.Component {
     const columns = [
       {
         Header: 'Customer',
-        accessor: 'customer.name'
+        accessor: 'customer.displayName'
       },
       {
         Header: 'Equipment',

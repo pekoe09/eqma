@@ -41,30 +41,25 @@ class App extends React.Component {
       <Container>
         <NavBar />
         <Route exact path='/users' render={() => <Users />} />
-        <Route exact path='/users/create' render={({ history }) =>
-          <UserCreate history={history} />}
-        />
+        <Route exact path='/users/create' render={() => <UserCreate />} />
         <Route exact path='/users/edit/:id' render={() => <UserEdit />} />
         <Route exact path='/users/details/:id' render={() => <User />} />
+
         <Route exact path='/assettransactions' render={() => <AssetTransactions />} />
-        <Route exact path='/assettransactions/create' render={({ history }) =>
-          <AssetTransactionsCreate history={history} />}
-        />
-        <Route exact path='/customers' render={(history) =>
-          <Customers history={history} />} />
-        <Route exact path='/customers/create' render={({ history }) =>
-          <CustomerCreate history={history} />} />
+        <Route exact path='/assettransactions/create' render={() => <AssetTransactionsCreate />} />
+
+        <Route exact path='/customers' render={() => <Customers />} />
+        <Route exact path='/customers/create' render={() => <CustomerCreate />} />
         <Route exact path='/customers/details/:id' render={() => <Customer />} />
         <Route exact path='/customers/edit/:id' render={() => <CustomerEdit />} />
+
         <Route exact path='/equipment' render={() => <Equipments />} />
-        <Route exact path='/equipment/create' render={({ history }) =>
-          <EquipmentCreate history={history} />}
-        />
+        <Route exact path='/equipment/create' render={() => <EquipmentCreate />} />
         <Route exact path='/equipment/edit/:id' render={() => <EquipmentEdit />} />
         <Route exact path='/equipment/details/:id' render={() => <Equipment />} />
+
         <Route exact path='/rentals' render={() => <Rentals />} />
-        <Route exact path='/rentals/create' render={({ history }) =>
-          <RentalCreate history={history} />}
+        <Route exact path='/rentals/create' render={() => <RentalCreate />}
         />
       </Container>
     )

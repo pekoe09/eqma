@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import ReactTable from 'react-table'
 import ViewHeader from './structure/viewHeader'
 import LinkButton from './structure/linkButton'
@@ -96,7 +97,7 @@ const mapStateToProps = (store) => {
   }
 }
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   { removeCustomer }
-)(Customers)
+)(Customers))

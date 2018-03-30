@@ -27,10 +27,11 @@ const rentalSchema = new mongoose.Schema({
 })
 
 rentalSchema.statics.format = (rental) => {
-  let totalPrice
+  console.log('Formatting ', rental)
+  let totalPrice = 0
   if (rental.end) {
-    let duration = getDuration(rental.start, rental.end, rental.timeUnit)
-    totalPrice = duration * rental.price
+     let duration = getDuration(rental.start, rental.end, rental.timeUnit)
+     totalPrice = duration * rental.price
   }
   return {
     ...rental,
@@ -38,8 +39,8 @@ rentalSchema.statics.format = (rental) => {
   }
 }
 
-getDuration = (start, end, period) => {
-  switch (rental.timeUnit) {
+getDuration = (start, end, timeUnit) => {
+  switch (timeUnit) {
     case 'year':
       return 1
     case 'month':
