@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import ReactTable from 'react-table'
+import moment from 'moment'
 import ViewHeader from './structure/viewHeader'
 import LinkButton from './structure/linkButton'
 import { Button } from 'semantic-ui-react'
@@ -12,27 +13,53 @@ class Rentals extends React.Component {
     const columns = [
       {
         Header: 'Customer',
-        accessor: 'customer.displayName'
+        accessor: 'customer.displayName',
+        headerStyle: {
+          textAlign: 'left'
+        }
       },
       {
         Header: 'Equipment',
-        accessor: 'equipment.makeAndModel'
+        accessor: 'equipment.makeAndModel',
+        headerStyle: {
+          textAlign: 'left'
+        }
       },
       {
         Header: 'Start',
-        accessor: 'start'
+        accessor: 'start',
+        Cell: row => (moment(row.original.start).format('MM/DD/YYYY HH:mm')),
+        style: {
+          textAlign: 'center'
+        },
+        maxWidth: 150
       },
       {
         Header: 'End',
-        accessor: 'end'
+        accessor: 'end',
+        Cell: row => (moment(row.original.end).format('MM/DD/YYYY HH:mm')),
+        style: {
+          textAlign: 'center'
+        },
+        maxWidth: 150
       },
       {
         Header: 'Price',
-        accessor: 'price'
+        accessor: 'price',
+        Cell: row => Number(row.original.price).toFixed(2) + ' / ' + row.original.timeUnit,
+        style: {
+          textAlign: 'center'
+        },
+        maxWidth: 150
       },
       {
         Header: 'Total',
-        accessor: 'totalPrice'
+        accessor: 'totalPrice',
+        Cell: row => Number(Math.round(row.original.totalPrice + 'e2') + 'e-2'),
+        style: {
+          textAlign: 'center'
+        },
+        maxWidth: 150
       }
     ]
 
