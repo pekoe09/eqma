@@ -1,6 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { Dropdown, Menu } from 'semantic-ui-react'
+import Login from '../login/login'
 
 const menuLogoStyle = {
   marginLeft: 5,
@@ -60,8 +61,8 @@ const NavBar = () => (
       <Menu.Item style={menuDropdownStyle}>
         Signup
       </Menu.Item>
-      <Menu.Item style={menuDropdownStyle}>
-        Login
+      <Menu.Item>
+        <Login/>
       </Menu.Item>
     </Menu.Menu>
   </Menu>
