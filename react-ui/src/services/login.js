@@ -11,4 +11,4 @@ const logout = async () => {
   return response.data
 }
 
-export { login, logout }
+export default { login, logout }

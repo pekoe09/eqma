@@ -7,6 +7,7 @@ import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2'
 import assetTransactionReducer from './reducers/assetTransactionReducer'
 import customerReducer from './reducers/customerReducer'
 import equipmentReducer from './reducers/equipmentReducer'
+import loginReducer from './reducers/loginReducer'
 import rentalReducer from './reducers/rentalReducer'
 import userReducer from './reducers/userReducer'
 
@@ -14,6 +15,7 @@ const reducer = combineReducers({
   assetTransactions: assetTransactionReducer,
   customers: customerReducer,
   equipments: equipmentReducer,
+  login: loginReducer,
   rentals: rentalReducer,
   users: userReducer
 })
