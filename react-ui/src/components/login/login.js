@@ -9,6 +9,15 @@ import { initializeCustomers } from '../../reducers/customerReducer'
 import { initializeEquipment } from '../../reducers/equipmentReducer'
 import { initializeRentals } from '../../reducers/rentalReducer'
 
+const loginInputStyle = {
+  maxWidth: 100,
+  fontWeight: 400
+}
+
+const loginLabelStyle = {
+  fontWeight: 400
+}
+
 class Login extends React.Component {
   state = {
     username: '',
@@ -21,15 +30,16 @@ class Login extends React.Component {
 
   handleSubmit = async (event) => {
     event.preventDefault()
-    console.log('Logging in with ', this.state.username, ' ', this.state.password)
-    await this.props.login({
+    const credentials = {
       username: this.state.username,
       password: this.state.password
-    })
+    }
     this.setState({
       username: '',
       password: ''
     })
+    await this.props.login(credentials)
+    
     this.props.initializeUsers()
     this.props.initializeEquipment()
     this.props.initializeAssetTransactions()
@@ -42,9 +52,9 @@ class Login extends React.Component {
       <div>
         <Form onSubmit={this.handleSubmit}>
           <Form.Group inline>
-            <Form.Input inline label='username' name='username' size='mini'
+            <Form.Input inline label='username' name='username' size='mini' style={loginInputStyle}
               value={this.state.username} onChange={this.handleChange} />
-            <Form.Input inline label='password' name='password' type='password' size='mini'
+            <Form.Input inline label='password' name='password' type='password' size='mini' style={loginInputStyle}
               value={this.state.password} onChange={this.handleChange} />
             <Form.Field>
               <Button primary size='mini'>login</Button>

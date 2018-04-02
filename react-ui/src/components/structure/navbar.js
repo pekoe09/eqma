@@ -14,10 +14,22 @@ const menuLogoStyle = {
 const menuStyle = {
   marginTop: 5
 }
+
 const menuDropdownStyle = {
   height: 40,
   display: 'inline-block',
   alignSelf: 'flex-end'
+}
+
+const logoutBtnStyle = {
+  fontSize: '0.8em'
+}
+
+const loginFormStyle = {
+  height: 40,
+  display: 'inline-block',
+  alignSelf: 'flex-end',
+  marginBottom: 7
 }
 
 const EquipmentDropdownStaff = () => (
@@ -87,22 +99,36 @@ class NavBar extends React.Component {
         <Menu.Header style={menuLogoStyle}>
           <img src='/img/eqma-logo-80_85.png' />
         </Menu.Header>
+
         {!this.props.loggedIn && <EquipmentDropdownOther />}
         {this.props.loggedIn && this.props.isStaff && <EquipmentDropdownStaff />}
         {this.props.loggedIn && this.props.isStaff && <CustomerDropdown />}
         {this.props.loggedIn && this.props.isStaff && <ReportDropdown />}
         {this.props.loggedIn && this.props.isAdmin && <BasicDataDropdown />}
+
         <Menu.Menu position='right'>
-          <Menu.Item style={menuDropdownStyle}>
-            Signup
-      </Menu.Item>
-          <Menu.Item>
-            <Login />
-          </Menu.Item>
-          <Menu.Item>
-            <Button onClick={this.handleLogout}>logout</Button>
-          </Menu.Item>
+          {!this.props.loggedIn &&
+            <Menu.Item style={menuDropdownStyle}>
+              Signup
+            </Menu.Item>
+          }
+          {!this.props.loggedIn &&
+            <Menu.Item style={loginFormStyle}>
+              <Login />
+            </Menu.Item>
+          }
+          {this.props.loggedIn &&
+            <Menu.Item style={menuDropdownStyle}>
+              {`Hello, ${this.props.user.firstName} ${this.props.user.lastName}`}
+            </Menu.Item>
+          }
+          {this.props.loggedIn &&
+            <Menu.Item style={menuDropdownStyle}>
+              <Button style={logoutBtnStyle} primary onClick={this.handleLogout}>logout</Button>
+            </Menu.Item>
+          }
         </Menu.Menu>
+
       </Menu>
     )
   }
