@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const usersRouter = require('express').Router()
 const User = require('../models/user')
@@ -39,6 +40,39 @@ usersRouter.post('/', async (req, res) => {
     console.log(exception)
     res.status(500).json({ error: 'encountered an error while trying to save a user' })
   }
+})
+
+usersRouter.post('/login', async (req, res) => {
+  const body = req.body
+  const user = await User
+    .findOne({ username: body.username})
+    .select({ _id: 1, username: 1, passwordHash: 1, lastName: 1, firstName: 1, email: 1, status: 1 })
+  const passwordCorrect = user === null 
+    ? false 
+    : await bcrypt.compare(body.password, user.passwordHash)  
+  if(!(user && passwordCorrect)) {
+    return res.status(401).send({error: 'invalid username or password'})
+  }
+
+  const userForToken = {
+    username: user.username,
+    id: user._id
+  }
+  const token = jwt.sign(userForToken, process.env.SECRET)
+  res.status(200).send({
+    username: user.username,
+    lastName: user.lastName,
+    firstName: user.firstName,
+    email: user.email,
+    status: user.status,
+    token
+  })
+})
+
+usersRouter.post('/logout', async (req, res) => {
+  const body = req.body
+
+  res.status(204).end()
 })
 
 usersRouter.put('/:id', async (req, res) => {
