@@ -8,7 +8,7 @@ import { store, persistor } from './store'
 
 const render = () => {
   ReactDOM.render(
-    < Provider store={store}>
+    <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <Router>
           <App />
