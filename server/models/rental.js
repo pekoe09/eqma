@@ -31,7 +31,6 @@ rentalSchema.statics.format = (rental) => {
   let totalPrice = 0
   if (rental.end) {
     let duration = getDuration(rental.start, rental.end, rental.timeUnit)
-    console.log('Duration for ', rental.equipment, ' is ', duration)
     totalPrice = duration * rental.price
   }
   return {

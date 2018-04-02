@@ -1,7 +1,10 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+const moment = require('moment')
 const usersRouter = require('express').Router()
+require('./controllerHelpers')
 const User = require('../models/user')
+const Session = require('../models/session')
 
 usersRouter.get('/', async (req, res) => {
   let users = await User.find({})
@@ -45,20 +48,31 @@ usersRouter.post('/', async (req, res) => {
 usersRouter.post('/login', async (req, res) => {
   const body = req.body
   const user = await User
-    .findOne({ username: body.username})
+    .findOne({ username: body.username })
     .select({ _id: 1, username: 1, passwordHash: 1, lastName: 1, firstName: 1, email: 1, status: 1 })
-  const passwordCorrect = user === null 
-    ? false 
-    : await bcrypt.compare(body.password, user.passwordHash)  
-  if(!(user && passwordCorrect)) {
-    return res.status(401).send({error: 'invalid username or password'})
+  const passwordCorrect = user === null
+    ? false
+    : await bcrypt.compare(body.password, user.passwordHash)
+  if (!(user && passwordCorrect)) {
+    return res.status(401).send({ error: 'invalid username or password' })
   }
 
-  const userForToken = {
+  const tokenPayload = {
     username: user.username,
-    id: user._id
+    userId: user._id,
+    userStatus: user.status,
+    exp: moment().add(1, 'h') / 1000
   }
-  const token = jwt.sign(userForToken, process.env.SECRET)
+  const token = jwt.sign(tokenPayload, process.env.SECRET)
+
+  const session = new Session({
+    user,
+    start: moment(),
+    issuedToken: token,
+    expiry: tokenPayload.exp * 1000
+  })
+  const savedSession = await session.save()
+
   res.status(200).send({
     username: user.username,
     lastName: user.lastName,
@@ -70,9 +84,27 @@ usersRouter.post('/login', async (req, res) => {
 })
 
 usersRouter.post('/logout', async (req, res) => {
-  const body = req.body
+  const token = getTokenFrom(req)
+  try {
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if (!token || !decodedToken.id) {
+      return res.status(401).json({ error: 'token missing or invalid' })
+    }
+    const session = Session.findOne({ issuedToken: req.token })
+    if (!session) {
+      return res.status(401).json({ error: 'session to logout from is not found' })
+    }
+    session.end = moment()
+    await Session.findByIdAndUpdate(session._id, session)
 
-  res.status(204).end()
+    res.status(204).end()
+  } catch (exception) {
+    if (exception.name === 'JsonWebTokenError') {
+      res.status(401).json({ error: exception.message })
+    } else {
+      res.status(500).json({ error: 'unknown error' })
+    }
+  }
 })
 
 usersRouter.put('/:id', async (req, res) => {
