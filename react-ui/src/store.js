@@ -11,7 +11,7 @@ import loginReducer from './reducers/loginReducer'
 import rentalReducer from './reducers/rentalReducer'
 import userReducer from './reducers/userReducer'
 
-const reducer = combineReducers({
+const appReducer = combineReducers({
   assetTransactions: assetTransactionReducer,
   customers: customerReducer,
   equipments: equipmentReducer,
@@ -20,13 +20,24 @@ const reducer = combineReducers({
   users: userReducer
 })
 
-const persistConfig = {
+export const rootReducer = (state, action) => {
+  if(action.type === 'USER_LOGOUT') {
+    Object.keys(state).forEach(key => {
+      storage.removeItem(`persist:${key}`)
+    })
+    state = undefined
+  }
+
+  return appReducer(state, action)
+}
+
+export const persistConfig = {
   key: 'root',
   storage,
   stateReconciler: autoMergeLevel2
 }
 
-const persistedReducer = persistReducer(persistConfig, reducer)
+const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = createStore(
   persistedReducer,

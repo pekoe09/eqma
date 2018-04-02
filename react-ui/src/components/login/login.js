@@ -3,6 +3,11 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { Form, Input, Button } from 'semantic-ui-react'
 import { login } from '../../reducers/loginReducer'
+import { initializeUsers } from '../../reducers/userReducer'
+import { initializeAssetTransactions } from '../../reducers/assetTransactionReducer'
+import { initializeCustomers } from '../../reducers/customerReducer'
+import { initializeEquipment } from '../../reducers/equipmentReducer'
+import { initializeRentals } from '../../reducers/rentalReducer'
 
 class Login extends React.Component {
   state = {
@@ -17,7 +22,7 @@ class Login extends React.Component {
   handleSubmit = async (event) => {
     event.preventDefault()
     console.log('Logging in with ', this.state.username, ' ', this.state.password)
-    this.props.login({
+    await this.props.login({
       username: this.state.username,
       password: this.state.password
     })
@@ -25,6 +30,11 @@ class Login extends React.Component {
       username: '',
       password: ''
     })
+    this.props.initializeUsers()
+    this.props.initializeEquipment()
+    this.props.initializeAssetTransactions()
+    this.props.initializeCustomers()
+    this.props.initializeRentals()
   }
 
   render() {
@@ -48,5 +58,12 @@ class Login extends React.Component {
 
 export default withRouter(connect(
   null,
-  { login }
+  { 
+    login,
+    initializeAssetTransactions,
+    initializeCustomers,
+    initializeEquipment,
+    initializeRentals,
+    initializeUsers
+  }
 )(Login))

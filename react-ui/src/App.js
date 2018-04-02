@@ -2,11 +2,6 @@ import React from 'react'
 import { Container } from 'semantic-ui-react'
 import { Route, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { initializeUsers } from './reducers/userReducer'
-import { initializeAssetTransactions } from './reducers/assetTransactionReducer'
-import { initializeCustomers } from './reducers/customerReducer'
-import { initializeEquipment } from './reducers/equipmentReducer'
-import { initializeRentals } from './reducers/rentalReducer'
 import NavBar from './components/structure/navbar'
 
 import User from './components/users/user'
@@ -27,14 +22,6 @@ import Rentals from './components/rentals/rentals'
 import RentalCreate from './components/rentals/rentalCreate'
 
 class App extends React.Component {
-
-  componentDidMount = async () => {
-    this.props.initializeUsers()
-    this.props.initializeEquipment()
-    this.props.initializeAssetTransactions()
-    this.props.initializeCustomers()
-    this.props.initializeRentals()
-  }
 
   render() {
     return (
@@ -67,12 +54,5 @@ class App extends React.Component {
 }
 
 export default withRouter(connect(
-  null,
-  {
-    initializeUsers,
-    initializeEquipment,
-    initializeAssetTransactions,
-    initializeCustomers,
-    initializeRentals
-  }
+  null
 )(App))

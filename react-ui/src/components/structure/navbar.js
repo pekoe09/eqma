@@ -110,15 +110,15 @@ class NavBar extends React.Component {
 
 const mapStateToProps = (store, ownProps) => {
   const loginState = store.login
-  const isStaff = loginState.loggedIn && (loginState.user.status === 'admin' || loginState.user.status === 'user')
-  const isAdmin = loginState.loggedIn && loginState.user.status === 'admin'
-  const isCustomer = loginState.loggedIn && !isStaff
+  const isStaff = loginState && loginState.loggedIn && (loginState.user.status === 'admin' || loginState.user.status === 'user')
+  const isAdmin = loginState && loginState.loggedIn && loginState.user.status === 'admin'
+  const isCustomer = loginState && loginState.loggedIn && !isStaff
   return {
-    user: loginState.user,
+    user: loginState ? loginState.user : null,
     isAdmin,
     isStaff,
     isCustomer,
-    loggedIn: loginState.loggedIn
+    loggedIn: loginState ? loginState.loggedIn : false
   }
 }
 

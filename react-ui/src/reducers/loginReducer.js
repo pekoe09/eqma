@@ -1,7 +1,7 @@
 import loginService from '../services/login'
 
 let user = JSON.parse(localStorage.getItem('user'))
-const initialState = user ? { loggedIn: true, user } : {}
+const initialState = user ? { loggedIn: true, user } : { loggedIn: false}
 
 const loginReducer = (store = initialState, action) => {
   switch (action.type) {
@@ -24,7 +24,7 @@ export const login = (credentials) => {
     dispatch({
       type: 'LOGIN',
       user
-    })
+    })    
   }
 }
 
@@ -33,6 +33,7 @@ export const logout = () => {
     await loginService.logout()
     localStorage.clear()
     dispatch({ type: 'LOGOUT' })
+    dispatch({ type: 'USER_LOGOUT' })
   }
 }
 
