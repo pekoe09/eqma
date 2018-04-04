@@ -56,6 +56,12 @@ const EquipmentDropdownOther = () => (
   </Dropdown>
 )
 
+const ContactLink = () => (
+  <Menu.Item style={menuDropdownStyle}>
+    <NavLink to='/contact'>Contact us</NavLink>
+  </Menu.Item>
+)
+
 const CustomerDropdown = () => (
   <Dropdown item text='Customers' style={menuDropdownStyle}>
     <Dropdown.Menu>
@@ -89,18 +95,20 @@ const BasicDataDropdown = () => (
 
 class NavBar extends React.Component {
 
-  handleLogout = () => {
-    this.props.logout()
+  handleLogout = async () => {
+    await this.props.logout()
+    this.props.history.push('/')
   }
 
   render() {
     return (
       <Menu style={menuStyle}>
         <Menu.Header style={menuLogoStyle}>
-          <img src='/img/eqma-logo-80_85.png' />
+          <NavLink to='/'><img src='/img/eqma-logo-80_85.png' /></NavLink>
         </Menu.Header>
 
         {!this.props.loggedIn && <EquipmentDropdownOther />}
+        {(!this.props.loggedIn || (this.props.loggedIn && !this.props.isStaff)) && <ContactLink />}
         {this.props.loggedIn && this.props.isStaff && <EquipmentDropdownStaff />}
         {this.props.loggedIn && this.props.isStaff && <CustomerDropdown />}
         {this.props.loggedIn && this.props.isStaff && <ReportDropdown />}
@@ -109,7 +117,7 @@ class NavBar extends React.Component {
         <Menu.Menu position='right'>
           {!this.props.loggedIn &&
             <Menu.Item style={menuDropdownStyle}>
-              Signup
+              Register
             </Menu.Item>
           }
           {!this.props.loggedIn &&

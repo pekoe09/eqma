@@ -2,7 +2,6 @@ import axios from 'axios'
 import { getTokenHeader } from './serviceHelpers'
 
 const login = async (credentials) => {
-  console.log('Sending login with creds ', credentials)
   const response = await axios.post('/api/users/login', credentials)
   return response.data
 }

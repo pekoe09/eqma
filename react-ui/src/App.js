@@ -20,6 +20,8 @@ import EquipmentCreate from './components/equipment/equipmentCreate'
 import EquipmentEdit from './components/equipment/equipmentEdit'
 import Rentals from './components/rentals/rentals'
 import RentalCreate from './components/rentals/rentalCreate'
+import ContactView from './components/contact/contactView'
+import StoreHome from './components/structure/storeHome'
 
 class App extends React.Component {
 
@@ -27,6 +29,9 @@ class App extends React.Component {
     return (
       <Container>
         <NavBar />
+        <Route exact path='/' render={() => <StoreHome />} />
+        <Route exact path='/contact' render={() => <ContactView />} />
+
         <Route exact path='/users' render={() => <Users />} />
         <Route exact path='/users/create' render={() => <UserCreate />} />
         <Route exact path='/users/edit/:id' render={() => <UserEdit />} />

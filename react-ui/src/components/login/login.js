@@ -10,8 +10,7 @@ import { initializeEquipment } from '../../reducers/equipmentReducer'
 import { initializeRentals } from '../../reducers/rentalReducer'
 
 const loginInputStyle = {
-  maxWidth: 100,
-  fontWeight: 400
+  maxWidth: 100
 }
 
 const loginLabelStyle = {
