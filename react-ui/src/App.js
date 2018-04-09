@@ -14,6 +14,7 @@ import Customer from './components/customers/customer'
 import Customers from './components/customers/customers'
 import CustomerCreate from './components/customers/customerCreate'
 import CustomerEdit from './components/customers/customerEdit'
+import CustomerMessages from './components/customerMessages/customerMessages'
 import Equipment from './components/equipment/equipment'
 import Equipments from './components/equipment/equipments'
 import EquipmentCreate from './components/equipment/equipmentCreate'
@@ -44,6 +45,8 @@ class App extends React.Component {
         <Route exact path='/customers/create' render={() => <CustomerCreate />} />
         <Route exact path='/customers/details/:id' render={() => <Customer />} />
         <Route exact path='/customers/edit/:id' render={() => <CustomerEdit />} />
+
+        <Route exact path='/customermessages' render={() => <CustomerMessages />} />
 
         <Route exact path='/equipment' render={() => <Equipments />} />
         <Route exact path='/equipment/create' render={() => <EquipmentCreate />} />

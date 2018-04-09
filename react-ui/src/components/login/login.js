@@ -6,6 +6,7 @@ import { login } from '../../reducers/loginReducer'
 import { initializeUsers } from '../../reducers/userReducer'
 import { initializeAssetTransactions } from '../../reducers/assetTransactionReducer'
 import { initializeCustomers } from '../../reducers/customerReducer'
+import { initializeCustomerMessages } from '../../reducers/customerMessageReducer'
 import { initializeEquipment } from '../../reducers/equipmentReducer'
 import { initializeRentals } from '../../reducers/rentalReducer'
 
@@ -38,11 +39,12 @@ class Login extends React.Component {
       password: ''
     })
     await this.props.login(credentials)
-    
+
     this.props.initializeUsers()
     this.props.initializeEquipment()
     this.props.initializeAssetTransactions()
     this.props.initializeCustomers()
+    this.props.initializeCustomerMessages()
     this.props.initializeRentals()
   }
 
@@ -67,10 +69,11 @@ class Login extends React.Component {
 
 export default withRouter(connect(
   null,
-  { 
+  {
     login,
     initializeAssetTransactions,
     initializeCustomers,
+    initializeCustomerMessages,
     initializeEquipment,
     initializeRentals,
     initializeUsers

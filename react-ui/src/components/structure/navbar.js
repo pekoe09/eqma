@@ -66,6 +66,7 @@ const CustomerDropdown = () => (
   <Dropdown item text='Customers' style={menuDropdownStyle}>
     <Dropdown.Menu>
       <Dropdown.Header content='Customers' />
+      <Dropdown.Item><NavLink to='/customermessages'>Messages</NavLink></Dropdown.Item>
       <Dropdown.Item><NavLink to='/customers'>Browse</NavLink></Dropdown.Item>
       <Dropdown.Item><NavLink to='/customers/create'>Create new</NavLink></Dropdown.Item>
       <Dropdown.Divider />
