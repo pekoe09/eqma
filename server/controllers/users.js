@@ -1,9 +1,13 @@
+const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+const moment = require('moment')
 const usersRouter = require('express').Router()
+require('./controllerHelpers')
 const User = require('../models/user')
+const Session = require('../models/session')
 
 usersRouter.get('/', async (req, res) => {
-  const users = await User.find({})
+  let users = await User.find({})
   res.json(users)
 })
 
@@ -29,15 +33,77 @@ usersRouter.post('/', async (req, res) => {
       passwordHash,
       firstName: body.firstName,
       lastName: body.lastName,
+      email: body.email,
       status: body.status === undefined ? 'user' : body.status
     })
 
     const savedUser = await user.save()
-
     res.status(201).json(savedUser)
   } catch (exception) {
     console.log(exception)
     res.status(500).json({ error: 'encountered an error while trying to save a user' })
+  }
+})
+
+usersRouter.post('/login', async (req, res) => {
+  const body = req.body
+  const user = await User
+    .findOne({ username: body.username })
+    .select({ _id: 1, username: 1, passwordHash: 1, lastName: 1, firstName: 1, email: 1, status: 1 })
+  const passwordCorrect = user === null
+    ? false
+    : await bcrypt.compare(body.password, user.passwordHash)
+  if (!(user && passwordCorrect)) {
+    return res.status(401).send({ error: 'invalid username or password' })
+  }
+
+  const tokenPayload = {
+    username: user.username,
+    userId: user._id,
+    userStatus: user.status,
+    exp: moment().add(1, 'h') / 1000
+  }
+  const token = jwt.sign(tokenPayload, process.env.SECRET)
+
+  const session = new Session({
+    user,
+    start: moment(),
+    issuedToken: token,
+    expiry: tokenPayload.exp * 1000
+  })
+  const savedSession = await session.save()
+
+  res.status(200).send({
+    username: user.username,
+    lastName: user.lastName,
+    firstName: user.firstName,
+    email: user.email,
+    status: user.status,
+    token
+  })
+})
+
+usersRouter.post('/logout', async (req, res) => {
+  const token = getTokenFrom(req)
+  try {
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if (!token || !decodedToken.userId) {
+      return res.status(401).json({ error: 'token missing or invalid' })
+    }
+    const session = Session.findOne({ issuedToken: req.token })
+    if (!session) {
+      return res.status(401).json({ error: 'session to logout from is not found' })
+    }
+    session.end = moment()
+    await Session.findByIdAndUpdate(session._id, session)
+
+    res.status(204).end()
+  } catch (exception) {
+    if (exception.name === 'JsonWebTokenError') {
+      res.status(401).json({ error: exception.message })
+    } else {
+      res.status(500).json({ error: 'unknown error' })
+    }
   }
 })
 

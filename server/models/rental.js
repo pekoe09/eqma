@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const moment = require('moment')
 
 const rentalSchema = new mongoose.Schema({
   equipment: {
@@ -27,7 +28,7 @@ const rentalSchema = new mongoose.Schema({
 })
 
 rentalSchema.statics.format = (rental) => {
-  let totalPrice
+  let totalPrice = 0
   if (rental.end) {
     let duration = getDuration(rental.start, rental.end, rental.timeUnit)
     totalPrice = duration * rental.price
@@ -38,21 +39,23 @@ rentalSchema.statics.format = (rental) => {
   }
 }
 
-getDuration = (start, end, period) => {
-  switch (rental.timeUnit) {
+getDuration = (start, end, timeUnit) => {
+  let timeDiff = moment(end).diff(moment(start))
+  switch (timeUnit) {
     case 'year':
-      return 1
+      return timeDiff / (1000 * 60 * 60 * 24 * 365)
     case 'month':
-      return 1
+      return timeDiff / (1000 * 60 * 60 * 24 * 30)
     case 'week':
-      return 1
+      return timeDiff / (1000 * 60 * 60 * 24 * 7)
     case 'day':
-      return 1
+      return timeDiff / (1000 * 60 * 60 * 24)
     case 'hour':
-      return 1
+      return timeDiff / (1000 * 60 * 60)
     case 'minute':
-      return 1
+      return timeDiff / (1000 * 60 * 60)
   }
+  return duration
 }
 
 const Rental = mongoose.model('Rental', rentalSchema)

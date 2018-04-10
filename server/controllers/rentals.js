@@ -2,19 +2,17 @@ const rentalsRouter = require('express').Router()
 const Rental = require('../models/rental')
 
 rentalsRouter.get('/', async (req, res) => {
-  const rentals = await Rental
+  let rentals = await Rental
     .find({})
     .populate('equipment customer')
-    .map(Rental.format)
-    .map(r => {
-
-    })
+  rentals = rentals.map(r => Rental.format(r._doc))
   res.json(rentals)
 })
 
 rentalsRouter.post('/', async (req, res) => {
   try {
     const body = req.body
+    console.log('Renting ', req.body)
     if (!body.equipment) {
       return res.status(400).json({ error: 'equipment is missing' })
     }

@@ -6,6 +6,8 @@ const userReducer = (store = [], action) => {
       return action.users
     case 'CREATE_USER':
       return store.concat(action.newUser)
+    case 'UPDATE_USER':
+      return store.map(u => u._id !== action.updatedUser.id ? u : action.updatedUser)
     case 'REMOVE_USER':
       return store.filter(u => u._id !== action.id)
     default:
@@ -19,6 +21,16 @@ export const createUser = (user) => {
     dispatch({
       type: 'CREATE_USER',
       newUser
+    })
+  }
+}
+
+export const updatedUser = (user) => {
+  return async (dispatch) => {
+    const updatedUser = await userService.update(user)
+    dispatch({
+      type: 'UPDATE_USER',
+      updatedUser
     })
   }
 }

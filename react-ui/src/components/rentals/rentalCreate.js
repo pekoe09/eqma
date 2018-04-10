@@ -1,12 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import DatePicker from 'react-datepicker'
 import moment from 'moment'
 import 'react-datepicker/dist/react-datepicker.css'
 import { Form, Input, Select, Button } from 'semantic-ui-react'
-import ViewHeader from './structure/viewHeader'
-import LinkButton from './structure/linkButton'
-import { createRental } from '../reducers/rentalReducer'
+import ViewHeader from '../structure/viewHeader'
+import LinkButton from '../structure/linkButton'
+import { createRental } from '../../reducers/rentalReducer'
 
 const timeUnitOptions = [
   { key: 'day', text: 'Day', value: 'day' },
@@ -47,6 +48,14 @@ class RentalCreate extends React.Component {
     this.setState({ end })
   }
 
+  handleEquipmentChange = (event, { value }) => {
+    this.setState({ equipment: value })
+  }
+
+  handleCustomerChange = (event, { value }) => {
+    this.setState({ customer: value })
+  }
+
   handleSubmit = async (event) => {
     event.preventDefault()
     const rental = {
@@ -66,12 +75,12 @@ class RentalCreate extends React.Component {
       <div>
         <ViewHeader text={'Rent equipment'} />
         <LinkButton text={'To customer list'} to={'/customers'} type={'default'} />
-        <LinkButton text={'To equipment list'} to={'/equipments'} type={'default'} />
+        <LinkButton text={'To equipment list'} to={'/equipment'} type={'default'} />
         <Form style={formStyle} onSubmit={this.handleSubmit}>
           <Form.Field required control={Select} width={6} label='Equipment' name='equipment'
-            options={this.props.equipments} value={this.state.equipment} onChange={this.handleChange} />
+            options={this.props.equipments} value={this.state.equipment} onChange={this.handleEquipmentChange} />
           <Form.Field required control={Select} width={6} label='Customer' name='customer'
-            options={this.props.customers} value={this.state.customer} onChange={this.handleChange} />
+            options={this.props.customers} value={this.state.customer} onChange={this.handleCustomerChange} />
           <Form.Field width={4}>
             <label forname='start'>Date</label>
             <DatePicker
@@ -124,7 +133,7 @@ const mapStateToProps = (store) => {
   }
 }
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   { createRental }
-)(RentalCreate)
+)(RentalCreate))
