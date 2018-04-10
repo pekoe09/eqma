@@ -1,4 +1,6 @@
 import axios from 'axios'
+import { getTokenHeader } from './serviceHelpers'
+
 const baseUrl = '/api/customermessages'
 
 const getAll = async () => {
@@ -12,7 +14,11 @@ const createNew = async (message) => {
 }
 
 const update = async (message) => {
-  const response = await axios.put(`${baseUrl}/${message._id}`, message)
+  const tokenHeader = getTokenHeader()
+  const config = {
+    headers: { 'Authorization': tokenHeader }
+  }
+  const response = await axios.put(`${baseUrl}/${message._id}`, message, config)
   return response.data
 }
 

@@ -14,8 +14,11 @@ const logout = async () => {
   const config = {
     headers: { 'Authorization': tokenHeader }
   }
-  const response = await axios.post('/api/users/logout', null, config)
-  return response.data
+  try { await axios.post('/api/users/logout', null, config) }
+  catch (exception) {
+    console.log(exception)
+  }
+  return
 }
 
 export default { login, logout }

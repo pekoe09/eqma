@@ -1,6 +1,8 @@
+const jwt = require('jsonwebtoken')
+const moment = require('moment')
 const customerMessagesRouter = require('express').Router()
 const CustomerMessage = require('../models/customerMessage')
-const moment = require('moment')
+require('./controllerHelpers')
 
 customerMessagesRouter.get('/', async (req, res) => {
   let messages = await CustomerMessage
@@ -27,7 +29,9 @@ customerMessagesRouter.post('/', async (req, res) => {
       sent: moment()
     })
     console.log('Saving ', message)
-    const savedMessage = await message.save()
+    const savedMessage = await message
+      .save()
+      .populate('customer')
     res.status(201).json(savedMessage)
   } catch (exception) {
     console.log(exception)
@@ -39,32 +43,42 @@ customerMessagesRouter.post('/', async (req, res) => {
 
 customerMessagesRouter.put('/:id', async (req, res) => {
   // only possible fields to update: handler and reply (with replySent)
-  console.log('Received req ', req.body)
+  const token = getTokenFrom(req)
   try {
-    const match = await CustomerMessage.findById(req.params.id)
-    if (!match) {
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if (!token || !decodedToken.userId) {
+      return res.status(401).json({ error: 'token missing or invalid' })
+    }
+    const userId = decodedToken.userId
+
+    const message = await CustomerMessage.findById(req.params.id)
+    if (!message) {
       return res.status(400).json({ error: 'nonexistent id' })
     }
-    console.log('Matched with ', match)
 
     const body = req.body
-    const message = match
-    if(body.handler) {
-      message.handler = body.handler
+    if (body.handlerDropped) {
+      message.handler = null
+    } else if (!message.handler) {
+      message.handler = userId
     }
-    if(body.reply) {
+    if (body.reply) {
       message.reply = body.reply
       message.replySent = moment()
     }
-    console.log('Persisting ', message)
-    const updatedMessage = await CustomerMessage.findByIdAndUpdate(
-      req.params.id, message, { new: true })
+    let updatedMessage = await CustomerMessage
+      .findByIdAndUpdate(req.params.id, message, { new: true })
+      .populate('customer handler')
     res.json(updatedMessage)
   } catch (exception) {
-    console.log(exception)
-    res.status(500).json({
-      error: 'encountered an error while trying to update a customer message'
-    })
+    if (exception.name === 'JsonWebTokenError') {
+      res.status(401).json({ error: exception.message })
+    } else {
+      console.log(exception)
+      res.status(500).json({
+        error: 'encountered an error while trying to update a customer message'
+      })
+    }
   }
 })
 

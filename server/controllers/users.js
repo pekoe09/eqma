@@ -87,7 +87,7 @@ usersRouter.post('/logout', async (req, res) => {
   const token = getTokenFrom(req)
   try {
     const decodedToken = jwt.verify(token, process.env.SECRET)
-    if (!token || !decodedToken.id) {
+    if (!token || !decodedToken.userId) {
       return res.status(401).json({ error: 'token missing or invalid' })
     }
     const session = Session.findOne({ issuedToken: req.token })

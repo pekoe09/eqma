@@ -30,7 +30,7 @@ export const login = (credentials) => {
 
 export const logout = () => {
   return async (dispatch) => {
-    await loginService.logout()
+    await loginService.logout()    
     localStorage.clear()
     dispatch({ type: 'LOGOUT' })
     dispatch({ type: 'USER_LOGOUT' })

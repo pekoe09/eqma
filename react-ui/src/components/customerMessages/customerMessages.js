@@ -46,7 +46,7 @@ class CustomerMessages extends React.Component {
       },
       {
         Header: 'Handler',
-        accessor: 'handler',
+        accessor: 'handlerName',
         headerStyle: {
           textAlign: 'left'
         }
@@ -68,7 +68,7 @@ class CustomerMessages extends React.Component {
               handlePickup(row.original._id, e)}>Pick up</Button>) ||
           (row.original.handler &&
             <Button basic color='orange' className='mini' onClick={(e) =>
-              handlePickup(row.original._id, e)}>Drop</Button>)
+              handleDrop(row.original._id, e)}>Drop</Button>)
         ),
         style: {
           textAlign: 'center'
@@ -106,18 +106,19 @@ class CustomerMessages extends React.Component {
       await this.props.removeCustomerMessage(id)
     }
 
-    const handlePickup = async (id, e) => {      
+    const handlePickup = async (id, e) => {
       e.stopPropagation()
       const message = findById(id)
-      message.handler = this.props.user._id
-      console.log('Picking up ', message)
+      message.handler = this.props.user
+      message.handlerName = `${this.props.user.firstName} ${this.props.user.lastName}`
       await this.props.updateCustomerMessage(message)
     }
 
     const handleDrop = async (id, e) => {
       e.stopPropagation()
       const message = findById(id)
-      const { handler, ...updatedMessage} = message
+      const { handler, handlerName, ...updatedMessage } = message
+      updatedMessage.handlerDropped = true
       await this.props.updateCustomerMessage(updatedMessage)
     }
 
@@ -144,7 +145,12 @@ class CustomerMessages extends React.Component {
 const mapStateToProps = (store) => {
   const loginState = store.login
   return {
-    customerMessages: store.customerMessages,
+    customerMessages: store.customerMessages.map(m => {
+      return { 
+        ...m, 
+        handlerName: m.handler ? `${m.handler.firstName} ${m.handler.lastName}` : null
+      }
+    }),
     user: loginState ? loginState.user : null
   }
 }
