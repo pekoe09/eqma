@@ -6,6 +6,7 @@ import ReactTable from 'react-table'
 import ViewHeader from '../structure/viewHeader'
 import { Button, Confirm } from 'semantic-ui-react'
 import { removeCustomerMessage, updateCustomerMessage } from '../../reducers/customerMessageReducer'
+import { addUIMessage } from '../../reducers/uiMessageReducer'
 
 class CustomerMessages extends React.Component {
 
@@ -136,8 +137,10 @@ class CustomerMessages extends React.Component {
     }
 
     const handleConfirmedRemove = async () => {
+      const name = this.state.rowToDelete.name
       this.setState({ openDeleteConfirm: false, rowToDelete: null })
       await this.props.removeCustomerMessage(this.state.rowToDelete._id)
+      this.props.addUIMessage(`Message from user ${name} deleted`, 'success', 10)
     }
 
     const handleCancelledRemove = () => {
@@ -206,6 +209,7 @@ export default withRouter(connect(
   mapStateToProps,
   {
     removeCustomerMessage,
-    updateCustomerMessage
+    updateCustomerMessage,
+    addUIMessage
   }
 )(CustomerMessages))

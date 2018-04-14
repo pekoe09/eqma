@@ -6,6 +6,7 @@ import ViewHeader from '../structure/viewHeader'
 import LinkButton from '../structure/linkButton'
 import { Button, Confirm } from 'semantic-ui-react'
 import { removeEquipment } from '../../reducers/equipmentReducer'
+import { addUIMessage } from '../../reducers/uiMessageReducer'
 
 class Equipments extends React.Component {
 
@@ -20,8 +21,10 @@ class Equipments extends React.Component {
   }
 
   handleConfirmedRemove = async () => {
+    const makeAndModel = this.state.rowToDelete.makeAndModel
     this.setState({ openDeleteConfirm: false, rowToDelete: null })
     await this.props.removeEquipment(this.state.rowToDelete._id)
+    this.props.addUIMessage(`Equipment ${makeAndModel} deleted`, 'success', 10)
   }
 
   handleCancelledRemove = () => {
@@ -127,5 +130,5 @@ const mapStateToProps = (store) => {
 
 export default withRouter(connect(
   mapStateToProps,
-  { removeEquipment }
+  { removeEquipment, addUIMessage }
 )(Equipments))

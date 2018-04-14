@@ -10,6 +10,7 @@ import customerMessageReducer from './reducers/customerMessageReducer'
 import equipmentReducer from './reducers/equipmentReducer'
 import loginReducer from './reducers/loginReducer'
 import rentalReducer from './reducers/rentalReducer'
+import uiMessageReducer from './reducers/uiMessageReducer'
 import userReducer from './reducers/userReducer'
 
 const appReducer = combineReducers({
@@ -19,6 +20,7 @@ const appReducer = combineReducers({
   equipments: equipmentReducer,
   login: loginReducer,
   rentals: rentalReducer,
+  uiMessages: uiMessageReducer,
   users: userReducer
 })
 

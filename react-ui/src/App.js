@@ -3,6 +3,7 @@ import { Container } from 'semantic-ui-react'
 import { Route, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import NavBar from './components/structure/navbar'
+import UIMessages from './components/structure/uiMessages'
 
 import User from './components/users/user'
 import Users from './components/users/users'
@@ -31,6 +32,8 @@ class App extends React.Component {
     return (
       <Container>
         <NavBar />
+        <UIMessages />
+
         <Route exact path='/' render={() => <StoreHome />} />
         <Route exact path='/contact' render={() => <ContactView />} />
 
