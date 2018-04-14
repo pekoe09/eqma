@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
+import moment from 'moment'
 import ReactTable from 'react-table'
 import ViewHeader from '../structure/viewHeader'
 import { Button } from 'semantic-ui-react'
@@ -38,11 +39,13 @@ class CustomerMessages extends React.Component {
         }
       },
       {
-        Header: 'Customer',
-        accessor: 'customer',
-        headerStyle: {
-          textAlign: 'left'
-        }
+        Header: 'Sent',
+        accessor: 'sent',
+        Cell: row => (moment(row.original.sent).format('MM/DD/YYYY HH:mm')),
+        style: {
+          textAlign: 'center'
+        },
+        maxWidth: 150
       },
       {
         Header: 'Handler',
@@ -60,6 +63,23 @@ class CustomerMessages extends React.Component {
         style: messageCellStyle
       },
       {
+        Header: 'Replied',
+        accessor: 'replied',
+        Cell: (row) => {
+          return (
+            <input
+              type='checkbox'
+              checked={row.original.replied}
+              readOnly
+            />
+          )
+        },
+        style: {
+          textAlign: 'center'
+        },
+        maxWidth: 65
+      },
+      {
         Header: '',
         accessor: 'pickup',
         Cell: (row) => (
@@ -73,7 +93,9 @@ class CustomerMessages extends React.Component {
         style: {
           textAlign: 'center'
         },
-        maxWidth: 100
+        sortable: false,
+        filterable: false,
+        maxWidth: 75
       },
       {
         Header: '',
@@ -85,7 +107,9 @@ class CustomerMessages extends React.Component {
         style: {
           textAlign: 'center'
         },
-        maxWidth: 100
+        sortable: false,
+        filterable: false,
+        maxWidth: 80
       }
     ]
 
@@ -93,7 +117,7 @@ class CustomerMessages extends React.Component {
       const history = this.props.history
       return {
         onClick: (e, handleOriginal) => {
-          history.push(`/customermessages/details/${rowInfo.original._id}`)
+          history.push(`/customermessages/edit/${rowInfo.original._id}`)
           if (handleOriginal) {
             handleOriginal()
           }
@@ -146,9 +170,10 @@ const mapStateToProps = (store) => {
   const loginState = store.login
   return {
     customerMessages: store.customerMessages.map(m => {
-      return { 
-        ...m, 
-        handlerName: m.handler ? `${m.handler.firstName} ${m.handler.lastName}` : null
+      return {
+        ...m,
+        handlerName: m.handler ? `${m.handler.firstName} ${m.handler.lastName}` : null,
+        replied: m.replySent ? true : false
       }
     }),
     user: loginState ? loginState.user : null

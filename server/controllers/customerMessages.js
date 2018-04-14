@@ -66,6 +66,7 @@ customerMessagesRouter.put('/:id', async (req, res) => {
       message.reply = body.reply
       message.replySent = moment()
     }
+    console.log('Updating message', message)
     let updatedMessage = await CustomerMessage
       .findByIdAndUpdate(req.params.id, message, { new: true })
       .populate('customer handler')
