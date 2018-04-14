@@ -9,8 +9,9 @@ import { removeUser } from '../../reducers/userReducer'
 
 class Users extends React.Component {
 
-  handleRemove = (id) => {
-    this.props.removeUser(id)
+  handleRemove = async (id, e) => {
+    e.stopPropagation()
+    await this.props.removeUser(id)
   }
 
   render() {
@@ -55,13 +56,15 @@ class Users extends React.Component {
         Header: '',
         accessor: 'delete',
         Cell: (row) => (
-          <Button negative basic className='mini' onClick={() =>
-            this.handleRemove(row.original._id)}>Delete</Button>
+          <Button negative basic className='mini' onClick={(e) =>
+            this.handleRemove(row.original._id, e)}>Delete</Button>
         ),
         style: {
           textAlign: 'center'
         },
-        maxWidth: 100
+        sortable: false,
+        filterable: false,
+        maxWidth: 80
       }
     ]
 

@@ -9,8 +9,9 @@ import { removeCustomer } from '../../reducers/customerReducer'
 
 class Customers extends React.Component {
 
-  handleRemove = (id) => {
-    this.props.removeCustomer(id)
+  handleRemove = async (id, e) => {
+    e.stopPropagation()
+    await this.props.removeCustomer(id)
   }
 
   render() {
@@ -41,27 +42,23 @@ class Customers extends React.Component {
         Header: '',
         accessor: 'delete',
         Cell: (row) => (
-          <Button negative basic className='mini' onClick={() =>
-            this.handleRemove(row.original._id)}>Delete</Button>
+          <Button negative basic className='mini' onClick={(e) =>
+            this.handleRemove(row.original._id, e)}>Delete</Button>
         ),
         style: {
           textAlign: 'center'
         },
-        maxWidth: 100
+        sortable: false,
+        filterable: false,
+        maxWidth: 80
       }
     ]
 
     const handleRowClick = (state, rowInfo, column, instance) => {
-      const history = this.props.history.history
+      const history = this.props.history
       return {
         onClick: (e, handleOriginal) => {
           history.push(`/customers/details/${rowInfo.original._id}`)
-
-          // IMPORTANT! React-Table uses onClick internally to trigger
-          // events like expanding SubComponents and pivots.
-          // By default a custom 'onClick' handler will override this functionality.
-          // If you want to fire the original onClick handler, call the
-          // 'handleOriginal' function.
           if (handleOriginal) {
             handleOriginal()
           }

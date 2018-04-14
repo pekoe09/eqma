@@ -9,8 +9,9 @@ import { removeEquipment } from '../../reducers/equipmentReducer'
 
 class Equipments extends React.Component {
 
-  handleRemove = (id) => {
-    this.props.removeEquipment(id)
+  handleRemove = async (id, e) => {
+    e.stopPropagation()
+    await this.props.removeEquipment(id)
   }
 
   render() {
@@ -50,13 +51,15 @@ class Equipments extends React.Component {
         Header: '',
         accessor: 'delete',
         Cell: (row) => (
-          <Button negative basic className='mini' onClick={() =>
-            this.handleRemove(row.original._id)}>Delete</Button>
+          <Button negative basic className='mini' onClick={(e) =>
+            this.handleRemove(row.original._id, e)}>Delete</Button>
         ),
         style: {
           textAlign: 'center'
         },
-        maxWidth: 100
+        sortable: false,
+        filterable: false,
+        maxWidth: 80
       }
     ]
 

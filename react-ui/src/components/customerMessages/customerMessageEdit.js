@@ -37,7 +37,6 @@ class CustomerMessageEdit extends React.Component {
     customerMessage.reply = this.state.reply
     customerMessage.handler = this.state.handler
     customerMessage.handlerName = `${customerMessage.handler.firstName} ${customerMessage.handler.lastName}`
-    console.log('Replyint to message', customerMessage)
     await this.props.updateCustomerMessage(customerMessage)
     this.props.history.push('/customermessages')
   }
