@@ -4,10 +4,15 @@ import { withRouter } from 'react-router-dom'
 import moment from 'moment'
 import ReactTable from 'react-table'
 import ViewHeader from '../structure/viewHeader'
-import { Button } from 'semantic-ui-react'
+import { Button, Confirm } from 'semantic-ui-react'
 import { removeCustomerMessage, updateCustomerMessage } from '../../reducers/customerMessageReducer'
 
 class CustomerMessages extends React.Component {
+
+  state = {
+    openDeleteConfirm: false,
+    rowToDelete: null
+  }
 
   render() {
 
@@ -102,7 +107,7 @@ class CustomerMessages extends React.Component {
         accessor: 'delete',
         Cell: (row) => (
           <Button negative basic className='mini' onClick={(e) =>
-            handleRemove(row.original._id, e)}>Delete</Button>
+            handleRemove(row.original, e)}>Delete</Button>
         ),
         style: {
           textAlign: 'center'
@@ -125,9 +130,18 @@ class CustomerMessages extends React.Component {
       }
     }
 
-    const handleRemove = async (id, e) => {
+    const handleRemove = async (row, e) => {
       e.stopPropagation()
-      await this.props.removeCustomerMessage(id)
+      this.setState({ openDeleteConfirm: true, rowToDelete: row })
+    }
+
+    const handleConfirmedRemove = async () => {
+      this.setState({ openDeleteConfirm: false, rowToDelete: null })
+      await this.props.removeCustomerMessage(this.state.rowToDelete._id)
+    }
+
+    const handleCancelledRemove = () => {
+      this.setState({ openDeleteConfirm: false, rowToDelete: null })
     }
 
     const handlePickup = async (id, e) => {
@@ -153,6 +167,14 @@ class CustomerMessages extends React.Component {
     return (
       <div>
         <ViewHeader text={'Customer messages'} />
+        <Confirm
+          open={this.state.openDeleteConfirm}
+          header='Deleting a customer message'
+          content={`Deleting message from ${this.state.rowToDelete ? this.state.rowToDelete.name : ''}. The operation is permanent; are you sure?`}
+          confirmButton='Yes, delete'
+          onConfirm={handleConfirmedRemove}
+          onCancel={handleCancelledRemove}
+        />
         <ReactTable
           data={this.props.customerMessages}
           columns={columns}

@@ -4,14 +4,28 @@ import { withRouter } from 'react-router-dom'
 import ReactTable from 'react-table'
 import ViewHeader from '../structure/viewHeader'
 import LinkButton from '../structure/linkButton'
-import { Button } from 'semantic-ui-react'
+import { Button, Confirm } from 'semantic-ui-react'
 import { removeUser } from '../../reducers/userReducer'
 
 class Users extends React.Component {
 
-  handleRemove = async (id, e) => {
+  state = {
+    openDeleteConfirm: false,
+    rowToDelete: null
+  }
+
+  handleRemove = async (row, e) => {
     e.stopPropagation()
-    await this.props.removeUser(id)
+    this.setState({ openDeleteConfirm: true, rowToDelete: row })
+  }
+
+  handleConfirmedRemove = async () => {
+    this.setState({ openDeleteConfirm: false, rowToDelete: null })
+    await this.props.removeUser(this.state.rowToDelete._id)
+  }
+
+  handleCancelledRemove = () => {
+    this.setState({ openDeleteConfirm: false, rowToDelete: null })
   }
 
   render() {
@@ -57,7 +71,7 @@ class Users extends React.Component {
         accessor: 'delete',
         Cell: (row) => (
           <Button negative basic className='mini' onClick={(e) =>
-            this.handleRemove(row.original._id, e)}>Delete</Button>
+            this.handleRemove(row.original, e)}>Delete</Button>
         ),
         style: {
           textAlign: 'center'
@@ -89,6 +103,14 @@ class Users extends React.Component {
       <div>
         <ViewHeader text={'User list'} />
         <LinkButton text={'Add a user'} to={'/users/create'} />
+        <Confirm
+          open={this.state.openDeleteConfirm}
+          header='Deleting a user'
+          content={`Deleting ${this.state.rowToDelete ? this.state.rowToDelete.username : ''}. The operation is permanent; are you sure?`}
+          confirmButton='Yes, delete'
+          onConfirm={this.handleConfirmedRemove}
+          onCancel={this.handleCancelledRemove}
+        />
         <ReactTable
           data={this.props.users}
           columns={columns}

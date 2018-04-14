@@ -31,7 +31,6 @@ customerMessagesRouter.post('/', async (req, res) => {
     console.log('Saving ', message)
     const savedMessage = await message
       .save()
-      .populate('customer')
     res.status(201).json(savedMessage)
   } catch (exception) {
     console.log(exception)
