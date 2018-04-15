@@ -41,7 +41,11 @@ rentalsRouter.post('/', async (req, res) => {
       price: body.price
     })
     const savedRental = await rental.save()
-    res.status(201).json(savedRental)
+    const populatedRental = await Rental
+      .findById(savedRental._id)
+      .populate('customer equipment')
+    console.log("Returning ", populatedRental)
+    res.status(201).json(populatedRental)
   } catch (exception) {
     console.log(exception)
     res.status(500).json({

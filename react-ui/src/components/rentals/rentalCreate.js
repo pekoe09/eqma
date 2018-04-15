@@ -74,6 +74,7 @@ class RentalCreate extends React.Component {
     return (
       <div>
         <ViewHeader text={'Rent equipment'} />
+        <LinkButton text={'To rental list'} to={'/rentals'} type={'default'} />
         <LinkButton text={'To customer list'} to={'/customers'} type={'default'} />
         <LinkButton text={'To equipment list'} to={'/equipment'} type={'default'} />
         <Form style={formStyle} onSubmit={this.handleSubmit}>
