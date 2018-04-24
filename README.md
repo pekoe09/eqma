@@ -31,7 +31,7 @@ The solution utilizes a MongoDB database.
 
 ## Demo
 
-Eqma will be running on Heroku; address TBA.
+Eqma demo version is running on [Heroku](https://agile-eyrie-82144.herokuapp.com/).
 
 ## Hour logs
 
