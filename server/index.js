@@ -27,9 +27,11 @@ app.use('/api/equipment', equipmentsRouter)
 app.use('/api/rentals', rentalsRouter)
 app.use('/api/users', usersRouter)
 
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../react-ui/build', 'index.html'))
-})
+// app.get('*', (req, res) => {
+//   res.sendFile(path.resolve(__dirname, '../react-ui/build', 'index.html'))
+// })
+
+app.use(express.static(path.resolve(__dirname, '../react-ui/build')))
 
 const server = http.createServer(app)
 
