@@ -1,10 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { Form, Input, Select, Button } from 'semantic-ui-react'
+import { Form, Input, Select, Button, Confirm } from 'semantic-ui-react'
 import ViewHeader from '../structure/viewHeader'
 import LinkButton from '../structure/linkButton'
-import { updateEquipment } from '../../reducers/equipmentReducer'
+import { updateEquipment, removeEquipment } from '../../reducers/equipmentReducer'
+import { addUIMessage } from '../../reducers/uiMessageReducer'
 
 const timeUnitOptions = [
   { key: 'day', text: 'Day', value: 'day' },
@@ -26,7 +27,8 @@ class EquipmentEdit extends React.Component {
     model: this.props.initialEquipment.model,
     description: this.props.initialEquipment.description,
     price: this.props.initialEquipment.price,
-    timeUnit: this.props.initialEquipment.timeUnit
+    timeUnit: this.props.initialEquipment.timeUnit,
+    openDeleteConfirm: false
   }
 
   handleChange = (event, { value }) => {
@@ -46,32 +48,60 @@ class EquipmentEdit extends React.Component {
     this.props.history.push('/equipment')
   }
 
+  handleRemove = async () => {
+    this.setState({ openDeleteConfirm: true })
+  }
+
+  handleConfirmedRemove = async () => {
+    const name = this.props.initialEquipment.makeAndModel
+    await this.props.removeEquipment(this.props.initialEquipment._id)
+    this.props.addUIMessage(`Equipment ${name} deleted`, 'success', 10)
+    this.props.history.push('/equipment')
+  }
+
+  handleCancelledRemove = () => {
+    this.setState({ openDeleteConfirm: false })
+  }
+
   render() {
-    return (
-      <div>
-        <ViewHeader text={`Edit equipment ${this.props.initialEquipment.name} (${this.props.initialEquipment.makeAndModel})`} />
-        <LinkButton text={'Cancel'} to={'/equipment'} type={'default'} />
-        <Form style={formStyle} onSubmit={this.handleSubmit}>
-          <Form.Field required control={Input} width={6} label='Name' name='name'
-            value={this.state.name} onChange={this.handleChange} />
-          <Form.Field control={Input} width={6} label='Make' name='make'
-            value={this.state.make} onChange={this.handleChange} />
-          <Form.Field control={Input} width={6} label='Model' name='model'
-            value={this.state.model} onChange={this.handleChange} />
-          <Form.TextArea width={12} rows={5} label='Description' name='description'
-            value={this.state.description} onChange={this.handleChange} />
-          <Form.Field required control={Select} width={6} label='Rented by' name='timeUnit'
-            options={timeUnitOptions} value={this.state.timeUnit} onChange={this.handleChange} />
-          <Form.Field control={Input} width={6} label='Rate' name='price'
-            value={this.state.price} onChange={this.handleChange} />
-          <Form.Field>
-            <Button primary>
-              Save
+    if (this.props.initialEquipment) {
+      return (
+        <div>
+          <ViewHeader text={`Edit equipment ${this.props.initialEquipment.name} (${this.props.initialEquipment.makeAndModel})`} />
+          <LinkButton text={'Cancel'} to={'/equipment'} type={'default'} />
+          <Button negative onClick={this.handleRemove}>Delete</Button>
+          <Confirm
+            open={this.state.openDeleteConfirm}
+            header='Deleting a piece of equipment'
+            content={`Deleting equipment ${this.props.initialEquipment.makeAndModel}. The operation is permanent; are you sure?`}
+            confirmButton='Yes, delete'
+            onConfirm={this.handleConfirmedRemove}
+            onCancel={this.handleCancelledRemove}
+          />
+          <Form style={formStyle} onSubmit={this.handleSubmit}>
+            <Form.Field required control={Input} width={6} label='Name' name='name'
+              value={this.state.name} onChange={this.handleChange} />
+            <Form.Field control={Input} width={6} label='Make' name='make'
+              value={this.state.make} onChange={this.handleChange} />
+            <Form.Field control={Input} width={6} label='Model' name='model'
+              value={this.state.model} onChange={this.handleChange} />
+            <Form.TextArea width={12} rows={5} label='Description' name='description'
+              value={this.state.description} onChange={this.handleChange} />
+            <Form.Field required control={Select} width={6} label='Rented by' name='timeUnit'
+              options={timeUnitOptions} value={this.state.timeUnit} onChange={this.handleChange} />
+            <Form.Field control={Input} width={6} label='Rate' name='price'
+              value={this.state.price} onChange={this.handleChange} />
+            <Form.Field>
+              <Button primary>
+                Save
             </Button>
-          </Form.Field>
-        </Form>
-      </div>
-    )
+            </Form.Field>
+          </Form>
+        </div>
+      )
+    } else {
+      return <div></div>
+    }
   }
 }
 
@@ -84,5 +114,9 @@ const mapStateToProps = (store, ownProps) => {
 
 export default withRouter(connect(
   mapStateToProps,
-  { updateEquipment }
+  {
+    updateEquipment,
+    removeEquipment,
+    addUIMessage
+  }
 )(EquipmentEdit))
