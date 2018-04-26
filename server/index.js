@@ -7,6 +7,7 @@ const path = require('path')
 
 const config = require('./utils/config')
 const { tokenExtractor } = require('./utils/tokenExtractor')
+const { userExtractor } = require('./utils/userExtractor')
 const mongo = require('./mongo')
 
 const assetTransactionsRouter = require('./controllers/assetTransactions')
@@ -19,6 +20,7 @@ const usersRouter = require('./controllers/users')
 app.use(cors())
 app.use(bodyParser.json())
 app.use(tokenExtractor)
+app.use(userExtractor)
 
 app.use('/api/assettransactions', assetTransactionsRouter)
 app.use('/api/customers', customersRouter)

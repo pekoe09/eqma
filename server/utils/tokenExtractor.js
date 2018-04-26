@@ -1,9 +1,12 @@
-const tokenExtractor = (request, response, next) => {
-  const authorization = request.get('authorization')
+const tokenExtractor = (req, res, next) => {
+  console.log('Extracting token...')
+  const authorization = req.get('authorization')
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    request.token = authorization.substring(7)
+    req.token = authorization.substring(7)
+    console.log('...got token ', req.token)
   } else {
-    request.token = null
+    req.token = null
+    console.log('No token found')
   }
   next()
 }

@@ -42,13 +42,16 @@ assetTransactionRouter.post('/', async (req, res) => {
     })
 
     const savedTransaction = await assetTransaction.save()
+    const populatedTransaction = await AssetTransaction
+      .findById(savedTransaction._id)
+      .populate('equipment')
     if (!equipment.transactions) {
       equipment.transactions = []
     }
     equipment.transactions = equipment.transactions.concat(savedTransaction._id)
     await Equipment.findByIdAndUpdate(equipment._id, equipment)
 
-    res.status(201).json(savedTransaction)
+    res.status(201).json(populatedTransaction)
   } catch (exception) {
     console.log(exception)
     res.status(500).json({

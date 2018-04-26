@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const moment = require('moment')
 const customerMessagesRouter = require('express').Router()
 const CustomerMessage = require('../models/customerMessage')
-require('./controllerHelpers')
+const { getTokenFrom } = require('./controllerHelpers')
 
 customerMessagesRouter.get('/', async (req, res) => {
   let messages = await CustomerMessage
@@ -65,7 +65,7 @@ customerMessagesRouter.put('/:id', async (req, res) => {
       message.reply = body.reply
       message.replySent = moment()
     }
-    
+
     let updatedMessage = await CustomerMessage
       .findByIdAndUpdate(req.params.id, message, { new: true })
       .populate('customer handler')
