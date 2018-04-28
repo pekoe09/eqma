@@ -2,8 +2,6 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const moment = require('moment')
 const usersRouter = require('express').Router()
-//require('./controllerHelpers')
-const { getTokenFrom } = require('./controllerHelpers')
 const User = require('../models/user')
 const Session = require('../models/session')
 
@@ -13,12 +11,6 @@ usersRouter.get('/', async (req, res) => {
 })
 
 usersRouter.post('/', async (req, res) => {
-  //const userId = helpers.getUserIdFromToken(req, res)
-  // if(!userId) {
-  //   return res.status(401).json({ error: 'token missing or invalid' })
-  // }
-
-
   try {
     const body = req.body
     if (!body.username) {
@@ -91,12 +83,7 @@ usersRouter.post('/login', async (req, res) => {
 })
 
 usersRouter.post('/logout', async (req, res) => {
-  const token = getTokenFrom(req)
   try {
-    const decodedToken = jwt.verify(token, process.env.SECRET)
-    if (!token || !decodedToken.userId) {
-      return res.status(401).json({ error: 'token missing or invalid' })
-    }
     const session = Session.findOne({ issuedToken: req.token })
     if (!session) {
       return res.status(401).json({ error: 'session to logout from is not found' })
@@ -106,11 +93,8 @@ usersRouter.post('/logout', async (req, res) => {
 
     res.status(204).end()
   } catch (exception) {
-    if (exception.name === 'JsonWebTokenError') {
-      res.status(401).json({ error: exception.message })
-    } else {
-      res.status(500).json({ error: 'unknown error' })
-    }
+    console.log(exception)
+    res.status(500).json({ error: 'encountered an error while logging out' })
   }
 })
 
@@ -154,11 +138,6 @@ usersRouter.put('/:id', async (req, res) => {
 
 usersRouter.delete('/:id', async (req, res) => {
   try {
-    // const decodedToken = jwt.verify(request.token, process.env.SECRET)
-    // if (!req.token || !decodedToken.id) {
-    //   return res.status(401).json({ error: 'token missing or invalid' })
-    // }
-
     const user = await User.findById(req.params.id)
     if (!user) {
       return res.status(400).json({ error: 'nonexistent id' })

@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { getTokenHeader } from './serviceHelpers'
 
 const login = async (credentials) => {
   const response = await axios.post('/api/users/login', credentials)
@@ -7,18 +6,7 @@ const login = async (credentials) => {
 }
 
 const logout = async () => {
-  const tokenHeader = getTokenHeader()
-  if (!tokenHeader) {
-    return { error: 'cannot log out as token has not been set' }
-  }
-  const config = {
-    headers: { 'Authorization': tokenHeader }
-  }
-  try { await axios.post('/api/users/logout', null, config) }
-  catch (exception) {
-    console.log(exception)
-  }
-  return
+  await axios.post('/api/users/logout', null)
 }
 
 export default { login, logout }

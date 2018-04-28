@@ -23,12 +23,15 @@ app.use(bodyParser.json())
 app.use(tokenExtractor)
 app.use(userExtractor)
 
-app.use('/api/assettransactions', permissionChecker('staff', 'admin'), assetTransactionsRouter)
-app.use('/api/customers', customersRouter)
-app.use('/api/customermessages', customerMessagesRouter)
-app.use('/api/equipment', equipmentsRouter)
-app.use('/api/rentals', rentalsRouter)
-app.use('/api/users', usersRouter)
+app.use('/api/assettransactions', permissionChecker(['user', 'admin'], []), assetTransactionsRouter)
+app.use('/api/customers', permissionChecker(['user', 'admin'], []), customersRouter)
+//TODO: add free path for customers posting a message
+app.use('/api/customermessages', permissionChecker(['user', 'admin'], []), customerMessagesRouter)
+//TODO: add separate free path for listing equipment for customers
+app.use('/api/equipment', permissionChecker(['user', 'admin'], []), equipmentsRouter)
+//TODO: add a self path for customer viewing their own rentals
+app.use('/api/rentals', permissionChecker(['user', 'admin'], []), rentalsRouter)
+app.use('/api/users', permissionChecker(['admin'], ['/login', '/logout']), usersRouter)
 
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../react-ui/build', 'index.html'))
