@@ -10,7 +10,7 @@ const userExtractor = async (req, res, next) => {
     console.log('Extracting from ', req.token)
     const userId = getUserIdFromToken(req.token)
     if (!userId) {
-      res.status(401).json({ error: 'token is invalid' })
+      return res.status(401).json({ error: 'token is invalid' })
     }
     console.log('...got id ', userId)
     req.user = await User.findById(userId)

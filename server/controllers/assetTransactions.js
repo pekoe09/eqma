@@ -3,6 +3,7 @@ const AssetTransaction = require('../models/assetTransaction')
 const Equipment = require('../models/equipment')
 
 assetTransactionRouter.get('/', async (req, res) => {
+  console.log('getting asset transactions')
   const assetTransactions = await AssetTransaction
     .find({})
     .populate('equipment')
