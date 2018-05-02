@@ -2,23 +2,30 @@ const supertest = require('supertest')
 const { app, server } = require('../index')
 const api = supertest(app)
 const AssetTransaction = require('../models/assetTransaction')
+const { getToken } = require('./usertesthelper')
 const { initialTransactions, transactionsInDb, nonExistingId, initTransactions } = require('./assetTransactionstesthelper')
 const { equipmentInDb } = require('./equipmentstesthelper')
 
 describe('GET /api/assettransactions', () => {
+
+  let token = null
+
   beforeAll(async () => {
     await initTransactions()
+    token = await getToken('testadmin3')
   })
 
   it('works', async () => {
     await api
       .get('/api/assettransactions')
+      .set('Authorization', 'Bearer ' + token)
       .expect(200)
   })
 
   it('returns asset transactions as json', async () => {
     await api
       .get('/api/assettransactions')
+      .set('Authorization', 'Bearer ' + token)
       .expect(200)
       .expect('Content-Type', /application\/json/)
   })
@@ -26,6 +33,7 @@ describe('GET /api/assettransactions', () => {
   it('returns the corrent number of asset transactions', async () => {
     const response = await api
       .get('/api/assettransactions')
+      .set('Authorization', 'Bearer ' + token)
 
     const initialTransactionsArray = await initialTransactions()
     expect(response.body.length).toBe(initialTransactionsArray.length)
@@ -34,8 +42,12 @@ describe('GET /api/assettransactions', () => {
 })
 
 describe('POST /api/assettransactions', () => {
+
+  let token = null
+
   beforeEach(async () => {
     await initTransactions()
+    token = await getToken('testadmin3')
   })
 
   it('adds an asset transaction', async () => {
@@ -52,6 +64,7 @@ describe('POST /api/assettransactions', () => {
 
     await api
       .post('/api/assettransactions')
+      .set('Authorization', 'Bearer ' + token)
       .send(newTransaction)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -77,6 +90,7 @@ describe('POST /api/assettransactions', () => {
 
     await api
       .post('/api/assettransactions')
+      .set('Authorization', 'Bearer ' + token)
       .send(newTransaction)
       .expect(400)
 
@@ -98,6 +112,7 @@ describe('POST /api/assettransactions', () => {
 
     await api
       .post('/api/assettransactions')
+      .set('Authorization', 'Bearer ' + token)
       .send(newTransaction)
       .expect(400)
 
@@ -120,6 +135,7 @@ describe('POST /api/assettransactions', () => {
 
     await api
       .post('/api/assettransactions')
+      .set('Authorization', 'Bearer ' + token)
       .send(newTransaction)
       .expect(400)
 
@@ -142,6 +158,7 @@ describe('POST /api/assettransactions', () => {
 
     await api
       .post('/api/assettransactions')
+      .set('Authorization', 'Bearer ' + token)
       .send(newTransaction)
       .expect(400)
 
@@ -164,6 +181,7 @@ describe('POST /api/assettransactions', () => {
 
     await api
       .post('/api/assettransactions')
+      .set('Authorization', 'Bearer ' + token)
       .send(newTransaction)
       .expect(400)
 
@@ -186,6 +204,7 @@ describe('POST /api/assettransactions', () => {
 
     await api
       .post('/api/assettransactions')
+      .set('Authorization', 'Bearer ' + token)
       .send(newTransaction)
       .expect(400)
 

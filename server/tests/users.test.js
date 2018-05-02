@@ -2,25 +2,31 @@ const supertest = require('supertest')
 const { app, server } = require('../index')
 const api = supertest(app)
 const User = require('../models/user')
-const { initialUsers, usersInDb, nonExistingId } = require('./usertesthelper')
+const { initialUsers, usersInDb, nonExistingId, getToken } = require('./usertesthelper')
 
-describe('GET /api/users', () => {
+describe.skip('GET /api/users', () => {
+
+  let token = null
+
   beforeAll(async () => {
     await User.remove({})
     const userObjects = initialUsers.map(user => new User(user))
     const promiseArray = userObjects.map(user => user.save())
     await Promise.all(promiseArray)
+    token = await getToken('testadmin3')
   })
 
   it('works', async () => {
     await api
       .get('/api/users')
+      .set('Authorization', 'Bearer ' + token)
       .expect(200)
   })
 
   it('returns users as json', async () => {
     await api
       .get('/api/users')
+      .set('Authorization', 'Bearer ' + token)
       .expect(200)
       .expect('Content-Type', /application\/json/)
   })
@@ -28,6 +34,7 @@ describe('GET /api/users', () => {
   it('returns the correct number of users', async () => {
     const response = await api
       .get('/api/users')
+      .set('Authorization', 'Bearer ' + token)
 
     expect(response.body.length).toBe(initialUsers.length)
   })
@@ -35,6 +42,7 @@ describe('GET /api/users', () => {
   it('returns all users', async () => {
     const response = await api
       .get('/api/users')
+      .set('Authorization', 'Bearer ' + token)
 
     const usernames = response.body.map(user => user.username)
     initialUsers.forEach(user => expect(usernames).toContain(user.username))
@@ -42,11 +50,15 @@ describe('GET /api/users', () => {
 })
 
 describe('POST /api/users', () => {
+
+  let token = null
+
   beforeEach(async () => {
     await User.remove({})
     const userObjects = initialUsers.map(user => new User(user))
     const promiseArray = userObjects.map(user => user.save())
     await Promise.all(promiseArray)
+    token = await getToken('testadmin3')
   })
 
   test('adds a user', async () => {
@@ -63,6 +75,7 @@ describe('POST /api/users', () => {
 
     await api
       .post('/api/users')
+      .set('Authorization', 'Bearer ' + token)
       .send(newUser)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -85,6 +98,7 @@ describe('POST /api/users', () => {
 
     const response = await api
       .post('/api/users')
+      .set('Authorization', 'Bearer ' + token)
       .send(newUser)
 
     const usersAfter = await usersInDb()
@@ -105,6 +119,7 @@ describe('POST /api/users', () => {
 
     const response = await api
       .post('/api/users')
+      .set('Authorization', 'Bearer ' + token)
       .send(newUser)
       .expect(400)
 
@@ -126,6 +141,7 @@ describe('POST /api/users', () => {
 
     const response = await api
       .post('/api/users')
+      .set('Authorization', 'Bearer ' + token)
       .send(newUser)
       .expect(400)
 
@@ -147,6 +163,7 @@ describe('POST /api/users', () => {
 
     const response = await api
       .post('/api/users')
+      .set('Authorization', 'Bearer ' + token)
       .send(newUser)
       .expect(400)
 
@@ -167,6 +184,7 @@ describe('POST /api/users', () => {
 
     const response = await api
       .post('/api/users')
+      .set('Authorization', 'Bearer ' + token)
       .send(newUser)
       .expect(400)
 
@@ -188,6 +206,7 @@ describe('POST /api/users', () => {
 
     const response = await api
       .post('/api/users')
+      .set('Authorization', 'Bearer ' + token)
       .send(newUser)
       .expect(400)
 
@@ -198,11 +217,15 @@ describe('POST /api/users', () => {
 })
 
 describe('PUT /api/users/:id', () => {
+
+  let token = null
+
   beforeEach(async () => {
     await User.remove({})
     const userObjects = initialUsers.map(user => new User(user))
     const promiseArray = userObjects.map(user => user.save())
     await Promise.all(promiseArray)
+    token = await getToken('testadmin3')
   })
 
   it('updates an existing user', async () => {
@@ -217,6 +240,7 @@ describe('PUT /api/users/:id', () => {
 
     await api
       .put(`/api/users/${target._id}`)
+      .set('Authorization', 'Bearer ' + token)
       .send(target)
       .expect(200)
       .expect('Content-Type', /application\/json/)
@@ -236,6 +260,7 @@ describe('PUT /api/users/:id', () => {
 
     await api
       .put(`/api/users/${nonId}`)
+      .set('Authorization', 'Bearer ' + token)
       .send(target)
       .expect(400)
 
@@ -258,6 +283,7 @@ describe('PUT /api/users/:id', () => {
 
     await api
       .put(`/api/users/${originalTarget._id}`)
+      .set('Authorization', 'Bearer ' + token)
       .send(target)
       .expect(400)
 
@@ -281,6 +307,7 @@ describe('PUT /api/users/:id', () => {
 
     await api
       .put(`/api/users/${originalTarget._id}`)
+      .set('Authorization', 'Bearer ' + token)
       .send(target)
       .expect(400)
 
@@ -304,6 +331,7 @@ describe('PUT /api/users/:id', () => {
 
     await api
       .put(`/api/users/${originalTarget._id}`)
+      .set('Authorization', 'Bearer ' + token)
       .send(target)
       .expect(400)
 
@@ -315,11 +343,19 @@ describe('PUT /api/users/:id', () => {
 })
 
 describe('DELETE /api/users/:id', () => {
+
+  let token = null
+
+  beforeAll(async () => {
+    token = await getToken('testadmin3')
+  })
+
   it('deletes the correct user', async () => {
     const usersBefore = await usersInDb()
 
     await api
       .delete(`/api/users/${usersBefore[1]._id}`)
+      .set('Authorization', 'Bearer ' + token)
       .expect(204)
 
     const usersAfter = await usersInDb()
@@ -334,6 +370,7 @@ describe('DELETE /api/users/:id', () => {
 
     await api
       .delete(`/api/users/${nonId}`)
+      .set('Authorization', 'Bearer ' + token)
       .expect(400)
 
     const usersAfter = await usersInDb()

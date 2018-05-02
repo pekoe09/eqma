@@ -2,22 +2,29 @@ const supertest = require('supertest')
 const { app, server } = require('../index')
 const api = supertest(app)
 const Equipment = require('../models/equipment')
+const { getToken } = require('./usertesthelper')
 const { initialEquipment, equipmentInDb, nonExistingId, initEquipments } = require('./equipmentstesthelper')
 
 describe('GET /api/equipment', () => {
+
+  let token = null
+
   beforeAll(async () => {
     await initEquipments()
+    token = await getToken('testadmin3')
   })
 
   it('works', async () => {
     await api
       .get('/api/equipment')
+      .set('Authorization', 'Bearer ' + token)
       .expect(200)
   })
 
   it('returns equipment as json', async () => {
     await api
       .get('/api/equipment')
+      .set('Authorization', 'Bearer ' + token)
       .expect(200)
       .expect('Content-Type', /application\/json/)
   })
@@ -25,6 +32,7 @@ describe('GET /api/equipment', () => {
   it('returns the corrent number of equipment', async () => {
     const response = await api
       .get('/api/equipment')
+      .set('Authorization', 'Bearer ' + token)
 
     expect(response.body.length).toBe(initialEquipment.length)
   })
@@ -32,6 +40,7 @@ describe('GET /api/equipment', () => {
   it('returns all equipment', async () => {
     const response = await api
       .get('/api/equipment')
+      .set('Authorization', 'Bearer ' + token)
 
     const equipmentNames = response.body.map(e => e.name)
     initialEquipment.forEach(e => expect(equipmentNames).toContain(e.name))
@@ -39,8 +48,12 @@ describe('GET /api/equipment', () => {
 })
 
 describe('POST /api/equipment', () => {
+
+  let token = null
+
   beforeEach(async () => {
     await initEquipments()
+    token = await getToken('testadmin3')
   })
 
   it('adds an equipment', async () => {
@@ -61,6 +74,7 @@ describe('POST /api/equipment', () => {
 
     await api
       .post('/api/equipment')
+      .set('Authorization', 'Bearer ' + token)
       .send(newEquipment)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -89,6 +103,7 @@ describe('POST /api/equipment', () => {
 
     const response = await api
       .post('/api/equipment')
+      .set('Authorization', 'Bearer ' + token)
       .send(newEquipment)
       .expect(400)
 
@@ -115,6 +130,7 @@ describe('POST /api/equipment', () => {
 
     const response = await api
       .post('/api/equipment')
+      .set('Authorization', 'Bearer ' + token)
       .send(newEquipment)
       .expect(400)
 
@@ -125,8 +141,12 @@ describe('POST /api/equipment', () => {
 })
 
 describe('PUT /api/equipment/:id', () => {
+
+  let token = null
+
   beforeEach(async () => {
     await initEquipments()
+    token = await getToken('testadmin3')
   })
 
   it('updates an existing equipment', async () => {
@@ -142,6 +162,7 @@ describe('PUT /api/equipment/:id', () => {
 
     await api
       .put(`/api/equipment/${target._id}`)
+      .set('Authorization', 'Bearer ' + token)
       .send(target)
       .expect(200)
       .expect('Content-Type', /application\/json/)
@@ -161,6 +182,7 @@ describe('PUT /api/equipment/:id', () => {
 
     await api
       .put(`/api/equipment/${nonId}`)
+      .set('Authorization', 'Bearer ' + token)
       .send(target)
       .expect(400)
 
@@ -184,6 +206,7 @@ describe('PUT /api/equipment/:id', () => {
 
     await api
       .put(`/api/equipment/${originalTarget._id}`)
+      .set('Authorization', 'Bearer ' + token)
       .send(target)
       .expect(400)
 
@@ -208,6 +231,7 @@ describe('PUT /api/equipment/:id', () => {
 
     await api
       .put(`/api/equipment/${originalTarget._id}`)
+      .set('Authorization', 'Bearer ' + token)
       .send(target)
       .expect(400)
 
@@ -219,8 +243,12 @@ describe('PUT /api/equipment/:id', () => {
 })
 
 describe('DELETE /api/equipment/:id', () => {
+
+  let token = null
+
   beforeEach(async () => {
     await initEquipments()
+    token = await getToken('testadmin3')
   })
 
   it('deletes the correct equipment', async () => {
@@ -228,6 +256,7 @@ describe('DELETE /api/equipment/:id', () => {
 
     await api
       .delete(`/api/equipment/${equipmentBefore[1]._id}`)
+      .set('Authorization', 'Bearer ' + token)
       .expect(204)
 
     const equipmentAfter = await equipmentInDb()
@@ -242,6 +271,7 @@ describe('DELETE /api/equipment/:id', () => {
 
     await api
       .delete(`/api/equipment/${nonId}`)
+      .set('Authorization', 'Bearer ' + token)
       .expect(400)
 
     const equipmentAfter = await equipmentInDb()
