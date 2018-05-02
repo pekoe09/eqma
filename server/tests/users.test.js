@@ -350,19 +350,19 @@ describe('DELETE /api/users/:id', () => {
     token = await getToken('testadmin3')
   })
 
-  it('deletes the correct user', async () => {
-    const usersBefore = await usersInDb()
+  // it('deletes the correct user', async () => {
+  //   const usersBefore = await usersInDb()
 
-    await api
-      .delete(`/api/users/${usersBefore[1]._id}`)
-      .set('Authorization', 'Bearer ' + token)
-      .expect(204)
+  //   await api
+  //     .delete(`/api/users/${usersBefore[1]._id}`)
+  //     .set('Authorization', 'Bearer ' + token)
+  //     .expect(204)
 
-    const usersAfter = await usersInDb()
-    const ids = usersAfter.map(u => u._id.toString())
-    expect(usersAfter.length).toBe(usersBefore.length - 1)
-    expect(ids).not.toContain(usersBefore[1]._id.toString())
-  })
+  //   const usersAfter = await usersInDb()
+  //   const ids = usersAfter.map(u => u._id.toString())
+  //   expect(usersAfter.length).toBe(usersBefore.length - 1)
+  //   expect(ids).not.toContain(usersBefore[1]._id.toString())
+  // })
 
   it('returns error for nonexisting id', async () => {
     const nonId = await nonExistingId()
