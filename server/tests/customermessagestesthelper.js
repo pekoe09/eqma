@@ -1,4 +1,6 @@
 const CustomerMessage = require('../models/customerMessage')
+const Customer = require('../models/customer')
+const User = require('../models/user')
 
 const initialCustomerMessages = [
   {
@@ -22,7 +24,7 @@ const initialCustomerMessages = [
 ]
 
 const customerMessagesInDb = async () => {
-  const customerMessages = await CustomerMessage.find({})
+  const customerMessages = await CustomerMessage.find({}).populate('customer handler')
   return customerMessages
 }
 
@@ -38,7 +40,16 @@ const nonExisitingId = async () => {
 
 const initCustomerMessages = async () => {
   await CustomerMessage.remove({})
-  const customerMessageObjects = initialCustomerMessages.map(m => new CustomerMessage(m))
+  const customers = await Customer.find({})
+  const users = await User.find({})
+  const customerMessageObjects = initialCustomerMessages.map(m => {
+    const messageProperties = {
+      ...m,
+      customer: customers[1],
+      handler: users[1]
+    }
+    return new CustomerMessage(messageProperties)
+  })
   const promiseArray = customerMessageObjects.map(m => m.save())
   await Promise.all(promiseArray)
 }

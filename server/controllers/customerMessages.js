@@ -28,7 +28,6 @@ customerMessagesRouter.post('/', async (req, res) => {
       message: body.message,
       sent: moment()
     })
-    console.log('Saving ', message)
     const savedMessage = await message
       .save()
     res.status(201).json(savedMessage)
@@ -42,24 +41,17 @@ customerMessagesRouter.post('/', async (req, res) => {
 
 customerMessagesRouter.put('/:id', async (req, res) => {
   // only possible fields to update: handler and reply (with replySent)
-  const token = getTokenFrom(req)
   try {
-    const decodedToken = jwt.verify(token, process.env.SECRET)
-    if (!token || !decodedToken.userId) {
-      return res.status(401).json({ error: 'token missing or invalid' })
-    }
-    const userId = decodedToken.userId
-
     const message = await CustomerMessage.findById(req.params.id)
     if (!message) {
       return res.status(400).json({ error: 'nonexistent id' })
     }
-
+    
     const body = req.body
     if (body.handlerDropped) {
       message.handler = null
     } else if (!message.handler) {
-      message.handler = userId
+      message.handler = req.user._id
     }
     if (body.reply) {
       message.reply = body.reply
@@ -71,14 +63,11 @@ customerMessagesRouter.put('/:id', async (req, res) => {
       .populate('customer handler')
     res.json(updatedMessage)
   } catch (exception) {
-    if (exception.name === 'JsonWebTokenError') {
-      res.status(401).json({ error: exception.message })
-    } else {
-      console.log(exception)
-      res.status(500).json({
-        error: 'encountered an error while trying to update a customer message'
-      })
-    }
+
+    console.log(exception)
+    res.status(500).json({
+      error: 'encountered an error while trying to update a customer message'
+    })
   }
 })
 
