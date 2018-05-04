@@ -55,20 +55,19 @@ customerRouter.put('/:id', async (req, res) => {
       lastName: body.lastName,
       firstNames: body.firstNames,
       company: body.company,
-      billingAddress: {
-        street1: body.billingAddress.street1,
-        street2: body.billingAddress.street2,
-        zip: body.billingAddress.zip,
-        city: body.billingAddress.city,
-        country: body.billingAddress.country
-      }
+      email: body.email,
+      phone: body.phone,
+      isInvoicable: body.isInvoicable,
+      billingAddress: body.billingAddress
     }
+
     const updatedCustomer = await Customer.findByIdAndUpdate(
       req.params.id, customer, { new: true })
+
     res.json(updatedCustomer)
   } catch (exception) {
     res.status(500).json({
-      error: 'encountered an error while trying to update an equipment'
+      error: 'encountered an error while trying to update a customer' + exception.message
     })
   }
 })
