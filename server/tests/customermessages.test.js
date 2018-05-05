@@ -300,6 +300,55 @@ describe('PUT /api/customermessages/:id', async () => {
 
 })
 
+describe('DELETE /api/customermessages/:id', async () => {
+
+  let token = null
+
+  beforeEach(async () => {
+    await initCustomerMessages()
+    token = await getToken('testadmin3')
+  })
+
+  it('deletes the correct customer message', async () => {
+    const messageBefore = await customerMessagesInDb()
+
+    await api
+      .delete(`/api/customermessages/${messageBefore[1]._id}`)
+      .set('Authorization', 'Bearer ' + token)
+      .expect(204)
+
+    const messagesAfter = await customerMessagesInDb()
+    const ids = messagesAfter.map(m => m._id.toString())
+    expect(messagesAfter.length).toBe(messageBefore.length - 1)
+    expect(ids).not.toContain(messageBefore[1]._id.toString())
+  })
+
+  it('prevents operation without authentication', async () => {
+    const messagesBefore = await customerMessagesInDb()
+
+    await api
+      .delete(`/api/customermessages/${messagesBefore[1]._id}`)
+      .expect(403)
+
+    const messagesAfter = await customerMessagesInDb()
+    expect(messagesAfter.length).toBe(messagesBefore.length)
+  })
+
+  it('returns error for nonexisting id', async () => {
+    const nonId = await nonExisitingId()
+    const messagesBefore = await customerMessagesInDb()
+
+    await api
+      .delete(`/api/customermessages/${nonId}`)
+      .set('Authorization', 'Bearer ' + token)
+      .expect(400)
+
+    const messagesAfter = await customerMessagesInDb()
+    expect(messagesAfter.length).toBe(messagesBefore.length)
+  })
+
+})
+
 afterAll(async () => {
   await server.close()
 })
