@@ -74,13 +74,9 @@ equipmentRouter.delete('/:id', async (req, res) => {
     res.status(204).end()
   } catch (exception) {
     console.log(exception)
-    if (exception.name === 'JsonWebTokenError') {
-      res.status(401).json({ error: 'token is rejected' })
-    } else {
-      res.status(500).json({
-        error: 'encountered an error while trying to delete an equipment'
-      })
-    }
+    res.status(500).json({
+      error: 'encountered an error while trying to delete an equipment'
+    })
   }
 })
 
