@@ -5,6 +5,10 @@ const equipmentSchema = new mongoose.Schema({
     type: String,
     isRequired: true
   },
+  equipmentType: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'EquipmentType'
+  },
   make: String,
   model: String,
   description: String,
@@ -13,7 +17,11 @@ const equipmentSchema = new mongoose.Schema({
     value: String
   }],
   price: Number,
-  timeUnit: String
+  timeUnit: String,
+  equipmentUnits: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'EquipmentUnit'
+  }]
 })
 
 equipmentSchema.virtual('makeAndModel').get(function () {

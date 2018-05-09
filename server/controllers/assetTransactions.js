@@ -1,24 +1,24 @@
 const assetTransactionRouter = require('express').Router()
 const AssetTransaction = require('../models/assetTransaction')
-const Equipment = require('../models/equipment')
+const EquipmentUnit = require('../models/equipmentUnit')
 
 assetTransactionRouter.get('/', async (req, res) => {
   console.log('getting asset transactions')
   const assetTransactions = await AssetTransaction
     .find({})
-    .populate('equipment')
+    .populate('equipmentUnit')
   res.json(assetTransactions)
 })
 
 assetTransactionRouter.post('/', async (req, res) => {
   try {
     const body = req.body
-    if (!body.equipment) {
-      return res.status(400).json({ error: 'equipment is missing' })
+    if (!body.equipmentUnit) {
+      return res.status(400).json({ error: 'equipment unit is missing' })
     }
-    const equipment = await Equipment.findById(body.equipment)
-    if (!equipment) {
-      return res.status(400).json({ error: 'invalid equipment id' })
+    const equipmentUnit = await EquipmentUnit.findById(body.equipment)
+    if (!equipmentUnit) {
+      return res.status(400).json({ error: 'invalid equipment unit id' })
     }
     if (!body.date) {
       return res.status(400).json({ error: 'date is missing' })
@@ -34,7 +34,7 @@ assetTransactionRouter.post('/', async (req, res) => {
     }
 
     const assetTransaction = new AssetTransaction({
-      equipment: body.equipment,
+      equipmentUnit: body.equipmentUnit,
       date: body.date,
       type: body.type,
       value: body.value,
@@ -45,12 +45,12 @@ assetTransactionRouter.post('/', async (req, res) => {
     const savedTransaction = await assetTransaction.save()
     const populatedTransaction = await AssetTransaction
       .findById(savedTransaction._id)
-      .populate('equipment')
-    if (!equipment.transactions) {
-      equipment.transactions = []
+      .populate('equipmentUnit')
+    if (!equipmentUnit.transactions) {
+      equipmentUnit.transactions = []
     }
-    equipment.transactions = equipment.transactions.concat(savedTransaction._id)
-    await Equipment.findByIdAndUpdate(equipment._id, equipment)
+    equipmentUnit.transactions = equipmentUnit.transactions.concat(savedTransaction._id)
+    await EquipmentUnit.findByIdAndUpdate(equipmentUnit._id, equipmentUnit)
 
     res.status(201).json(populatedTransaction)
   } catch (exception) {
@@ -69,12 +69,12 @@ assetTransactionRouter.put('/:id', async (req, res) => {
     }
 
     const body = req.body
-    if (!body.equipment) {
-      return res.status(400).json({ error: 'equipment is missing' })
+    if (!body.equipmentUnit) {
+      return res.status(400).json({ error: 'equipment unit is missing' })
     }
-    const equipment = Equipment.findById(body.equipment)
-    if (!equipment) {
-      return res.status(400).json({ error: 'invalid equipment id' })
+    const equipmentUnit = EquipmentUnit.findById(body.equipmentUnit)
+    if (!equipmentUnit) {
+      return res.status(400).json({ error: 'invalid equipment unit id' })
     }
     if (!body.date) {
       return res.status(400).json({ error: 'date is missing' })
@@ -93,7 +93,7 @@ assetTransactionRouter.put('/:id', async (req, res) => {
     }
 
     const assetTransaction = new AssetTransaction({
-      equipment: body.equipment,
+      equipmentUnit: body.equipmentUnit,
       date: body.date,
       type: body.type,
       value: body.value,

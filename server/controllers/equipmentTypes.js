@@ -25,7 +25,7 @@ equipmentTypeRouter.post('/', async (req, res) => {
 
     let parentType = null
     if (body.parentType) {
-      parentType = EquipmentType.findById(body.parentType)
+      parentType = await EquipmentType.findById(body.parentType)
       if (!parentType) {
         return res.status(400).json({ error: 'parent type cannot be found' })
       }
@@ -35,7 +35,7 @@ equipmentTypeRouter.post('/', async (req, res) => {
       parentType.childTypes = parentType.childTypes.concat(savedEquipmentType._id)
       await EquipmentType.findByIdAndUpdate(parentType._id, parentType)
     }
-    savedEquipmentType = EquipmentType
+    savedEquipmentType = await EquipmentType
       .findById(savedEquipmentType._id)
       .populate('parentType')
     res.status(201).json(savedEquipmentType)

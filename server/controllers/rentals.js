@@ -4,7 +4,7 @@ const Rental = require('../models/rental')
 rentalsRouter.get('/', async (req, res) => {
   let rentals = await Rental
     .find({})
-    .populate('equipment customer')
+    .populate('equipmentUnit customer')
   rentals = rentals.map(r => Rental.format(r._doc))
   res.json(rentals)
 })
@@ -13,8 +13,8 @@ rentalsRouter.post('/', async (req, res) => {
   try {
     const body = req.body
     console.log('Renting ', req.body)
-    if (!body.equipment) {
-      return res.status(400).json({ error: 'equipment is missing' })
+    if (!body.equipmentUnit) {
+      return res.status(400).json({ error: 'equipment unit is missing' })
     }
     if (!body.customer) {
       return res.status(400).json({ error: 'customer is missing' })
@@ -33,7 +33,7 @@ rentalsRouter.post('/', async (req, res) => {
     }
 
     const rental = new Rental({
-      equipment: body.equipment,
+      equipmentUnit: body.equipmentUnit,
       customer: body.customer,
       start: body.start,
       end: body.end,
@@ -43,8 +43,8 @@ rentalsRouter.post('/', async (req, res) => {
     const savedRental = await rental.save()
     const populatedRental = await Rental
       .findById(savedRental._id)
-      .populate('customer equipment')
-    console.log("Returning ", populatedRental)
+      .populate('customer equipmentUnit')
+    console.log('Returning ', populatedRental)
     res.status(201).json(populatedRental)
   } catch (exception) {
     console.log(exception)
@@ -62,8 +62,8 @@ rentalsRouter.put('/:id', async (req, res) => {
     }
 
     const body = req.body
-    if (!body.equipment) {
-      return res.status(400).json({ error: 'equipment is missing' })
+    if (!body.equipmentUnit) {
+      return res.status(400).json({ error: 'equipment unit is missing' })
     }
     if (!body.customer) {
       return res.status(400).json({ error: 'customer is missing' })
@@ -82,7 +82,7 @@ rentalsRouter.put('/:id', async (req, res) => {
     }
 
     const rental = {
-      equipment: body.equipment,
+      equipmentUnit: body.equipmentUnit,
       customer: body.customer,
       start: body.start,
       end: body.end,
