@@ -35,10 +35,20 @@ const loginFormStyle = {
 const EquipmentDropdownStaff = () => (
   <Dropdown item text='Equipment' style={menuDropdownStyle}>
     <Dropdown.Menu>
+      <Dropdown.Header content='Equipment units' />
+      <Dropdown.Item><NavLink to='/equipmentunits'>Browse</NavLink></Dropdown.Item>
+      <Dropdown.Item><NavLink to='/equipmentunits/create'>Create new</NavLink></Dropdown.Item>
+      <Dropdown.Item><NavLink to='/equipmentunits/services'>Services</NavLink></Dropdown.Item>
+      <Dropdown.Divider />
       <Dropdown.Header content='Equipment' />
       <Dropdown.Item><NavLink to='/equipment'>Browse</NavLink></Dropdown.Item>
       <Dropdown.Item><NavLink to='/equipment/create'>Create new</NavLink></Dropdown.Item>
       <Dropdown.Item><NavLink to='/equipment/services'>Services</NavLink></Dropdown.Item>
+      <Dropdown.Divider />
+      <Dropdown.Header content='Equipment types' />
+      <Dropdown.Item><NavLink to='/equipmenttypes'>Browse</NavLink></Dropdown.Item>
+      <Dropdown.Item><NavLink to='/equipmenttypes/create'>Create new</NavLink></Dropdown.Item>
+      <Dropdown.Item><NavLink to='/equipmenttypes/services'>Services</NavLink></Dropdown.Item>
       <Dropdown.Divider />
       <Dropdown.Header content='Asset transactions' />
       <Dropdown.Item><NavLink to='/assettransactions'>Browse</NavLink></Dropdown.Item>

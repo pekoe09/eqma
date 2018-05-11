@@ -260,8 +260,6 @@ describe('PUT /api/equipmentunits/:id', () => {
     const equipmentsAfter = await equipmentInDb()
     const oldEquipment = equipmentsAfter.find(e => e._id.toString() === equipments[1]._id.toString())
     const newEquipment = equipmentsAfter.find(e => e._id.toString() === equipments[2]._id.toString())
-    console.log(oldEquipment)
-    console.log(newEquipment)
     expect(oldEquipment.equipmentUnits).not.toContain(target._id.toString())
     expect(newEquipment.equipmentUnits.length).toBe(1)
     expect(newEquipment.equipmentUnits[0].toString()).toEqual(target._id.toString())
