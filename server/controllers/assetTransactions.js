@@ -3,7 +3,6 @@ const AssetTransaction = require('../models/assetTransaction')
 const EquipmentUnit = require('../models/equipmentUnit')
 
 assetTransactionRouter.get('/', async (req, res) => {
-  console.log('getting asset transactions')
   const assetTransactions = await AssetTransaction
     .find({})
     .populate('equipmentUnit')
@@ -16,7 +15,7 @@ assetTransactionRouter.post('/', async (req, res) => {
     if (!body.equipmentUnit) {
       return res.status(400).json({ error: 'equipment unit is missing' })
     }
-    const equipmentUnit = await EquipmentUnit.findById(body.equipment)
+    const equipmentUnit = await EquipmentUnit.findById(body.equipmentUnit)
     if (!equipmentUnit) {
       return res.status(400).json({ error: 'invalid equipment unit id' })
     }
@@ -63,7 +62,7 @@ assetTransactionRouter.post('/', async (req, res) => {
 
 assetTransactionRouter.put('/:id', async (req, res) => {
   try {
-    const match = AssetTransaction.findById(req.params.id)
+    const match = await AssetTransaction.findById(req.params.id)
     if (!match) {
       return res.status(400).json({ error: 'nonexistent id' })
     }
@@ -87,9 +86,6 @@ assetTransactionRouter.put('/:id', async (req, res) => {
     }
     if (!body.description) {
       return res.status(400).json({ error: 'description is missing' })
-    }
-    if (!body.isDeleted) {
-      return res.status(400).json({ error: 'deletion status is missing' })
     }
 
     const assetTransaction = new AssetTransaction({

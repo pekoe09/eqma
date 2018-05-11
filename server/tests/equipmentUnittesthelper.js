@@ -1,19 +1,33 @@
 const EquipmentUnit = require('../models/equipmentUnit')
+const { equipmentInDb } = require('./equipmentstesthelper')
 
 const initialEquipmentUnits = [
   {
-
+    registration: '1111',
+    VIN: 'aaaa',
+    assetID: 'ID1'
   },
   {
-
+    registration: '1111',
+    VIN: 'aaaa',
+    assetID: 'ID1'
   },
   {
-
+    registration: '1111',
+    VIN: 'aaaa',
+    assetID: 'ID1'
   }
 ]
 
 const equipmentUnitsInDb = async () => {
-  const equipmentUnits = await EquipmentUnit.find({})
+  const equipmentUnits = await EquipmentUnit
+    .find({})
+    .populate({
+      path: 'equipment',
+      populate: {
+        path: 'equipmentType'
+      }
+    })
   return equipmentUnits
 }
 
@@ -29,8 +43,14 @@ const nonExistingId = async () => {
 
 const initEquipmentUnits = async () => {
   await EquipmentUnit.remove({})
-  const equipmentUnitObjects = initialEquipmentUnits.map(e => new EquipmentUnit(e))
-  const promiseArray = equipmentUnitObjects.map(e = > e.save())
+  const equipment = equipmentInDb()
+  const equipmentUnitObjects = initialEquipmentUnits.map(e => new EquipmentUnit({
+    registration: e.registration,
+    VIN: e.VIN,
+    assetID: e.assetID,
+    equipment: equipment[0]
+  }))
+  const promiseArray = equipmentUnitObjects.map(e => e.save())
   await Promise.all(promiseArray)
 }
 

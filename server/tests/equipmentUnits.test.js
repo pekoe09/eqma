@@ -79,7 +79,7 @@ describe('POST /api/equipmentunits', () => {
       equipment: equipments[1],
       registration: '123245',
       VIN: 'abcde',
-      assetId: 'Testequip4'
+      assetID: 'Testequip4'
     }
 
     await api
@@ -98,17 +98,17 @@ describe('POST /api/equipmentunits', () => {
 
   it('prevents adding an equipment unit without authentication', async () => {
     const equipmentUnitsBefore = await equipmentUnitsInDb()
+    const equipment = await equipmentInDb()
 
     const newEquipmentUnit = {
-      equipment: equipments[1],
+      equipment: equipment[1],
       registration: '123245',
       VIN: 'abcde',
-      assetId: 'Testequip4'
+      assetID: 'Testequip4'
     }
 
     await api
       .post('/api/equipmentunits')
-      .set('Authorization', 'Bearer ' + token)
       .send(newEquipmentUnit)
       .expect(403)
 
@@ -123,7 +123,7 @@ describe('POST /api/equipmentunits', () => {
       equipment: equipments[1],
       registration: '123245',
       VIN: 'abcde',
-      assetId: 'Testequip4'
+      assetID: 'Testequip4'
     }
 
     const response = await api
@@ -191,11 +191,13 @@ describe('PUT /api/equipmentunits/:id', () => {
 
   it('updates an existing equipment unit', async () => {
     const equipmentUnitsBefore = await equipmentUnitsInDb()
+    const equipment = await equipmentInDb()
 
     const target = equipmentUnitsBefore[1]
     target.assetID = 'xxxyyy'
     target.VIN = '9999'
     target.registration = '6666'
+    target.equipment = equipment[1]
 
     await api
       .put(`/api/equipmentunits/${target._id}`)
@@ -207,12 +209,16 @@ describe('PUT /api/equipmentunits/:id', () => {
     const equipmentUnitsAfter = await equipmentUnitsInDb()
     const match = equipmentUnitsAfter.find(e => e._id.toString() === target._id.toString())
     expect(equipmentUnitsAfter.length).toBe(equipmentUnitsBefore.length)
-    expect(match.toJSON()).toEqual(target.toJSON())
+    expect(match.assetID).toEqual(target.assetID)
+    expect(match.VIN).toEqual(target.VIN)
+    expect(match.registration).toEqual(target.registration)
+    expect(match.equipment._id.toString()).toEqual(target.equipment._id.toString())
   })
 
   it('prevents updating without authentication', async () => {
     const equipmentUnitsBefore = await equipmentUnitsInDb()
 
+    const oldAssetID = equipmentUnitsBefore[1].assetID
     const target = equipmentUnitsBefore[1]
     target.assetID = 'xxxyyy'
     target.VIN = '9999'
@@ -226,11 +232,10 @@ describe('PUT /api/equipmentunits/:id', () => {
     const equipmentUnitsAfter = await equipmentUnitsInDb()
     const match = equipmentUnitsAfter.find(e => e._id.toString() === target._id.toString())
     expect(equipmentUnitsAfter.length).toBe(equipmentUnitsBefore.length)
-    expect(match.assetID).toEqual(equipmentUnitsBefore[1].assetID)
+    expect(match.assetID).toEqual(oldAssetID)
   })
 
   it('updates the parent equipments units', async () => {
-    const equipmentUnitsBefore = await equipmentUnitsInDb()
     const equipments = await equipmentInDb()
 
     const newEquipmentUnit = {
@@ -255,7 +260,9 @@ describe('PUT /api/equipmentunits/:id', () => {
     const equipmentsAfter = await equipmentInDb()
     const oldEquipment = equipmentsAfter.find(e => e._id.toString() === equipments[1]._id.toString())
     const newEquipment = equipmentsAfter.find(e => e._id.toString() === equipments[2]._id.toString())
-    expect(oldEquipment.equipmentUnits.length).toBe(0)
+    console.log(oldEquipment)
+    console.log(newEquipment)
+    expect(oldEquipment.equipmentUnits).not.toContain(target._id.toString())
     expect(newEquipment.equipmentUnits.length).toBe(1)
     expect(newEquipment.equipmentUnits[0].toString()).toEqual(target._id.toString())
   })
@@ -279,11 +286,15 @@ describe('PUT /api/equipmentunits/:id', () => {
     expect(assetIDs).not.toContain(target.assetID)
   })
 
-  it('does not accept equipment type without a name', async () => {
-    const equipmentTypesBefore = await equipmentUnitsInDb()
+  it('does not accept equipment unit without an asset ID', async () => {
+    const equipmentUnitsBefore = await equipmentUnitsInDb()
 
-    const originalTarget = equipmentTypesBefore[1]
-    const target = {}
+    const originalTarget = equipmentUnitsBefore[1]
+    const target = {
+      VIN: originalTarget.VIN,
+      registration: 'Changed',
+      equipment: originalTarget.equipment
+    }
 
     await api
       .put(`/api/equipmentunits/${originalTarget._id}`)
@@ -291,30 +302,32 @@ describe('PUT /api/equipmentunits/:id', () => {
       .send(target)
       .expect(400)
 
-    const equipmentTypesAfter = await equipmentUnitsInDb()
-    const match = equipmentTypesAfter.find(e => e._id.toString() === originalTarget._id.toString())
-    expect(equipmentTypesAfter.length).toBe(equipmentTypesBefore.length)
-    expect(match.toJSON()).toEqual(originalTarget.toJSON())
+    const equipmentUnitsAfter = await equipmentUnitsInDb()
+    const match = equipmentUnitsAfter.find(e => e._id.toString() === originalTarget._id.toString())
+    expect(equipmentUnitsAfter.length).toBe(equipmentUnitsBefore.length)
+    expect(match.registration).toEqual(originalTarget.registration)
   })
 
-  it('does not accept equipment type with an empty string as a name', async () => {
-    const equipmentTypesBefore = await equipmentUnitsInDb()
+  it('does not accept equipment unit without an equipment', async () => {
+    const equipmentUnitsBefore = await equipmentUnitsInDb()
 
-    const originalTarget = equipmentTypesBefore[1]
+    const originalTarget = equipmentUnitsBefore[1]
     const target = {
-      name: ''
+      VIN: originalTarget.VIN,
+      registration: 'Changed',
+      assetID: 'Changed'
     }
 
     await api
-      .put(`/api/equipmenttypes/${originalTarget._id}`)
+      .put(`/api/equipmentunits/${originalTarget._id}`)
       .set('Authorization', 'Bearer ' + token)
       .send(target)
       .expect(400)
 
-    const equipmentTypesAfter = await equipmentUnitsInDb()
-    const match = equipmentTypesAfter.find(e => e._id.toString() === originalTarget._id.toString())
-    expect(equipmentTypesAfter.length).toBe(equipmentTypesBefore.length)
-    expect(match.toJSON()).toEqual(originalTarget.toJSON())
+    const equipmentUnitsAfter = await equipmentUnitsInDb()
+    const match = equipmentUnitsAfter.find(e => e._id.toString() === originalTarget._id.toString())
+    expect(equipmentUnitsAfter.length).toBe(equipmentUnitsBefore.length)
+    expect(match.registration).toEqual(originalTarget.registration)
   })
 })
 
@@ -327,31 +340,31 @@ describe('DELETE /api/equipmentunits/:id', () => {
     token = await getToken('testadmin3')
   })
 
-  it('deletes the correct equipment type', async () => {
-    const equipmentTypesBefore = await equipmentUnitsInDb()
+  it('deletes the correct equipment unit', async () => {
+    const equipmentUnitsBefore = await equipmentUnitsInDb()
 
     await api
-      .delete(`/api/equipmentunits/${equipmentTypesBefore[1]._id}`)
+      .delete(`/api/equipmentunits/${equipmentUnitsBefore[1]._id}`)
       .set('Authorization', 'Bearer ' + token)
       .expect(204)
 
-    const equipmentTypesAfter = await equipmentUnitsInDb()
-    const ids = equipmentTypesAfter.map(e => e._id.toString())
-    expect(equipmentTypesAfter.length).toBe(equipmentTypesBefore.length - 1)
-    expect(ids).not.toContain(equipmentTypesBefore[1]._id.toString())
+    const equipmentUnitsAfter = await equipmentUnitsInDb()
+    const ids = equipmentUnitsAfter.map(e => e._id.toString())
+    expect(equipmentUnitsAfter.length).toBe(equipmentUnitsBefore.length - 1)
+    expect(ids).not.toContain(equipmentUnitsBefore[1]._id.toString())
   })
 
   it('returns error for nonexisting id', async () => {
     const nonId = await nonExistingId()
-    const equipmentTypesBefore = await equipmentUnitsInDb()
+    const equipmentUnitsBefore = await equipmentUnitsInDb()
 
     await api
       .delete(`/api/equipmentunits/${nonId}`)
       .set('Authorization', 'Bearer ' + token)
       .expect(400)
 
-    const equipmentTypesAfter = await equipmentUnitsInDb()
-    expect(equipmentTypesAfter.length).toBe(equipmentTypesBefore.length)
+    const equipmentUnitsAfter = await equipmentUnitsInDb()
+    expect(equipmentUnitsAfter.length).toBe(equipmentUnitsBefore.length)
   })
 })
 
