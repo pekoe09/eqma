@@ -28,6 +28,8 @@ export const createEquipmentType = (equipmentType) => {
 export const updateEquipmentType = (equipmentType) => {
   return async (dispatch) => {
     const updatedEquipmentType = await equipmentTypeService.update(equipmentType)
+    console.log('Updated type in reducer')
+    console.log(updatedEquipmentType)
     dispatch({
       type: 'UPDATE_EQUIPMENT_TYPE',
       updatedEquipmentType

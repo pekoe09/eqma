@@ -94,7 +94,7 @@ class EquipmentEdit extends React.Component {
             <Form.Field>
               <Button primary>
                 Save
-            </Button>
+              </Button>
             </Form.Field>
           </Form>
         </div>

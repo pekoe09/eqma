@@ -8,6 +8,8 @@ import { initializeAssetTransactions } from '../../reducers/assetTransactionRedu
 import { initializeCustomers } from '../../reducers/customerReducer'
 import { initializeCustomerMessages } from '../../reducers/customerMessageReducer'
 import { initializeEquipment } from '../../reducers/equipmentReducer'
+import { initializeEquipmentTypes } from '../../reducers/equipmentTypeReducer'
+import { initializeEquipmentUnits } from '../../reducers/equipmentUnitReducer'
 import { initializeRentals } from '../../reducers/rentalReducer'
 
 const loginInputStyle = {
@@ -41,7 +43,9 @@ class Login extends React.Component {
     await this.props.login(credentials)
 
     this.props.initializeUsers()
+    this.props.initializeEquipmentTypes()
     this.props.initializeEquipment()
+    this.props.initializeEquipmentUnits()
     this.props.initializeAssetTransactions()
     this.props.initializeCustomers()
     this.props.initializeCustomerMessages()
@@ -75,6 +79,8 @@ export default withRouter(connect(
     initializeCustomers,
     initializeCustomerMessages,
     initializeEquipment,
+    initializeEquipmentTypes,
+    initializeEquipmentUnits,
     initializeRentals,
     initializeUsers
   }

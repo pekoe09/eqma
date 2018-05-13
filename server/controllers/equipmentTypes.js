@@ -5,7 +5,7 @@ const _ = require('lodash')
 equipmentTypeRouter.get('/', async (req, res) => {
   const equipmentTypes = await EquipmentType
     .find({})
-    .populate('parentType, childTypes')
+    .populate('parentType childTypes')
   res.json(equipmentTypes)
 })
 
@@ -18,7 +18,7 @@ equipmentTypeRouter.post('/', async (req, res) => {
 
     const equipmentType = new EquipmentType({
       name: body.name,
-      parentType: body.parentType,
+      parentType: body.parentType ? body.parentType : null,
       childTypes: [],
       equipment: []
     })
@@ -80,7 +80,9 @@ equipmentTypeRouter.put('/:id', async (req, res) => {
 
     const updatedEquipmentType = await EquipmentType
       .findByIdAndUpdate(req.params.id, equipmentType, { new: true })
-      .populate('parentType', 'childTypes')
+      .populate('parentType childTypes')
+    console.log('Returning updated type')
+    console.log(updatedEquipmentType)
     res.json(updatedEquipmentType)
   } catch (exception) {
     console.log(exception)

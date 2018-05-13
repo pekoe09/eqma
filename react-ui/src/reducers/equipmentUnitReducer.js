@@ -35,7 +35,7 @@ export const updateEquipmentUnit = (equipmentUnit) => {
   }
 }
 
-export const initializeEquipment = () => {
+export const initializeEquipmentUnits = () => {
   return async (dispatch) => {
     const equipmentUnits = await equipmentUnitService.getAll()
     dispatch({
@@ -45,7 +45,7 @@ export const initializeEquipment = () => {
   }
 }
 
-export const removeEquipment = (id) => {
+export const removeEquipmentUnit = (id) => {
   return async (dispatch) => {
     await equipmentUnitService.remove(id)
     dispatch({
