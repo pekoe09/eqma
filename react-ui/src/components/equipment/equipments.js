@@ -34,16 +34,17 @@ class Equipments extends React.Component {
   render() {
 
     const columns = [
+
       {
-        Header: 'Name',
-        accessor: 'name',
+        Header: 'Make and model',
+        accessor: 'makeAndModel',
         headerStyle: {
           textAlign: 'left'
         }
       },
       {
-        Header: 'Make and model',
-        accessor: 'makeAndModel',
+        Header: 'Type',
+        accessor: 'equipmentTypeName',
         headerStyle: {
           textAlign: 'left'
         }
@@ -124,7 +125,15 @@ class Equipments extends React.Component {
 
 const mapStateToProps = (store) => {
   return {
-    equipments: store.equipments
+    equipments: store.equipments.map(e => {
+      return {
+        _id: e._id,
+        makeAndModel: e.makeAndModel,
+        equipmentTypeName: e.equipmentType ? e.equipmentType.name : '',
+        price: e.price,
+        timeUnit: e.timeUnit
+      }
+    })
   }
 }
 

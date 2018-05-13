@@ -21,7 +21,7 @@ const formStyle = {
 
 class EquipmentCreate extends React.Component {
   state = {
-    name: '',
+    equipmentType: '',
     make: '',
     model: '',
     description: '',
@@ -37,10 +37,14 @@ class EquipmentCreate extends React.Component {
     }
   }
 
+  handleEquipmentChange = ({ value }) => {
+    this.setState({ equipmentType: value })
+  }
+
   handleSubmit = async (event) => {
     event.preventDefault()
     const equipment = {
-      name: this.state.name,
+      equipmentType: this.state.equipmentType,
       make: this.state.make,
       model: this.state.model,
       description: this.state.description,
@@ -57,8 +61,8 @@ class EquipmentCreate extends React.Component {
         <ViewHeader text={'Add a piece of equipment'} />
         <LinkButton text={'Cancel'} to={'/equipment'} type={'default'} />
         <Form style={formStyle} onSubmit={this.handleSubmit}>
-          <Form.Field required control={Input} width={6} label='Name' name='name'
-            value={this.state.name} onChange={this.handleChange} />
+          <Form.Field required control={Select} width={6} label='Equipment type' name='equipmentType'
+            options={this.props.equipmentTypes} value={this.state.equipmentType} onChange={this.handleEquipmentChange} />
           <Form.Field control={Input} width={6} label='Make' name='make'
             value={this.state.make} onChange={this.handleChange} />
           <Form.Field control={Input} width={6} label='Model' name='model'
@@ -80,7 +84,19 @@ class EquipmentCreate extends React.Component {
   }
 }
 
+const mapStateToProps = (store) => {
+  return {
+    equipmentTypes: store.equipmentTypes.map(e => {
+      return {
+        key: e._id,
+        text: e.name,
+        value: e._id
+      }
+    })
+  }
+}
+
 export default withRouter(connect(
-  null,
+  mapStateToProps,
   { createEquipment }
 )(EquipmentCreate))

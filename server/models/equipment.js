@@ -1,13 +1,10 @@
 const mongoose = require('mongoose')
 
 const equipmentSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    isRequired: true
-  },
   equipmentType: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'EquipmentType'
+    ref: 'EquipmentType',
+    isRequired: true
   },
   make: String,
   model: String,
