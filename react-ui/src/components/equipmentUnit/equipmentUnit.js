@@ -37,7 +37,7 @@ class EquipmentUnit extends React.Component {
     if (equipmentUnit) {
       return (
         <div>
-          <ViewHeader text={`Equipment unit: ${equipmentUnit.equipment.makeAndModel} / ${equipmentUnit.assetId}`} />
+          <ViewHeader text={`Equipment unit: ${equipmentUnit.equipment.makeAndModel} / ${equipmentUnit.assetID}`} />
           <LinkButton text={'To equipment unit list'} to={'/equipmentunits'} type={'default'} />
           <LinkButton text={'Edit'} to={`/equipmentunits/edit/${equipmentUnit._id}`} type={'primary'} />
           <Button negative onClick={this.handleRemove}>Delete</Button>

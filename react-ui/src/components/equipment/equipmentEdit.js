@@ -22,11 +22,11 @@ const formStyle = {
 
 class EquipmentEdit extends React.Component {
   state = {
-    equipmentType: this.props.initialEquipment.equipmentType,
-    make: this.props.initialEquipment.make,
-    model: this.props.initialEquipment.model,
-    description: this.props.initialEquipment.description,
-    price: this.props.initialEquipment.price,
+    equipmentType: this.props.initialEquipment.equipmentType ? this.props.initialEquipment.equipmentType._id : '',
+    make: this.props.initialEquipment.make ? this.props.initialEquipment.make : '',
+    model: this.props.initialEquipment.model ? this.props.initialEquipment.model : '',
+    description: this.props.initialEquipment.description ? this.props.initialEquipment.description : '',
+    price: this.props.initialEquipment.price ? this.props.initialEquipment.price : '',
     timeUnit: this.props.initialEquipment.timeUnit,
     openDeleteConfirm: false
   }
@@ -35,11 +35,11 @@ class EquipmentEdit extends React.Component {
     this.setState({ [event.target.name]: value })
   }
 
-  handleTimeUnitChange = ({ value }) => {
+  handleTimeUnitChange = (event, { value }) => {
     this.setState({ timeUnit: value })
   }
 
-  handleEquipmentTypeChange = ({ value }) => {
+  handleEquipmentTypeChange = (event, { value }) => {
     this.setState({ equipmentType: value })
   }
 
@@ -52,6 +52,7 @@ class EquipmentEdit extends React.Component {
     equipment.description = this.state.description
     equipment.price = this.state.price
     equipment.timeUnit = this.state.timeUnit
+    console.log('Saving', equipment)
     await this.props.updateEquipment(equipment)
     this.props.history.push('/equipment')
   }
@@ -75,7 +76,7 @@ class EquipmentEdit extends React.Component {
     if (this.props.initialEquipment) {
       return (
         <div>
-          <ViewHeader text={`Edit equipment ${this.props.initialEquipment.name} (${this.props.initialEquipment.makeAndModel})`} />
+          <ViewHeader text={`Edit equipment ${this.props.initialEquipment.makeAndModel}`} />
           <LinkButton text={'Cancel'} to={'/equipment'} type={'default'} />
           <Button negative onClick={this.handleRemove}>Delete</Button>
           <Confirm

@@ -46,6 +46,20 @@ class EquipmentTypes extends React.Component {
         headerStyle: {
           textAlign:'left'
         }
+      },
+      {
+        Header: '',
+        accessor: 'delete',
+        Cell: (row) => (
+          <Button negative basic className='mini' onClick={(e) =>
+            this.handleRemove(row.original, e)}>Delete</Button>
+        ),
+        style: {
+          textAlign: 'center'
+        },
+        sortable: false,
+        filterable: false,
+        maxWidth: 80
       }
     ]
 

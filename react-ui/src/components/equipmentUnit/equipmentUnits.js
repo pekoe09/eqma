@@ -111,7 +111,7 @@ const mapStateToProps = (store) => {
   return {
     equipmentUnits: store.equipmentUnits.map(e => {
       return {
-        _id: e.id,
+        _id: e._id,
         makeAndModel: e.equipment.makeAndModel,
         equipmentTypeName: e.equipment.equipmentType.name,
         assetID: e.assetID,

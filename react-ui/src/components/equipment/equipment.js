@@ -37,7 +37,7 @@ class Equipment extends React.Component {
     if (equipment) {
       return (
         <div>
-          <ViewHeader text={`Equipment: ${equipment.name}`} />
+          <ViewHeader text={`Equipment: ${equipment.makeAndModel}`} />
           <LinkButton text={'To equipment list'} to={'/equipment'} type={'default'} />
           <LinkButton text={'Edit'} to={`/equipment/edit/${equipment._id}`} type={'primary'} />
           <Button negative onClick={this.handleRemove}>Delete</Button>

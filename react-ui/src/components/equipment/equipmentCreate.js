@@ -37,7 +37,7 @@ class EquipmentCreate extends React.Component {
     }
   }
 
-  handleEquipmentChange = ({ value }) => {
+  handleEquipmentChange = (event, { value }) => {
     this.setState({ equipmentType: value })
   }
 

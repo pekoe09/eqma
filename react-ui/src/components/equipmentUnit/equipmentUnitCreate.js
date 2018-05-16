@@ -41,8 +41,8 @@ class EquipmentUnitCreate extends React.Component {
   render() {
     return (
       <div>
-        <ViewHeader text={'Add an equipment type'} />
-        <LinkButton text={'Cancel'} to={'/equipmenttypes'} type={'default'} />
+        <ViewHeader text={'Add an equipment unit'} />
+        <LinkButton text={'Cancel'} to={'/equipmentunits'} type={'default'} />
         <Form style={formStyle} onSubmit={this.handleSubmit}>
           <Form.Field required control={Select} width={6} label='Equipment' name='equipment'
             options={this.props.equipments} value={this.state.equipment} onChange={this.handleChange} />
