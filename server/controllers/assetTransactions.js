@@ -5,7 +5,12 @@ const EquipmentUnit = require('../models/equipmentUnit')
 assetTransactionRouter.get('/', async (req, res) => {
   const assetTransactions = await AssetTransaction
     .find({})
-    .populate('equipmentUnit')
+    .populate({
+      path: 'equipmentUnit',
+      populate: {
+        path: 'equipment'
+      }
+    })
   res.json(assetTransactions)
 })
 
@@ -44,13 +49,18 @@ assetTransactionRouter.post('/', async (req, res) => {
     const savedTransaction = await assetTransaction.save()
     const populatedTransaction = await AssetTransaction
       .findById(savedTransaction._id)
-      .populate('equipmentUnit')
+      .populate({
+        path: 'equipmentUnit',
+        populate: {
+          path: 'equipment'
+        }
+      })
     if (!equipmentUnit.transactions) {
       equipmentUnit.transactions = []
     }
     equipmentUnit.transactions = equipmentUnit.transactions.concat(savedTransaction._id)
     await EquipmentUnit.findByIdAndUpdate(equipmentUnit._id, equipmentUnit)
-
+    console.log('Saved transaction', populatedTransaction)
     res.status(201).json(populatedTransaction)
   } catch (exception) {
     console.log(exception)

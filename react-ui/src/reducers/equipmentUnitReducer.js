@@ -39,7 +39,7 @@ export const initializeEquipmentUnits = () => {
   return async (dispatch) => {
     const equipmentUnits = await equipmentUnitService.getAll()
     dispatch({
-      type: 'INIT_EQUIPMENT_UNIT',
+      type: 'INIT_EQUIPMENT_UNITS',
       equipmentUnits
     })
   }
