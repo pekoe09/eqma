@@ -4,7 +4,12 @@ const Rental = require('../models/rental')
 rentalsRouter.get('/', async (req, res) => {
   let rentals = await Rental
     .find({})
-    .populate('equipmentUnit customer')
+    .populate({
+      path: 'equipmentUnit customer',
+      populate: {
+        path: 'equipment'
+      }
+    })
   rentals = rentals.map(r => Rental.format(r._doc))
   res.json(rentals)
 })
@@ -43,7 +48,12 @@ rentalsRouter.post('/', async (req, res) => {
     const savedRental = await rental.save()
     const populatedRental = await Rental
       .findById(savedRental._id)
-      .populate('customer equipmentUnit')
+      .populate({
+        path: 'customer equipmentUnit',
+        populate: {
+          path: 'equipment'
+        }
+      })
     console.log('Returning ', populatedRental)
     res.status(201).json(populatedRental)
   } catch (exception) {
