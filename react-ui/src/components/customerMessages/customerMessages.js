@@ -1,12 +1,19 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
+import moment from 'moment'
 import ReactTable from 'react-table'
 import ViewHeader from '../structure/viewHeader'
-import { Button } from 'semantic-ui-react'
+import { Button, Confirm } from 'semantic-ui-react'
 import { removeCustomerMessage, updateCustomerMessage } from '../../reducers/customerMessageReducer'
+import { addUIMessage } from '../../reducers/uiMessageReducer'
 
 class CustomerMessages extends React.Component {
+
+  state = {
+    openDeleteConfirm: false,
+    rowToDelete: null
+  }
 
   render() {
 
@@ -38,11 +45,13 @@ class CustomerMessages extends React.Component {
         }
       },
       {
-        Header: 'Customer',
-        accessor: 'customer',
-        headerStyle: {
-          textAlign: 'left'
-        }
+        Header: 'Sent',
+        accessor: 'sent',
+        Cell: row => (moment(row.original.sent).format('MM/DD/YYYY HH:mm')),
+        style: {
+          textAlign: 'center'
+        },
+        maxWidth: 150
       },
       {
         Header: 'Handler',
@@ -60,6 +69,23 @@ class CustomerMessages extends React.Component {
         style: messageCellStyle
       },
       {
+        Header: 'Replied',
+        accessor: 'replied',
+        Cell: (row) => {
+          return (
+            <input
+              type='checkbox'
+              checked={row.original.replied}
+              readOnly
+            />
+          )
+        },
+        style: {
+          textAlign: 'center'
+        },
+        maxWidth: 65
+      },
+      {
         Header: '',
         accessor: 'pickup',
         Cell: (row) => (
@@ -73,19 +99,23 @@ class CustomerMessages extends React.Component {
         style: {
           textAlign: 'center'
         },
-        maxWidth: 100
+        sortable: false,
+        filterable: false,
+        maxWidth: 75
       },
       {
         Header: '',
         accessor: 'delete',
         Cell: (row) => (
           <Button negative basic className='mini' onClick={(e) =>
-            handleRemove(row.original._id, e)}>Delete</Button>
+            handleRemove(row.original, e)}>Delete</Button>
         ),
         style: {
           textAlign: 'center'
         },
-        maxWidth: 100
+        sortable: false,
+        filterable: false,
+        maxWidth: 80
       }
     ]
 
@@ -93,7 +123,7 @@ class CustomerMessages extends React.Component {
       const history = this.props.history
       return {
         onClick: (e, handleOriginal) => {
-          history.push(`/customermessages/details/${rowInfo.original._id}`)
+          history.push(`/customermessages/edit/${rowInfo.original._id}`)
           if (handleOriginal) {
             handleOriginal()
           }
@@ -101,9 +131,20 @@ class CustomerMessages extends React.Component {
       }
     }
 
-    const handleRemove = async (id, e) => {
+    const handleRemove = async (row, e) => {
       e.stopPropagation()
-      await this.props.removeCustomerMessage(id)
+      this.setState({ openDeleteConfirm: true, rowToDelete: row })
+    }
+
+    const handleConfirmedRemove = async () => {
+      const name = this.state.rowToDelete.name
+      this.setState({ openDeleteConfirm: false, rowToDelete: null })
+      await this.props.removeCustomerMessage(this.state.rowToDelete._id)
+      this.props.addUIMessage(`Message from user ${name} deleted`, 'success', 10)
+    }
+
+    const handleCancelledRemove = () => {
+      this.setState({ openDeleteConfirm: false, rowToDelete: null })
     }
 
     const handlePickup = async (id, e) => {
@@ -129,6 +170,14 @@ class CustomerMessages extends React.Component {
     return (
       <div>
         <ViewHeader text={'Customer messages'} />
+        <Confirm
+          open={this.state.openDeleteConfirm}
+          header='Deleting a customer message'
+          content={`Deleting message from ${this.state.rowToDelete ? this.state.rowToDelete.name : ''}. The operation is permanent; are you sure?`}
+          confirmButton='Yes, delete'
+          onConfirm={handleConfirmedRemove}
+          onCancel={handleCancelledRemove}
+        />
         <ReactTable
           data={this.props.customerMessages}
           columns={columns}
@@ -146,9 +195,10 @@ const mapStateToProps = (store) => {
   const loginState = store.login
   return {
     customerMessages: store.customerMessages.map(m => {
-      return { 
-        ...m, 
-        handlerName: m.handler ? `${m.handler.firstName} ${m.handler.lastName}` : null
+      return {
+        ...m,
+        handlerName: m.handler ? `${m.handler.firstName} ${m.handler.lastName}` : null,
+        replied: m.replySent ? true : false
       }
     }),
     user: loginState ? loginState.user : null
@@ -159,6 +209,7 @@ export default withRouter(connect(
   mapStateToProps,
   {
     removeCustomerMessage,
-    updateCustomerMessage
+    updateCustomerMessage,
+    addUIMessage
   }
 )(CustomerMessages))

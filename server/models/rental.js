@@ -2,9 +2,9 @@ const mongoose = require('mongoose')
 const moment = require('moment')
 
 const rentalSchema = new mongoose.Schema({
-  equipment: {
+  equipmentUnit: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Equipment',
+    ref: 'EquipmentUnit',
     isRequired: true
   },
   customer: {
@@ -39,7 +39,7 @@ rentalSchema.statics.format = (rental) => {
   }
 }
 
-getDuration = (start, end, timeUnit) => {
+const getDuration = (start, end, timeUnit) => {
   let timeDiff = moment(end).diff(moment(start))
   switch (timeUnit) {
     case 'year':
@@ -55,7 +55,7 @@ getDuration = (start, end, timeUnit) => {
     case 'minute':
       return timeDiff / (1000 * 60 * 60)
   }
-  return duration
+  return null
 }
 
 const Rental = mongoose.model('Rental', rentalSchema)

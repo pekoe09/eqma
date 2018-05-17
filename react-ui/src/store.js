@@ -8,8 +8,11 @@ import assetTransactionReducer from './reducers/assetTransactionReducer'
 import customerReducer from './reducers/customerReducer'
 import customerMessageReducer from './reducers/customerMessageReducer'
 import equipmentReducer from './reducers/equipmentReducer'
+import equipmentTypeReducer from './reducers/equipmentTypeReducer'
+import equipmentUnitReducer from './reducers/equipmentUnitReducer'
 import loginReducer from './reducers/loginReducer'
 import rentalReducer from './reducers/rentalReducer'
+import uiMessageReducer from './reducers/uiMessageReducer'
 import userReducer from './reducers/userReducer'
 
 const appReducer = combineReducers({
@@ -17,13 +20,16 @@ const appReducer = combineReducers({
   customers: customerReducer,
   customerMessages: customerMessageReducer,
   equipments: equipmentReducer,
+  equipmentTypes: equipmentTypeReducer,
+  equipmentUnits: equipmentUnitReducer,
   login: loginReducer,
   rentals: rentalReducer,
+  uiMessages: uiMessageReducer,
   users: userReducer
 })
 
 export const rootReducer = (state, action) => {
-  if(action.type === 'USER_LOGOUT') {
+  if (action.type === 'USER_LOGOUT') {
     Object.keys(state).forEach(key => {
       storage.removeItem(`persist:${key}`)
     })

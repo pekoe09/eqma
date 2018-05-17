@@ -27,8 +27,13 @@ class AssetTransactions extends React.Component {
         style: { textAlign: 'center' }
       },
       {
-        Header: 'Asset',
-        accessor: 'equipmentLabel',
+        Header: 'Asset ID',
+        accessor: 'equipmentUnitAssetID',
+        style: { textAlign: 'center' }
+      },
+      {
+        Header: 'Asset make / model',
+        accessor: 'equipmentMakeAndModel',
         style: { textAlign: 'center' },
         minWidth: 300
       }
@@ -61,9 +66,9 @@ const mapStateToProps = (store) => {
     assetTransactions: store.assetTransactions.map(t => {
       return {
         id: t._id,
-        equipment: t.equipment._id,
-        equipmentName: t.equipment.name,
-        equipmentLabel: `${t.equipment.name} (${t.equipment.make} ${t.equipment.model})`,
+        equipmentUnit: t.equipmentUnit._id,
+        equipmentUnitAssetID: t.equipmentUnit.assetID,
+        equipmentMakeAndModel: t.equipmentUnit.equipment.makeAndModel,
         date: t.date,
         type: t.type,
         value: t.value,

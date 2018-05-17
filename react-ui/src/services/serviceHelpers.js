@@ -5,3 +5,10 @@ export const getTokenHeader = () => {
   }
   return null
 }
+
+export const getConfig = () => {
+  const tokenHeader = getTokenHeader()
+  return {
+    headers: { 'Authorization': tokenHeader }
+  }
+}

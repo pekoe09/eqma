@@ -2,8 +2,10 @@ POST http://localhost:3000/api/users
 Content-Type: application/json
 
 {
-  "username": "testuser2",
-  "password": "testpass",
-  "firstName": "Taimi",
-  "lastName": "Testaaja"
+  "username": "testadmin3",
+  "password": "test3",
+  "firstName": "Test",
+  "lastName": "Admin",
+  "email": "test3@test.com",
+  "status": "admin"
 }

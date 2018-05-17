@@ -4,13 +4,31 @@ import { withRouter } from 'react-router-dom'
 import ReactTable from 'react-table'
 import ViewHeader from '../structure/viewHeader'
 import LinkButton from '../structure/linkButton'
-import { Button } from 'semantic-ui-react'
+import { Button, Confirm } from 'semantic-ui-react'
 import { removeCustomer } from '../../reducers/customerReducer'
+import { addUIMessage } from '../../reducers/uiMessageReducer'
 
 class Customers extends React.Component {
 
-  handleRemove = (id) => {
-    this.props.removeCustomer(id)
+  state = {
+    openDeleteConfirm: false,
+    rowToDelete: null
+  }
+
+  handleRemove = (row, e) => {
+    e.stopPropagation()
+    this.setState({ openDeleteConfirm: true, rowToDelete: row })
+  }
+
+  handleConfirmedRemove = async () => {
+    const displayName = this.state.rowToDelete.displayName
+    this.setState({ openDeleteConfirm: false, rowToDelete: null })
+    await this.props.removeCustomer(this.state.rowToDelete._id)
+    this.props.addUIMessage(`Customer ${displayName} deleted`, 'success', 10)
+  }
+
+  handleCancelledRemove = () => {
+    this.setState({ openDeleteConfirm: false, rowToDelete: null })
   }
 
   render() {
@@ -41,27 +59,23 @@ class Customers extends React.Component {
         Header: '',
         accessor: 'delete',
         Cell: (row) => (
-          <Button negative basic className='mini' onClick={() =>
-            this.handleRemove(row.original._id)}>Delete</Button>
+          <Button negative basic className='mini' onClick={(e) =>
+            this.handleRemove(row.original, e)}>Delete</Button>
         ),
         style: {
           textAlign: 'center'
         },
-        maxWidth: 100
+        sortable: false,
+        filterable: false,
+        maxWidth: 80
       }
     ]
 
     const handleRowClick = (state, rowInfo, column, instance) => {
-      const history = this.props.history.history
+      const history = this.props.history
       return {
         onClick: (e, handleOriginal) => {
           history.push(`/customers/details/${rowInfo.original._id}`)
-
-          // IMPORTANT! React-Table uses onClick internally to trigger
-          // events like expanding SubComponents and pivots.
-          // By default a custom 'onClick' handler will override this functionality.
-          // If you want to fire the original onClick handler, call the
-          // 'handleOriginal' function.
           if (handleOriginal) {
             handleOriginal()
           }
@@ -78,6 +92,14 @@ class Customers extends React.Component {
       <div>
         <ViewHeader text={'Customers'} />
         <LinkButton text={'Add a customer'} to={'/customers/create'} />
+        <Confirm
+          open={this.state.openDeleteConfirm}
+          header='Deleting a customer'
+          content={`Deleting ${this.state.rowToDelete ? this.state.rowToDelete.displayName : ''}. The operation is permanent; are you sure?`}
+          confirmButton='Yes, delete'
+          onConfirm={this.handleConfirmedRemove}
+          onCancel={this.handleCancelledRemove}
+        />
         <ReactTable
           data={this.props.customers}
           columns={columns}
@@ -99,5 +121,5 @@ const mapStateToProps = (store) => {
 
 export default withRouter(connect(
   mapStateToProps,
-  { removeCustomer }
+  { removeCustomer, addUIMessage }
 )(Customers))

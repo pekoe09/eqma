@@ -4,13 +4,31 @@ import { withRouter } from 'react-router-dom'
 import ReactTable from 'react-table'
 import ViewHeader from '../structure/viewHeader'
 import LinkButton from '../structure/linkButton'
-import { Button } from 'semantic-ui-react'
+import { Button, Confirm } from 'semantic-ui-react'
 import { removeUser } from '../../reducers/userReducer'
+import { addUIMessage } from '../../reducers/uiMessageReducer'
 
 class Users extends React.Component {
 
-  handleRemove = (id) => {
-    this.props.removeUser(id)
+  state = {
+    openDeleteConfirm: false,
+    rowToDelete: null
+  }
+
+  handleRemove = async (row, e) => {
+    e.stopPropagation()
+    this.setState({ openDeleteConfirm: true, rowToDelete: row })
+  }
+
+  handleConfirmedRemove = async () => {
+    const username = this.state.rowToDelete.username
+    this.setState({ openDeleteConfirm: false, rowToDelete: null })
+    await this.props.removeUser(this.state.rowToDelete._id)
+    this.props.addUIMessage(`User ${username} deleted`, 'success', 10)
+  }
+
+  handleCancelledRemove = () => {
+    this.setState({ openDeleteConfirm: false, rowToDelete: null })
   }
 
   render() {
@@ -55,13 +73,15 @@ class Users extends React.Component {
         Header: '',
         accessor: 'delete',
         Cell: (row) => (
-          <Button negative basic className='mini' onClick={() =>
-            this.handleRemove(row.original._id)}>Delete</Button>
+          <Button negative basic className='mini' onClick={(e) =>
+            this.handleRemove(row.original, e)}>Delete</Button>
         ),
         style: {
           textAlign: 'center'
         },
-        maxWidth: 100
+        sortable: false,
+        filterable: false,
+        maxWidth: 80
       }
     ]
 
@@ -86,6 +106,14 @@ class Users extends React.Component {
       <div>
         <ViewHeader text={'User list'} />
         <LinkButton text={'Add a user'} to={'/users/create'} />
+        <Confirm
+          open={this.state.openDeleteConfirm}
+          header='Deleting a user'
+          content={`Deleting ${this.state.rowToDelete ? this.state.rowToDelete.username : ''}. The operation is permanent; are you sure?`}
+          confirmButton='Yes, delete'
+          onConfirm={this.handleConfirmedRemove}
+          onCancel={this.handleCancelledRemove}
+        />
         <ReactTable
           data={this.props.users}
           columns={columns}
@@ -107,5 +135,5 @@ const mapStateToProps = (store) => {
 
 export default withRouter(connect(
   mapStateToProps,
-  { removeUser }
+  { removeUser, addUIMessage }
 )(Users))

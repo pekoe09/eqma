@@ -1,7 +1,11 @@
 const mongoose = require('mongoose')
 
 const equipmentSchema = new mongoose.Schema({
-  name: { type: String, isRequired: true },
+  equipmentType: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'EquipmentType',
+    isRequired: true
+  },
   make: String,
   model: String,
   description: String,
@@ -11,9 +15,9 @@ const equipmentSchema = new mongoose.Schema({
   }],
   price: Number,
   timeUnit: String,
-  transactions: [{
+  equipmentUnits: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'AssetTransaction'
+    ref: 'EquipmentUnit'
   }]
 })
 
