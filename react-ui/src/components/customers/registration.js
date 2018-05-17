@@ -4,14 +4,16 @@ import { withRouter } from 'react-router-dom'
 import { Form, Input, Button } from 'semantic-ui-react'
 import ViewHeader from '../structure/viewHeader'
 import LinkButton from '../structure/linkButton'
-import { createCustomer } from '../../reducers/customerReducer'
+import { register } from '../../reducers/customerReducer'
 
 const formStyle = {
   marginTop: 10
 }
 
-class CustomerCreate extends React.Component {
+class Registration extends React.Component {
   state = {
+    password: '',
+    confirmPsw: '',
     lastName: '',
     firstNames: '',
     company: '',
@@ -22,7 +24,6 @@ class CustomerCreate extends React.Component {
     zip: '',
     city: '',
     country: '',
-    isInvoicable: false
   }
 
   handleChange = (event, { value }) => {
@@ -32,6 +33,8 @@ class CustomerCreate extends React.Component {
   handleSubmit = async (event) => {
     event.preventDefault()
     const customer = {
+      password: this.state.password,
+      confirmPsw: this.state.confirmPsw,
       lastName: this.state.lastName,
       firstNames: this.state.firstNames,
       company: this.state.company,
@@ -43,27 +46,32 @@ class CustomerCreate extends React.Component {
         zip: this.state.zip,
         city: this.state.city,
         country: this.state.country
-      },
-      isInvoicable: this.state.isInvoicable
+      }
     }
-    this.props.createCustomer(customer)
-    this.props.history.push('/customers')
+    console.log('Registering', customer)
+    this.props.register(customer)
+    this.props.history.push('/')
   }
 
   render() {
     return (
       <div>
-        <ViewHeader text={'Add a customer'} />
-        <LinkButton text={'Cancel'} to={'/customers'} type={'default'} />
+        <ViewHeader text={'Register as a customer'} />
+        <LinkButton text={'Cancel'} to={'/'} type={'default'} />
         <Form style={formStyle} onSubmit={this.handleSubmit}>
+          <Form.Field required control={Input} width={6} label='Email' name='email'
+            value={this.state.email} onChange={this.handleChange} />
+          <Form.Field required control={Input} width={6} label='Password' name='password'
+            value={this.state.password} onChange={this.handleChange} />
+          <Form.Field required control={Input} width={6} label='Confirm password' name='confirmPsw'
+            value={this.state.confirmPsw} onChange={this.handleChange} />
+
           <Form.Field required control={Input} width={6} label='Last name' name='lastName'
             value={this.state.lastName} onChange={this.handleChange} />
           <Form.Field required control={Input} width={6} label='First names' name='firstNames'
             value={this.state.firstNames} onChange={this.handleChange} />
           <Form.Field control={Input} width={6} label='Company' name='company'
             value={this.state.company} onChange={this.handleChange} />
-          <Form.Field control={Input} width={6} label='Email' name='email'
-            value={this.state.email} onChange={this.handleChange} />
           <Form.Field control={Input} width={6} label='Phone' name='phone'
             value={this.state.phone} onChange={this.handleChange} />
           <h4>Billing address</h4>
@@ -79,7 +87,7 @@ class CustomerCreate extends React.Component {
             value={this.state.country} onChange={this.handleChange} />
           <Form.Field>
             <Button primary>
-              Save
+              Register!
             </Button>
           </Form.Field>
         </Form>
@@ -90,5 +98,5 @@ class CustomerCreate extends React.Component {
 
 export default withRouter(connect(
   null,
-  { createCustomer }
-)(CustomerCreate))
+  { register }
+)(Registration))

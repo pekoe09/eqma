@@ -128,7 +128,7 @@ class NavBar extends React.Component {
         <Menu.Menu position='right'>
           {!this.props.loggedIn &&
             <Menu.Item style={menuDropdownStyle}>
-              Register
+              <NavLink to='/customers/register'>Register</NavLink>
             </Menu.Item>
           }
           {!this.props.loggedIn &&

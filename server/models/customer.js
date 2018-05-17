@@ -17,8 +17,8 @@ const customerSchema = new mongoose.Schema({
 })
 
 customerSchema.virtual('displayName').get(function () {
-    return this.company ? this.company : `${this.lastName}, ${this.firstNames}`
-  }
+  return this.company ? this.company : `${this.lastName}, ${this.firstNames}`
+}
 )
 
 customerSchema.set('toObject', { virtuals: true })

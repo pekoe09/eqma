@@ -1,0 +1,17 @@
+POST http://localhost:3000/api/customers/register
+Content-Type: application/json
+
+{
+  "email": "joku@jossain.com",
+  "password": "joku",
+  "lastName": "Last1",
+  "firstNames": "First1",
+  "company": "Company1",
+  "billingAddress": {   
+    "street1":"STreet1",
+    "street2": "Street2",
+    "zip": "Zip",
+    "city": "City",
+    "country": "Country"
+  }
+}
