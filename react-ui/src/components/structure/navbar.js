@@ -61,7 +61,7 @@ const EquipmentDropdownOther = () => (
   <Dropdown item text='Equipment' style={menuDropdownStyle}>
     <Dropdown.Menu>
       <Dropdown.Header content='Equipment' />
-      <Dropdown.Item><NavLink to='/equipment'>Browse</NavLink></Dropdown.Item>
+      <Dropdown.Item><NavLink to='/equipment/forrent'>Browse</NavLink></Dropdown.Item>
     </Dropdown.Menu>
   </Dropdown>
 )

@@ -28,8 +28,7 @@ app.use(userExtractor)
 app.use('/api/assettransactions', permissionChecker(['user', 'admin'], []), assetTransactionsRouter)
 app.use('/api/customers', permissionChecker(['user', 'admin'], ['POST:/register']), customersRouter)
 app.use('/api/customermessages', permissionChecker(['user', 'admin'], ['POST:/']), customerMessagesRouter)
-//TODO: add separate free path for listing equipment for customers
-app.use('/api/equipment', permissionChecker(['user', 'admin'], []), equipmentsRouter)
+app.use('/api/equipment', permissionChecker(['user', 'admin'], ['/forrent']), equipmentsRouter)
 app.use('/api/equipmenttypes', permissionChecker(['user', 'admin'], []), equipmentTypeRouter)
 app.use('/api/equipmentunits', permissionChecker(['user', 'admin'], []), equipmentUnitsRouter)
 //TODO: add a self path for customer viewing their own rentals

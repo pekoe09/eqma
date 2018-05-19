@@ -8,6 +8,11 @@ const getAll = async () => {
   return response.data
 }
 
+const getForRent = async () => {
+  const response = await axios.get(`${baseUrl}/forrent`)
+  return response.data
+}
+
 const createNew = async (equipment) => {
   const response = await axios.post(baseUrl, equipment, getConfig())
   return response.data
@@ -23,4 +28,4 @@ const remove = async (id) => {
   return response.data
 }
 
-export default { getAll, createNew, update, remove }
+export default { getAll, getForRent, createNew, update, remove }
