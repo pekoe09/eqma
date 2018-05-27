@@ -32,7 +32,7 @@ app.use('/api/equipment', permissionChecker(['user', 'admin'], ['/forrent']), eq
 app.use('/api/equipmenttypes', permissionChecker(['user', 'admin'], []), equipmentTypeRouter)
 app.use('/api/equipmentunits', permissionChecker(['user', 'admin'], []), equipmentUnitsRouter)
 //TODO: add a self path for customer viewing their own rentals
-app.use('/api/rentals', permissionChecker(['user', 'admin'], []), rentalsRouter)
+app.use('/api/rentals', permissionChecker(['user', 'admin'], ['POST:/reserve']), rentalsRouter)
 app.use('/api/users', permissionChecker(['admin'], ['/login', '/logout']), usersRouter)
 
 app.get('*', (req, res) => {

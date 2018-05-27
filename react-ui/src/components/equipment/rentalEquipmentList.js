@@ -27,7 +27,7 @@ class RentalEquipmentList extends React.Component {
       }
     ]
 
-    const handleRowClick = (state, rowInfo, column) => {
+    const handleRowClick = (state, rowInfo) => {
       const history = this.props.history
       return {
         onClick: (e, handleOriginal) => {
@@ -61,8 +61,6 @@ class RentalEquipmentList extends React.Component {
 }
 
 const mapStateToProps = (store) => {
-  console.log('Store equipments')
-  console.log(store.equipments)
   const equipments = store.equipments
   return {
     equipments

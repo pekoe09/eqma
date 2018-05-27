@@ -24,7 +24,8 @@ const rentalSchema = new mongoose.Schema({
   price: {
     type: Number,
     isRequired: true
-  }
+  },
+  isReservation: Boolean
 })
 
 rentalSchema.statics.format = (rental) => {

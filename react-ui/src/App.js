@@ -32,6 +32,7 @@ import EquipmentUnitEdit from './components/equipmentUnit/equipmentUnitEdit'
 import Registration from './components/customers/registration'
 import Rental from './components/rentals/rental'
 import Rentals from './components/rentals/rentals'
+import RentalEquipment from './components/equipment/rentalEquipment'
 import RentalEquipmentList from './components/equipment/rentalEquipmentList'
 import RentalCreate from './components/rentals/rentalCreate'
 import ContactView from './components/contact/contactView'
@@ -70,6 +71,7 @@ class App extends React.Component {
         <Route exact path='/equipment/edit/:id' render={() => <EquipmentEdit />} />
         <Route exact path='/equipment/details/:id' render={() => <Equipment />} />
         <Route exact path='/equipment/forrent' render={() => <RentalEquipmentList />} />
+        <Route exact path='/equipment/rentdetails/:id' render={() => <RentalEquipment />} />
 
         <Route exact path='/equipmenttypes' render={() => <EquipmentTypes />} />
         <Route exact path='/equipmenttypes/create' render={() => <EquipmentTypeCreate />} />

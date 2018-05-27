@@ -118,7 +118,7 @@ class NavBar extends React.Component {
           <NavLink to='/'><img src='/img/eqma-logo-80_85.png' /></NavLink>
         </Menu.Header>
 
-        {!this.props.loggedIn && <EquipmentDropdownOther />}
+        {(!this.props.loggedIn || this.props.isCustomer) && <EquipmentDropdownOther />}
         {(!this.props.loggedIn || (this.props.loggedIn && !this.props.isStaff)) && <ContactLink />}
         {this.props.loggedIn && this.props.isStaff && <EquipmentDropdownStaff />}
         {this.props.loggedIn && this.props.isStaff && <CustomerDropdown />}

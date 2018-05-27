@@ -13,9 +13,14 @@ const createNew = async (rental) => {
   return response.data
 }
 
+const createReservation = async (reservation) => {
+  const response = await axios.post(`${baseUrl}/reserve`, reservation, getConfig())
+  return response.data
+}
+
 const remove = async (id) => {
   const response = await axios.delete(`${baseUrl}/${id}`, getConfig())
   return response.data
 }
 
-export default { getAll, createNew, remove }
+export default { getAll, createNew, createReservation, remove }

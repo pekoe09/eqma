@@ -123,4 +123,8 @@ equipmentUnitsRouter.delete('/:id', async (req, res) => {
   }
 })
 
-module.exports = equipmentUnitsRouter
+const findAvailableUnits = (start, end, equipmentID) => {
+  return []
+}
+
+module.exports = equipmentUnitsRouter, findAvailableUnits
