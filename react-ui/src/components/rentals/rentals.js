@@ -22,8 +22,8 @@ class Rentals extends React.Component {
   }
 
   handleConfirmedRemove = async () => {
-    const makeAndModel = this.state.rowToDelete.equipment.makeAndModel
-    const customer = this.state.rowToDelete.customer.displayName
+    const makeAndModel = this.state.rowToDelete.equipmentMakeAndModel
+    const customer = this.state.rowToDelete.customerName
     this.setState({ openDeleteConfirm: false, rowToDelete: null })
     await this.props.removeRental(this.state.rowToDelete._id)
     this.props.addUIMessage(`Rental of ${makeAndModel} to ${customer} deleted`, 'success', 10)
@@ -38,14 +38,21 @@ class Rentals extends React.Component {
     const columns = [
       {
         Header: 'Customer',
-        accessor: 'customer.displayName',
+        accessor: 'customerName',
         headerStyle: {
           textAlign: 'left'
         }
       },
       {
         Header: 'Equipment',
-        accessor: 'equipment.makeAndModel',
+        accessor: 'equipmentMakeAndModel',
+        headerStyle: {
+          textAlign: 'left'
+        }
+      },
+      {
+        Header: 'Asset ID',
+        accessor: 'equipmentUnitAssetID',
         headerStyle: {
           textAlign: 'left'
         }
@@ -133,13 +140,12 @@ class Rentals extends React.Component {
           header='Deleting a rental'
           content={`Deleting rental of
           ${this.state.rowToDelete
-              ? this.state.rowToDelete.equipment.makeAndModel
-              : ''}
-          to
-            ${this.state.rowToDelete
-              ? this.state.rowToDelete.customer.displayName
+              ? this.state.rowToDelete.equipmentMakeAndModel
+              : ''} to          
+          ${this.state.rowToDelete
+              ? this.state.rowToDelete.customerName
               : ''}. 
-              The operation is permanent; are you sure?`}
+          The operation is permanent; are you sure?`}
           confirmButton='Yes, delete'
           onConfirm={this.handleConfirmedRemove}
           onCancel={this.handleCancelledRemove}
@@ -159,7 +165,19 @@ class Rentals extends React.Component {
 
 const mapStateToProps = (store) => {
   return {
-    rentals: store.rentals
+    rentals: store.rentals.map(r => {
+      return {
+        _id: r._id,
+        customerName: r.customer.displayName,
+        equipmentMakeAndModel: r.equipmentUnit.equipment.makeAndModel,
+        equipmentUnitAssetID: r.equipmentUnit.assetID,
+        start: r.start,
+        end: r.end,
+        price: r.price,
+        timeUnit: r.timeUnit,
+        totalPrice: r.totalPrice
+      }
+    })
   }
 }
 

@@ -1,20 +1,20 @@
 import axios from 'axios'
 import { getConfig } from './serviceHelpers'
 
-const baseUrl = '/api/rentals'
+const baseUrl = '/api/equipmentunits'
 
 const getAll = async () => {
   const response = await axios.get(baseUrl, getConfig())
   return response.data
 }
 
-const createNew = async (rental) => {
-  const response = await axios.post(baseUrl, rental, getConfig())
+const createNew = async (equipmentUnit) => {
+  const response = await axios.post(baseUrl, equipmentUnit, getConfig())
   return response.data
 }
 
-const createReservation = async (reservation) => {
-  const response = await axios.post(`${baseUrl}/reserve`, reservation, getConfig())
+const update = async (equipmentUnit) => {
+  const response = await axios.put(`${baseUrl}/${equipmentUnit._id}`, equipmentUnit, getConfig())
   return response.data
 }
 
@@ -23,4 +23,4 @@ const remove = async (id) => {
   return response.data
 }
 
-export default { getAll, createNew, createReservation, remove }
+export default { getAll, createNew, update, remove }

@@ -4,11 +4,11 @@ import { withRouter } from 'react-router-dom'
 import ReactTable from 'react-table'
 import ViewHeader from '../structure/viewHeader'
 import LinkButton from '../structure/linkButton'
-import { Button, Confirm } from 'semantic-ui-react'
-import { removeEquipment } from '../../reducers/equipmentReducer'
+import { Confirm } from 'semantic-ui-react'
+import { removeEquipmentUnit } from '../../reducers/equipmentUnitReducer'
 import { addUIMessage } from '../../reducers/uiMessageReducer'
 
-class Equipments extends React.Component {
+class EquipmentUnits extends React.Component {
 
   state = {
     openDeleteConfirm: false,
@@ -21,10 +21,10 @@ class Equipments extends React.Component {
   }
 
   handleConfirmedRemove = async () => {
-    const makeAndModel = this.state.rowToDelete.makeAndModel
+    const name = this.state.rowToDelete.name
     this.setState({ openDeleteConfirm: false, rowToDelete: null })
-    await this.props.removeEquipment(this.state.rowToDelete._id)
-    this.props.addUIMessage(`Equipment ${makeAndModel} deleted`, 'success', 10)
+    await this.props.removeEquipmentUnit(this.state.rowToDelete._id)
+    this.props.addUIMessage(`Equipment unit ${name} deleted`, 'success', 10)
   }
 
   handleCancelledRemove = () => {
@@ -32,11 +32,9 @@ class Equipments extends React.Component {
   }
 
   render() {
-
     const columns = [
-
       {
-        Header: 'Make and model',
+        Header: 'Equipment',
         accessor: 'makeAndModel',
         headerStyle: {
           textAlign: 'left'
@@ -50,42 +48,26 @@ class Equipments extends React.Component {
         }
       },
       {
-        Header: 'Rate',
-        accessor: 'price',
-        style: {
-          textAlign: 'center'
-        },
-        maxWidth: 100
+        Header: 'Asset ID',
+        accessor: 'assetID',
+        headerStyle: {
+          textAlign: 'left'
+        }
       },
       {
-        Header: 'Rented by',
-        accessor: 'timeUnit',
-        style: {
-          textAlign: 'center'
-        },
-        maxWidth: 100
+        Header: 'Registration',
+        accessor: 'registration',
+        headerStyle: {
+          textAlign: 'left'
+        }
       },
-      {
-        Header: '',
-        accessor: 'delete',
-        Cell: (row) => (
-          <Button negative basic className='mini' onClick={(e) =>
-            this.handleRemove(row.original, e)}>Delete</Button>
-        ),
-        style: {
-          textAlign: 'center'
-        },
-        sortable: false,
-        filterable: false,
-        maxWidth: 80
-      }
     ]
 
     const handleRowClick = (state, rowInfo, column, instance) => {
       const history = this.props.history
       return {
         onClick: (e, handleOriginal) => {
-          history.push(`/equipment/details/${rowInfo.original._id}`)
+          history.push(`/equipmentunits/details/${rowInfo.original._id}`)
           if (handleOriginal) {
             handleOriginal()
           }
@@ -100,18 +82,20 @@ class Equipments extends React.Component {
 
     return (
       <div>
-        <ViewHeader text={'Equipment list'} />
-        <LinkButton text={'Add a piece of equipment'} to={'/equipment/create'} />
+        <ViewHeader text={'Equipment unit list'} />
+        <LinkButton text={'Add an equipment unit'} to={'/equipmentunits/create'} />
         <Confirm
           open={this.state.openDeleteConfirm}
-          header='Deleting a piece of equipment'
-          content={`Deleting ${this.state.rowToDelete ? this.state.rowToDelete.makeAndModel : ''}. The operation is permanent; are you sure?`}
+          header='Deleting an equipment unit'
+          content={`Deleting ${this.state.rowToDelete
+            ? (this.state.rowToDelete.makeAndModel + ' ' + this.state.rowToDelete.registration)
+            : ''}. The operation is permanent; are you sure?`}
           confirmButton='Yes, delete'
           onConfirm={this.handleConfirmedRemove}
           onCancel={this.handleCancelledRemove}
         />
         <ReactTable
-          data={this.props.equipments}
+          data={this.props.equipmentUnits}
           columns={columns}
           getTrProps={handleRowClick}
           defaultPageSize={10}
@@ -125,13 +109,13 @@ class Equipments extends React.Component {
 
 const mapStateToProps = (store) => {
   return {
-    equipments: store.equipments.map(e => {
+    equipmentUnits: store.equipmentUnits.map(e => {
       return {
         _id: e._id,
-        makeAndModel: e.makeAndModel,
-        equipmentTypeName: e.equipmentType ? e.equipmentType.name : '',
-        price: e.price,
-        timeUnit: e.timeUnit
+        makeAndModel: e.equipment.makeAndModel,
+        equipmentTypeName: e.equipment.equipmentType.name,
+        assetID: e.assetID,
+        registration: e.registration
       }
     })
   }
@@ -139,5 +123,8 @@ const mapStateToProps = (store) => {
 
 export default withRouter(connect(
   mapStateToProps,
-  { removeEquipment, addUIMessage }
-)(Equipments))
+  {
+    removeEquipmentUnit,
+    addUIMessage
+  }
+)(EquipmentUnits))

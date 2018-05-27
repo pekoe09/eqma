@@ -5,7 +5,7 @@ const _ = require('lodash')
 equipmentTypeRouter.get('/', async (req, res) => {
   const equipmentTypes = await EquipmentType
     .find({})
-    .populate('parentType, childTypes')
+    .populate('parentType childTypes')
   res.json(equipmentTypes)
 })
 
@@ -18,14 +18,14 @@ equipmentTypeRouter.post('/', async (req, res) => {
 
     const equipmentType = new EquipmentType({
       name: body.name,
-      parentType: body.parentType,
+      parentType: body.parentType ? body.parentType : null,
       childTypes: [],
       equipment: []
     })
 
     let parentType = null
     if (body.parentType) {
-      parentType = EquipmentType.findById(body.parentType)
+      parentType = await EquipmentType.findById(body.parentType)
       if (!parentType) {
         return res.status(400).json({ error: 'parent type cannot be found' })
       }
@@ -35,7 +35,7 @@ equipmentTypeRouter.post('/', async (req, res) => {
       parentType.childTypes = parentType.childTypes.concat(savedEquipmentType._id)
       await EquipmentType.findByIdAndUpdate(parentType._id, parentType)
     }
-    savedEquipmentType = EquipmentType
+    savedEquipmentType = await EquipmentType
       .findById(savedEquipmentType._id)
       .populate('parentType')
     res.status(201).json(savedEquipmentType)
@@ -80,7 +80,9 @@ equipmentTypeRouter.put('/:id', async (req, res) => {
 
     const updatedEquipmentType = await EquipmentType
       .findByIdAndUpdate(req.params.id, equipmentType, { new: true })
-      .populate('parentType', 'childTypes')
+      .populate('parentType childTypes')
+    console.log('Returning updated type')
+    console.log(updatedEquipmentType)
     res.json(updatedEquipmentType)
   } catch (exception) {
     console.log(exception)

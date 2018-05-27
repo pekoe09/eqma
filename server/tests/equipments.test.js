@@ -1,7 +1,6 @@
 const supertest = require('supertest')
 const { app, server } = require('../index')
 const api = supertest(app)
-const Equipment = require('../models/equipment')
 const { getToken } = require('./usertesthelper')
 const { initialEquipment, equipmentInDb, nonExistingId, initEquipments } = require('./equipmentstesthelper')
 
@@ -44,6 +43,15 @@ describe('GET /api/equipment', () => {
 
     const equipmentNames = response.body.map(e => e.name)
     initialEquipment.forEach(e => expect(equipmentNames).toContain(e.name))
+  })
+
+  it('returns make and model in a single field', async () => {
+    const response = await api
+      .get('/api/equipment')
+      .set('Authorization', 'Bearer ' + token)
+
+    const equipmentMakeAndModels = response.body.map(e => e.makeAndModel)
+    initialEquipment.forEach(e => expect(equipmentMakeAndModels).toContain((`${e.make} ${e.model}`).trim()))
   })
 })
 

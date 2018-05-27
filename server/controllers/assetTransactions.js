@@ -1,24 +1,28 @@
 const assetTransactionRouter = require('express').Router()
 const AssetTransaction = require('../models/assetTransaction')
-const Equipment = require('../models/equipment')
+const EquipmentUnit = require('../models/equipmentUnit')
 
 assetTransactionRouter.get('/', async (req, res) => {
-  console.log('getting asset transactions')
   const assetTransactions = await AssetTransaction
     .find({})
-    .populate('equipment')
+    .populate({
+      path: 'equipmentUnit',
+      populate: {
+        path: 'equipment'
+      }
+    })
   res.json(assetTransactions)
 })
 
 assetTransactionRouter.post('/', async (req, res) => {
   try {
     const body = req.body
-    if (!body.equipment) {
-      return res.status(400).json({ error: 'equipment is missing' })
+    if (!body.equipmentUnit) {
+      return res.status(400).json({ error: 'equipment unit is missing' })
     }
-    const equipment = await Equipment.findById(body.equipment)
-    if (!equipment) {
-      return res.status(400).json({ error: 'invalid equipment id' })
+    const equipmentUnit = await EquipmentUnit.findById(body.equipmentUnit)
+    if (!equipmentUnit) {
+      return res.status(400).json({ error: 'invalid equipment unit id' })
     }
     if (!body.date) {
       return res.status(400).json({ error: 'date is missing' })
@@ -34,7 +38,7 @@ assetTransactionRouter.post('/', async (req, res) => {
     }
 
     const assetTransaction = new AssetTransaction({
-      equipment: body.equipment,
+      equipmentUnit: body.equipmentUnit,
       date: body.date,
       type: body.type,
       value: body.value,
@@ -45,13 +49,18 @@ assetTransactionRouter.post('/', async (req, res) => {
     const savedTransaction = await assetTransaction.save()
     const populatedTransaction = await AssetTransaction
       .findById(savedTransaction._id)
-      .populate('equipment')
-    if (!equipment.transactions) {
-      equipment.transactions = []
+      .populate({
+        path: 'equipmentUnit',
+        populate: {
+          path: 'equipment'
+        }
+      })
+    if (!equipmentUnit.transactions) {
+      equipmentUnit.transactions = []
     }
-    equipment.transactions = equipment.transactions.concat(savedTransaction._id)
-    await Equipment.findByIdAndUpdate(equipment._id, equipment)
-
+    equipmentUnit.transactions = equipmentUnit.transactions.concat(savedTransaction._id)
+    await EquipmentUnit.findByIdAndUpdate(equipmentUnit._id, equipmentUnit)
+    console.log('Saved transaction', populatedTransaction)
     res.status(201).json(populatedTransaction)
   } catch (exception) {
     console.log(exception)
@@ -63,18 +72,18 @@ assetTransactionRouter.post('/', async (req, res) => {
 
 assetTransactionRouter.put('/:id', async (req, res) => {
   try {
-    const match = AssetTransaction.findById(req.params.id)
+    const match = await AssetTransaction.findById(req.params.id)
     if (!match) {
       return res.status(400).json({ error: 'nonexistent id' })
     }
 
     const body = req.body
-    if (!body.equipment) {
-      return res.status(400).json({ error: 'equipment is missing' })
+    if (!body.equipmentUnit) {
+      return res.status(400).json({ error: 'equipment unit is missing' })
     }
-    const equipment = Equipment.findById(body.equipment)
-    if (!equipment) {
-      return res.status(400).json({ error: 'invalid equipment id' })
+    const equipmentUnit = EquipmentUnit.findById(body.equipmentUnit)
+    if (!equipmentUnit) {
+      return res.status(400).json({ error: 'invalid equipment unit id' })
     }
     if (!body.date) {
       return res.status(400).json({ error: 'date is missing' })
@@ -88,12 +97,9 @@ assetTransactionRouter.put('/:id', async (req, res) => {
     if (!body.description) {
       return res.status(400).json({ error: 'description is missing' })
     }
-    if (!body.isDeleted) {
-      return res.status(400).json({ error: 'deletion status is missing' })
-    }
 
     const assetTransaction = new AssetTransaction({
-      equipment: body.equipment,
+      equipmentUnit: body.equipmentUnit,
       date: body.date,
       type: body.type,
       value: body.value,

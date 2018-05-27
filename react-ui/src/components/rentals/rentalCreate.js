@@ -24,7 +24,7 @@ const formStyle = {
 
 class RentalCreate extends React.Component {
   state = {
-    equipment: '',
+    equipmentUnit: '',
     customer: '',
     start: moment(),
     end: null,
@@ -48,8 +48,8 @@ class RentalCreate extends React.Component {
     this.setState({ end })
   }
 
-  handleEquipmentChange = (event, { value }) => {
-    this.setState({ equipment: value })
+  handleEquipmentUnitChange = (event, { value }) => {
+    this.setState({ equipmentUnit: value })
   }
 
   handleCustomerChange = (event, { value }) => {
@@ -59,7 +59,7 @@ class RentalCreate extends React.Component {
   handleSubmit = async (event) => {
     event.preventDefault()
     const rental = {
-      equipment: this.state.equipment,
+      equipmentUnit: this.state.equipmentUnit,
       customer: this.state.customer,
       start: this.state.start,
       end: this.state.end,
@@ -79,7 +79,7 @@ class RentalCreate extends React.Component {
         <LinkButton text={'To equipment list'} to={'/equipment'} type={'default'} />
         <Form style={formStyle} onSubmit={this.handleSubmit}>
           <Form.Field required control={Select} width={6} label='Equipment' name='equipment'
-            options={this.props.equipments} value={this.state.equipment} onChange={this.handleEquipmentChange} />
+            options={this.props.equipmentUnits} value={this.state.equipmentUnit} onChange={this.handleEquipmentUnitChange} />
           <Form.Field required control={Select} width={6} label='Customer' name='customer'
             options={this.props.customers} value={this.state.customer} onChange={this.handleCustomerChange} />
           <Form.Field width={4}>
@@ -117,20 +117,24 @@ class RentalCreate extends React.Component {
 
 const mapStateToProps = (store) => {
   return {
-    equipments: store.equipments.map(e => {
-      return {
-        key: e._id,
-        text: e.name,
-        value: e._id
-      }
-    }),
-    customers: store.customers.map(c => {
-      return {
-        key: c._id,
-        text: c.displayName,
-        value: c._id
-      }
-    })
+    equipmentUnits: store.equipmentUnits
+      .map(e => {
+        return {
+          key: e._id,
+          text: `${e.equipment.makeAndModel} / ${e.assetID}`,
+          value: e._id
+        }
+      })
+      .sort((a, b) => a.text > b.text),
+    customers: store.customers
+      .map(c => {
+        return {
+          key: c._id,
+          text: c.displayName,
+          value: c._id
+        }
+      })
+      .sort((a, b) => a.text > b.text)
   }
 }
 

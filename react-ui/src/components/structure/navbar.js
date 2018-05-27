@@ -35,10 +35,20 @@ const loginFormStyle = {
 const EquipmentDropdownStaff = () => (
   <Dropdown item text='Equipment' style={menuDropdownStyle}>
     <Dropdown.Menu>
+      <Dropdown.Header content='Equipment units' />
+      <Dropdown.Item><NavLink to='/equipmentunits'>Browse</NavLink></Dropdown.Item>
+      <Dropdown.Item><NavLink to='/equipmentunits/create'>Create new</NavLink></Dropdown.Item>
+      <Dropdown.Item><NavLink to='/equipmentunits/services'>Services</NavLink></Dropdown.Item>
+      <Dropdown.Divider />
       <Dropdown.Header content='Equipment' />
       <Dropdown.Item><NavLink to='/equipment'>Browse</NavLink></Dropdown.Item>
       <Dropdown.Item><NavLink to='/equipment/create'>Create new</NavLink></Dropdown.Item>
       <Dropdown.Item><NavLink to='/equipment/services'>Services</NavLink></Dropdown.Item>
+      <Dropdown.Divider />
+      <Dropdown.Header content='Equipment types' />
+      <Dropdown.Item><NavLink to='/equipmenttypes'>Browse</NavLink></Dropdown.Item>
+      <Dropdown.Item><NavLink to='/equipmenttypes/create'>Create new</NavLink></Dropdown.Item>
+      <Dropdown.Item><NavLink to='/equipmenttypes/services'>Services</NavLink></Dropdown.Item>
       <Dropdown.Divider />
       <Dropdown.Header content='Asset transactions' />
       <Dropdown.Item><NavLink to='/assettransactions'>Browse</NavLink></Dropdown.Item>
@@ -51,7 +61,7 @@ const EquipmentDropdownOther = () => (
   <Dropdown item text='Equipment' style={menuDropdownStyle}>
     <Dropdown.Menu>
       <Dropdown.Header content='Equipment' />
-      <Dropdown.Item><NavLink to='/equipment'>Browse</NavLink></Dropdown.Item>
+      <Dropdown.Item><NavLink to='/equipment/forrent'>Browse</NavLink></Dropdown.Item>
     </Dropdown.Menu>
   </Dropdown>
 )
@@ -108,7 +118,7 @@ class NavBar extends React.Component {
           <NavLink to='/'><img src='/img/eqma-logo-80_85.png' /></NavLink>
         </Menu.Header>
 
-        {!this.props.loggedIn && <EquipmentDropdownOther />}
+        {(!this.props.loggedIn || this.props.isCustomer) && <EquipmentDropdownOther />}
         {(!this.props.loggedIn || (this.props.loggedIn && !this.props.isStaff)) && <ContactLink />}
         {this.props.loggedIn && this.props.isStaff && <EquipmentDropdownStaff />}
         {this.props.loggedIn && this.props.isStaff && <CustomerDropdown />}
@@ -118,7 +128,7 @@ class NavBar extends React.Component {
         <Menu.Menu position='right'>
           {!this.props.loggedIn &&
             <Menu.Item style={menuDropdownStyle}>
-              Register
+              <NavLink to='/customers/register'>Register</NavLink>
             </Menu.Item>
           }
           {!this.props.loggedIn &&

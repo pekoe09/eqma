@@ -25,6 +25,16 @@ export const createCustomer = (customer) => {
   }
 }
 
+export const register = (customer) => {
+  return async (dispatch) => {
+    const newCustomer = await customerService.register(customer)
+    dispatch({
+      type: 'CREATE_CUSTOMER',
+      newCustomer
+    })
+  }
+}
+
 export const updateCustomer = (customer) => {
   return async (dispatch) => {
     const updatedCustomer = await customerService.update(customer)

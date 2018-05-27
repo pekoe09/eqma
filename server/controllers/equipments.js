@@ -1,34 +1,53 @@
 const equipmentRouter = require('express').Router()
 const Equipment = require('../models/equipment')
+const EquipmentType = require('../models/equipmentType')
+const { handleException } = require('../utils/errorHandler')
+const _ = require('lodash')
 
 equipmentRouter.get('/', async (req, res) => {
-  const equipments = await Equipment.find({})
+  const equipments = await Equipment
+    .find({})
+    .populate('equipmentType')
+  res.json(equipments)
+})
+
+equipmentRouter.get('/forrent', async (req, res) => {
+  const equipments = await Equipment
+    .find({})
+    .populate('equipmentType')
   res.json(equipments)
 })
 
 equipmentRouter.post('/', async (req, res) => {
   try {
     const body = req.body
-    if (!body.name) {
-      return res.status(400).json({ error: 'name is missing' })
+    if (!body.equipmentType) {
+      return res.status(400).json({ error: 'equipment type is missing' })
+    }
+    const equipmentType = await EquipmentType.findById(body.equipmentType)
+    if (!equipmentType) {
+      return res.status(400).json({ error: 'equipment type cannot be found' })
     }
 
     const equipment = new Equipment({
-      name: body.name,
+      equipmentType: body.equipmentType,
       make: body.make,
       model: body.model,
       description: body.description,
       features: body.features,
       price: body.price ? Number(body.price) : null,
-      timeUnit: body.timeUnit
+      timeUnit: body.timeUnit,
+      equipmentUnits: []
     })
-    const savedEquipment = await equipment.save()
+    let savedEquipment = await equipment.save()
+    equipmentType.equipment = equipmentType.equipment.concat(savedEquipment._id)
+    await EquipmentType.findByIdAndUpdate(equipmentType._id, equipmentType)
+    savedEquipment = await Equipment
+      .findById(savedEquipment._id)
+      .populate('equipmentType')
     res.status(201).json(savedEquipment)
   } catch (exception) {
-    console.log(exception)
-    res.status(500).json({
-      error: 'encountered an error while trying to create an equipment'
-    })
+    handleException(res, exception, 'equipment', 'create', 500, null)
   }
 })
 
@@ -40,27 +59,41 @@ equipmentRouter.put('/:id', async (req, res) => {
     }
 
     const body = req.body
-    if (!body.name) {
-      return res.status(400).json({ error: 'name is missing' })
+    if (!body.equipmentType) {
+      return res.status(400).json({ error: 'equipment type is missing' })
+    }
+    const equipmentType = EquipmentType.findById(body.equipmentType)
+    if (!equipmentType) {
+      return res.status(400).json({ error: 'equipment type cannot be found' })
     }
 
     const equipment = {
-      name: body.name,
+      equipmentType: body.equipmentType,
       make: body.make,
       model: body.model,
       description: body.description,
       features: body.features,
       price: body.price ? Number(body.price) : null,
-      timeUnit: body.timeUnit
+      timeUnit: body.timeUnit,
+      equipmentUnits: match.equipmentUnits
     }
-    const updatedEquipment = await Equipment.findByIdAndUpdate(
-      req.params.id, equipment, { new: true })
+    if (match.equipmentType !== body.equipmentType) {
+      let oldType = await EquipmentType.findById(match.equipmentType)
+      if (oldType) {
+        oldType.equipment = oldType.equipment.filter(e => e.toString() !== match._id.toString())
+        await EquipmentType.findByIdAndUpdate(oldType._id, oldType)
+      }
+      let newType = await EquipmentType.findById(body.equipmentType)
+      newType.equipment = newType.equipment.concat(match._id)
+      await EquipmentType.findByIdAndUpdate(newType._id, newType)
+    }
+
+    const updatedEquipment = await Equipment
+      .findByIdAndUpdate(req.params.id, equipment, { new: true })
+      .populate('equipmentType')
     res.json(updatedEquipment)
   } catch (exception) {
-    console.log(exception)
-    res.status(500).json({
-      error: 'encountered an error while trying to update an equipment'
-    })
+    handleException(res, exception, 'equipment', 'update', 500, null)
   }
 })
 
@@ -70,13 +103,15 @@ equipmentRouter.delete('/:id', async (req, res) => {
     if (!equipment) {
       return res.status(400).json({ error: 'nonexistent id' })
     }
+    let equipmentType = await EquipmentType.findById(equipment.equipmentType)
+    if(equipmentType) {
+      equipmentType.equipment = _.remove(equipmentType.equipment, equipment._id)
+      await EquipmentType.findByIdAndUpdate(equipmentType._id, equipmentType)
+    }
     await Equipment.findByIdAndRemove(req.params.id)
     res.status(204).end()
   } catch (exception) {
-    console.log(exception)
-    res.status(500).json({
-      error: 'encountered an error while trying to delete an equipment'
-    })
+    handleException(res, exception, 'equipment', 'delete', 500, null)
   }
 })
 

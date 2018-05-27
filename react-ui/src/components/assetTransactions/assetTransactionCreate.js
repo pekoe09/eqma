@@ -22,7 +22,7 @@ const formStyle = {
 class AssetTransactionCreate extends React.Component {
 
   state = {
-    equipment: '',
+    equipmentUnit: '',
     date: moment(),
     type: '',
     value: '',
@@ -33,7 +33,7 @@ class AssetTransactionCreate extends React.Component {
     if (event.target.name) {
       this.setState({ [event.target.name]: value })
     } else {
-      this.setState({ equipment: value })
+      this.setState({ equipmentUnit: value })
     }
   }
 
@@ -48,7 +48,7 @@ class AssetTransactionCreate extends React.Component {
   handleSubmit = async (event) => {
     event.preventDefault()
     const assetTransaction = {
-      equipment: this.state.equipment,
+      equipmentUnit: this.state.equipmentUnit,
       date: this.state.date,
       type: this.state.type,
       value: this.state.value,
@@ -64,8 +64,8 @@ class AssetTransactionCreate extends React.Component {
         <ViewHeader text={'Add an asset transaction'} />
         <LinkButton text={'Cancel'} to={'/assettransactions'} type={'default'} />
         <Form style={formStyle} onSubmit={this.handleSubmit}>
-          <Form.Field required control={Select} width={6} label='Equipment' name='equipment'
-            options={this.props.equipments} value={this.state.equipment} onChange={this.handleChange} />
+          <Form.Field required control={Select} width={6} label='Equipment' name='equipmentUnit'
+            options={this.props.equipmentUnits} value={this.state.equipmentUnit} onChange={this.handleChange} />
           <Form.Field width={4}>
             <label forname='date'>Date</label>
             <DatePicker
@@ -94,10 +94,10 @@ class AssetTransactionCreate extends React.Component {
 
 const mapStateToProps = (store) => {
   return {
-    equipments: store.equipments.map(e => {
+    equipmentUnits: store.equipmentUnits.map(e => {
       return {
         key: e._id,
-        text: e.name,
+        text: `${e.equipment.makeAndModel} / ${e.assetID}`,
         value: e._id
       }
     })

@@ -5,10 +5,10 @@ import ReactTable from 'react-table'
 import ViewHeader from '../structure/viewHeader'
 import LinkButton from '../structure/linkButton'
 import { Button, Confirm } from 'semantic-ui-react'
-import { removeEquipment } from '../../reducers/equipmentReducer'
+import { removeEquipmentType } from '../../reducers/equipmentTypeReducer'
 import { addUIMessage } from '../../reducers/uiMessageReducer'
 
-class Equipments extends React.Component {
+class EquipmentTypes extends React.Component {
 
   state = {
     openDeleteConfirm: false,
@@ -21,10 +21,10 @@ class Equipments extends React.Component {
   }
 
   handleConfirmedRemove = async () => {
-    const makeAndModel = this.state.rowToDelete.makeAndModel
+    const name = this.state.rowToDelete.name
     this.setState({ openDeleteConfirm: false, rowToDelete: null })
-    await this.props.removeEquipment(this.state.rowToDelete._id)
-    this.props.addUIMessage(`Equipment ${makeAndModel} deleted`, 'success', 10)
+    await this.props.removeEquipmentType(this.state.rowToDelete._id)
+    this.props.addUIMessage(`Equipment type ${name} deleted`, 'success', 10)
   }
 
   handleCancelledRemove = () => {
@@ -32,38 +32,20 @@ class Equipments extends React.Component {
   }
 
   render() {
-
     const columns = [
-
       {
-        Header: 'Make and model',
-        accessor: 'makeAndModel',
+        Header: 'Name',
+        accessor: 'name',
         headerStyle: {
           textAlign: 'left'
         }
       },
       {
-        Header: 'Type',
-        accessor: 'equipmentTypeName',
+        Header: 'Parent type',
+        accessor: 'parentName',
         headerStyle: {
-          textAlign: 'left'
+          textAlign:'left'
         }
-      },
-      {
-        Header: 'Rate',
-        accessor: 'price',
-        style: {
-          textAlign: 'center'
-        },
-        maxWidth: 100
-      },
-      {
-        Header: 'Rented by',
-        accessor: 'timeUnit',
-        style: {
-          textAlign: 'center'
-        },
-        maxWidth: 100
       },
       {
         Header: '',
@@ -85,7 +67,7 @@ class Equipments extends React.Component {
       const history = this.props.history
       return {
         onClick: (e, handleOriginal) => {
-          history.push(`/equipment/details/${rowInfo.original._id}`)
+          history.push(`/equipmenttypes/details/${rowInfo.original._id}`)
           if (handleOriginal) {
             handleOriginal()
           }
@@ -100,18 +82,18 @@ class Equipments extends React.Component {
 
     return (
       <div>
-        <ViewHeader text={'Equipment list'} />
-        <LinkButton text={'Add a piece of equipment'} to={'/equipment/create'} />
+        <ViewHeader text={'Equipment type list'} />
+        <LinkButton text={'Add an equipment type'} to={'/equipmenttypes/create'} />
         <Confirm
           open={this.state.openDeleteConfirm}
-          header='Deleting a piece of equipment'
-          content={`Deleting ${this.state.rowToDelete ? this.state.rowToDelete.makeAndModel : ''}. The operation is permanent; are you sure?`}
+          header='Deleting an equipment type'
+          content={`Deleting ${this.state.rowToDelete ? this.state.rowToDelete.name : ''}. The operation is permanent; are you sure?`}
           confirmButton='Yes, delete'
           onConfirm={this.handleConfirmedRemove}
           onCancel={this.handleCancelledRemove}
         />
         <ReactTable
-          data={this.props.equipments}
+          data={this.props.equipmentTypes}
           columns={columns}
           getTrProps={handleRowClick}
           defaultPageSize={10}
@@ -125,13 +107,12 @@ class Equipments extends React.Component {
 
 const mapStateToProps = (store) => {
   return {
-    equipments: store.equipments.map(e => {
+    equipmentTypes: store.equipmentTypes.map(e => {
       return {
         _id: e._id,
-        makeAndModel: e.makeAndModel,
-        equipmentTypeName: e.equipmentType ? e.equipmentType.name : '',
-        price: e.price,
-        timeUnit: e.timeUnit
+        name: e.name,
+        parentType: e.parentType,
+        parentName: e.parentType ? e.parentType.name : ''
       }
     })
   }
@@ -139,5 +120,5 @@ const mapStateToProps = (store) => {
 
 export default withRouter(connect(
   mapStateToProps,
-  { removeEquipment, addUIMessage }
-)(Equipments))
+  { removeEquipmentType, addUIMessage }
+)(EquipmentTypes))

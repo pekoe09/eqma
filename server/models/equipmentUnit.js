@@ -3,7 +3,8 @@ const mongoose = require('mongoose')
 const equipmentUnitSchema = new mongoose.Schema({
   equipment: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Equipment'
+    ref: 'Equipment',
+    isRequired: true
   },
   transactions: [{
     type: mongoose.Schema.Types.ObjectId,

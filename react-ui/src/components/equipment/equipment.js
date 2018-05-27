@@ -22,9 +22,9 @@ class Equipment extends React.Component {
   }
 
   handleConfirmedRemove = async () => {
-    const name = this.props.equipment.makeAndModel
+    const makeAndModel = this.props.equipment.makeAndModel
     await this.props.removeEquipment(this.props.equipment._id)
-    this.props.addUIMessage(`Equipment ${name} deleted`, 'success', 10)
+    this.props.addUIMessage(`Equipment ${makeAndModel} deleted`, 'success', 10)
     this.props.history.push('/equipment')
   }
 
@@ -37,7 +37,7 @@ class Equipment extends React.Component {
     if (equipment) {
       return (
         <div>
-          <ViewHeader text={`Equipment: ${equipment.name}`} />
+          <ViewHeader text={`Equipment: ${equipment.makeAndModel}`} />
           <LinkButton text={'To equipment list'} to={'/equipment'} type={'default'} />
           <LinkButton text={'Edit'} to={`/equipment/edit/${equipment._id}`} type={'primary'} />
           <Button negative onClick={this.handleRemove}>Delete</Button>
@@ -51,8 +51,8 @@ class Equipment extends React.Component {
           />
           <Form style={formStyle}>
             <Form.Field>
-              <label>Name</label>
-              <p>{equipment.name ? equipment.name : '-'}</p>
+              <label>Equipment type</label>
+              <p>{equipment.equipmentType ? equipment.equipmentType.name : '-'}</p>
             </Form.Field>
             <Form.Field>
               <label>Make</label>

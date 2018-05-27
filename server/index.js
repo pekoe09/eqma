@@ -16,6 +16,7 @@ const customersRouter = require('./controllers/customers')
 const customerMessagesRouter = require('./controllers/customerMessages')
 const equipmentsRouter = require('./controllers/equipments')
 const equipmentTypeRouter = require('./controllers/equipmentTypes')
+const equipmentUnitsRouter = require('./controllers/equipmentUnits')
 const rentalsRouter = require('./controllers/rentals')
 const usersRouter = require('./controllers/users')
 
@@ -25,13 +26,13 @@ app.use(tokenExtractor)
 app.use(userExtractor)
 
 app.use('/api/assettransactions', permissionChecker(['user', 'admin'], []), assetTransactionsRouter)
-app.use('/api/customers', permissionChecker(['user', 'admin'], []), customersRouter)
+app.use('/api/customers', permissionChecker(['user', 'admin'], ['POST:/register']), customersRouter)
 app.use('/api/customermessages', permissionChecker(['user', 'admin'], ['POST:/']), customerMessagesRouter)
-//TODO: add separate free path for listing equipment for customers
-app.use('/api/equipment', permissionChecker(['user', 'admin'], []), equipmentsRouter)
-app.use('/api/equipmentType', permissionChecker(['user', 'admin'], []), equipmentTypeRouter)
+app.use('/api/equipment', permissionChecker(['user', 'admin'], ['/forrent']), equipmentsRouter)
+app.use('/api/equipmenttypes', permissionChecker(['user', 'admin'], []), equipmentTypeRouter)
+app.use('/api/equipmentunits', permissionChecker(['user', 'admin'], []), equipmentUnitsRouter)
 //TODO: add a self path for customer viewing their own rentals
-app.use('/api/rentals', permissionChecker(['user', 'admin'], []), rentalsRouter)
+app.use('/api/rentals', permissionChecker(['user', 'admin'], ['POST:/reserve']), rentalsRouter)
 app.use('/api/users', permissionChecker(['admin'], ['/login', '/logout']), usersRouter)
 
 app.get('*', (req, res) => {

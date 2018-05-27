@@ -1,9 +1,9 @@
 const mongoose = require('mongoose')
 
 const assetTransactionSchema = new mongoose.Schema({
-  equipment: {
+  equipmentUnit: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Equipment',
+    ref: 'EquipmentUnit',
     isRequired: true
   },
   date: {
@@ -26,7 +26,7 @@ const assetTransactionSchema = new mongoose.Schema({
     type: Boolean,
     isRequired: true
   },
-  predecessor: { 
+  predecessor: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'AssetTransaction'
   },

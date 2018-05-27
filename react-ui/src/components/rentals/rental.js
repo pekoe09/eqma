@@ -31,16 +31,15 @@ class Rental extends React.Component {
           <Form.Field>
             <label>Contact details</label>
             <p style={tightRowStyle}>{rental.customer.email}</p>
-            <p style={tightRowStyle}>{rental.customer.phone}</p>
-            <p style={tightRowStyle}>{rental.customer.billingAddress.street1}</p>
-            <p style={tightRowStyle}>{rental.customer.billingAddress.street2}</p>
-            <p style={tightRowStyle}>{rental.customer.billingAddress.zip}</p>
-            <p style={tightRowStyle}>{rental.customer.billingAddress.city}</p>
-            <p>{rental.customer.billingAddress.country}</p>
+            <p>{rental.customer.phone}</p>
           </Form.Field>
           <Form.Field>
             <label>Equipment</label>
-            <p>{rental.equipment.makeAndModel}</p>
+            <p>{rental.equipmentUnit.equipment.makeAndModel}</p>
+          </Form.Field>
+          <Form.Field>
+            <label>Asset ID</label>
+            <p>{rental.equipmentUnit.assetID}</p>
           </Form.Field>
           <Form.Field>
             <label>Rental period</label>
@@ -53,7 +52,7 @@ class Rental extends React.Component {
           </Form.Field>
           <Form.Field>
             <label>Total rent</label>
-            <p>{Number(Math.round(rental.totalPrice + 'e2') + 'e-2')}</p>
+            <p>{rental.totalPrice ? Number(Math.round(rental.totalPrice + 'e2') + 'e-2') : '-'}</p>
           </Form.Field>
         </Form>
       </div>

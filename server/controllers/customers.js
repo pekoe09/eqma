@@ -1,5 +1,9 @@
 const customerRouter = require('express').Router()
+const bcrypt = require('bcrypt')
 const Customer = require('../models/customer')
+const User = require('../models/user')
+const { handleException } = require('../utils/errorHandler')
+const { validateMandatoryFields } = require('../utils/validator')
 
 customerRouter.get('/', async (req, res) => {
   const customers = await Customer.find({})
@@ -34,6 +38,45 @@ customerRouter.post('/', async (req, res) => {
     res.status(500).json({
       error: 'encountered an error while trying to create a customer'
     })
+  }
+})
+
+customerRouter.post('/register', async (req, res) => {
+  try {
+    const body = req.body
+    const mandatories = ['email', 'password', 'lastName', 'firstNames',
+      'billingAddress.street1', 'billingAddress.zip', 'billingAddress.city', 'billingAddress.country']
+    validateMandatoryFields(req, res, mandatories, 'customer', 'register')
+
+    const customer = new Customer({
+      lastName: body.lastName,
+      firstNames: body.firstNames,
+      company: body.company,
+      billingAddress: {
+        street1: body.billingAddress.street1,
+        street2: body.billingAddress.street2,
+        zip: body.billingAddress.zip,
+        city: body.billingAddress.city,
+        country: body.billingAddress.country
+      }
+    })
+    const savedCustomer = await customer.save()
+
+    const saltRounds = 10
+    const passwordHash = await bcrypt.hash(body.password, saltRounds)
+    const user = new User({
+      username: body.email,
+      passwordHash,
+      firstName: body.firstNames,
+      lastName: body.lastName,
+      email: body.email,
+      status: 'customer'
+    })
+    await user.save()
+
+    res.status(201).json(savedCustomer)
+  } catch (exception) {
+    handleException(res, exception, 'customer', 'register', 500, null)
   }
 })
 

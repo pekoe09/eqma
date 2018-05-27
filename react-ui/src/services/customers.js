@@ -13,6 +13,11 @@ const createNew = async (customer) => {
   return response.data
 }
 
+const register = async (customer) => {
+  const response = await axios.post(`${baseUrl}/register`, customer)
+  return response.data
+}
+
 const update = async (customer) => {
   const response = await axios.put(`${baseUrl}/${customer._id}`, customer, getConfig())
   return response.data
@@ -23,4 +28,4 @@ const remove = async (id) => {
   return response.data
 }
 
-export default { getAll, createNew, update, remove }
+export default { getAll, createNew, register, update, remove }

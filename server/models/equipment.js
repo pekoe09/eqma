@@ -1,8 +1,9 @@
 const mongoose = require('mongoose')
 
 const equipmentSchema = new mongoose.Schema({
-  name: {
-    type: String,
+  equipmentType: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'EquipmentType',
     isRequired: true
   },
   make: String,
@@ -13,7 +14,11 @@ const equipmentSchema = new mongoose.Schema({
     value: String
   }],
   price: Number,
-  timeUnit: String
+  timeUnit: String,
+  equipmentUnits: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'EquipmentUnit'
+  }]
 })
 
 equipmentSchema.virtual('makeAndModel').get(function () {
