@@ -3,7 +3,7 @@ const { handleException } = require('../utils/errorHandler')
 const { validateMandatoryFields } = require('../utils/validator')
 const Rental = require('../models/rental')
 const Customer = require('../models/customer')
-const findAvailableUnits = require('./equipmentUnits')
+const { findAvailableUnits } = require('./equipmentUnits')
 
 rentalsRouter.get('/', async (req, res) => {
   let rentals = await Rental
@@ -57,32 +57,44 @@ rentalsRouter.post('/reserve', async (req, res) => {
     const mandatories = []
     validateMandatoryFields(req, res, mandatories, 'rental', 'reserve')
 
-    const availableUnits = findAvailableUnits(body.start, body.end, body.equipment)
+    console.log('trying to find units', body.start, body.end, body.equipment)
+    const availableUnits = await findAvailableUnits(body.start, body.end, body.equipment)
+    console.log('found units', availableUnits)
     if (availableUnits.length === 0) {
+      console.log('no units found')
       handleException(res, null, 'rental', 'reserve', 400, 'No units available for period in question')
+    } else {
+      console.log('looking for customer based on user ' + req.user._id)
+      let customer = null
+      customer = await Customer.findOne({ userID: req.user._id })
+      if (!customer) {
+        handleException(res, null, 'rental', 'reserve', 400, 'No customer found')
+      } else {
+        console.log('found', customer)
+        console.log('reserving ' + availableUnits[0])
+
+        const rental = new Rental({
+          equipmentUnit: availableUnits[0],
+          customer: customer,
+          start: body.start,
+          end: body.end,
+          timeUnit: body.timeUnit,
+          price: body.price,
+          isReservation: true
+        })
+        console.log('saving reservation', rental)
+        const savedRental = await rental.save()
+        const populatedRental = await Rental
+          .findById(savedRental._id)
+          .populate({
+            path: 'customerequipmentUnit',
+            populate: {
+              path: 'equipment'
+            }
+          })
+        res.status(201).json(populatedRental)
+      }
     }
-
-    const customer = await Customer.find({ userID: req.user._id })
-
-    const rental = new Rental({
-      equipmentUnit: availableUnits[0]._id,
-      customer: customer,
-      start: body.start,
-      end: body.end,
-      timeUnit: body.timeUnit,
-      price: body.price,
-      isReservation: true
-    })
-    const savedRental = await rental.save()
-    const populatedRental = await Rental
-      .findById(savedRental._id)
-      .populate({
-        path: 'customerequipmentUnit',
-        populate: {
-          path: 'equipment'
-        }
-      })
-    res.status(201).json(populatedRental)
   } catch (exception) {
     handleException(res, exception, 'rental', 'reserve', 500)
   }

@@ -60,7 +60,7 @@ customerRouter.post('/register', async (req, res) => {
         country: body.billingAddress.country
       }
     })
-    const savedCustomer = await customer.save()
+    let savedCustomer = await customer.save()
 
     const saltRounds = 10
     const passwordHash = await bcrypt.hash(body.password, saltRounds)
@@ -72,7 +72,11 @@ customerRouter.post('/register', async (req, res) => {
       email: body.email,
       status: 'customer'
     })
-    await user.save()
+    const savedUser = await user.save()
+    savedCustomer.userID = savedUser._id
+    console.log('enrich with user' + savedUser)
+    console.log(savedCustomer)
+    savedCustomer = await Customer.findByIdAndUpdate(savedCustomer._id, savedCustomer)
 
     res.status(201).json(savedCustomer)
   } catch (exception) {

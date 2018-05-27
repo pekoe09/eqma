@@ -14,8 +14,13 @@ const createNew = async (rental) => {
 }
 
 const createReservation = async (reservation) => {
-  const response = await axios.post(`${baseUrl}/reserve`, reservation, getConfig())
-  return response.data
+  let response = null
+  try {
+    response = await axios.post(`${baseUrl}/reserve`, reservation, getConfig())
+  } catch(exception) {
+    console.log(exception)
+  }
+  return response
 }
 
 const remove = async (id) => {

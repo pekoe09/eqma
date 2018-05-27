@@ -7,7 +7,7 @@ import moment from 'moment'
 import 'react-datepicker/dist/react-datepicker.css'
 import { Form, Button } from 'semantic-ui-react'
 import rentalService from '../../services/rentals'
-import { createCustomerMessage } from '../../reducers/customerMessageReducer'
+import { addUIMessage } from '../../reducers/uiMessageReducer'
 
 const formStyle = {
   borderRadius: 4,
@@ -37,9 +37,13 @@ class RentalReservationForm extends React.Component {
       price: this.props.price,
       timeUnit: this.props.timeUnit
     }
-    rentalService.createReservation(rentalReservation)
-    //this.props.createCustomerMessage(rentalReservation)
-    this.props.history.push('/equipment/forrent')
+    const result = await rentalService.createReservation(rentalReservation)
+    if (result) {
+      this.props.addUIMessage(`${this.props.makeAndModel} has been reserved for you from ${this.state.start} until ${this.state.end}`, 'success', 10)
+      this.props.history.push('/equipment/forrent')
+    } else {
+      this.props.addUIMessage(`Reservation failed: ${this.props.makeAndModel} is not available for the period requested`, 'error', 10)
+    }
   }
 
   render() {
@@ -82,8 +86,7 @@ const mapStateToProps = (store, ownProps) => {
 export default withRouter(connect(
   mapStateToProps,
   {
-    //createReservation,
-    createCustomerMessage
+    addUIMessage
   }
 )(RentalReservationForm))
 

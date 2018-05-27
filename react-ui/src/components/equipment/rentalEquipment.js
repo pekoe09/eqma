@@ -19,6 +19,7 @@ class RentalEquipment extends React.Component {
           this.props.user &&
           <RentalReservationForm
             equipmentID={equipment._id}
+            makeAndModel={equipment.makeAndModel}
             price={equipment.price}
             timeUnit={equipment.timeUnit}
           />
