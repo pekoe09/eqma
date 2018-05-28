@@ -8,6 +8,11 @@ const getAll = async () => {
   return response.data
 }
 
+const getSelf = async () => {
+  const response = await axios.get(`${baseUrl}/self`, getConfig())
+  return response.data
+}
+
 const createNew = async (customer) => {
   const response = await axios.post(baseUrl, customer, getConfig())
   return response.data
@@ -28,4 +33,4 @@ const remove = async (id) => {
   return response.data
 }
 
-export default { getAll, createNew, register, update, remove }
+export default { getAll, getSelf, createNew, register, update, remove }

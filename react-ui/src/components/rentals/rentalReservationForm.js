@@ -39,7 +39,11 @@ class RentalReservationForm extends React.Component {
     }
     const result = await rentalService.createReservation(rentalReservation)
     if (result) {
-      this.props.addUIMessage(`${this.props.makeAndModel} has been reserved for you from ${this.state.start} until ${this.state.end}`, 'success', 10)
+      this.props.addUIMessage(
+        `${this.props.makeAndModel} has been reserved for you from ${moment(this.state.start).format('MM/DD/YYYY')} until ${moment(this.state.end).format('MM/DD/YYYY')}`,
+        'success',
+        10
+      )
       this.props.history.push('/equipment/forrent')
     } else {
       this.props.addUIMessage(`Reservation failed: ${this.props.makeAndModel} is not available for the period requested`, 'error', 10)

@@ -55,6 +55,16 @@ export const initializeCustomers = () => {
   }
 }
 
+export const initializeSelfAsCustomer = () => {
+  return async (dispatch) => {
+    const customers = await customerService.getSelf()
+    dispatch({
+      type: 'INIT_CUSTOMERS',
+      customers
+    })
+  }
+}
+
 export const removeCustomer = (id) => {
   return async (dispatch) => {
     await customerService.remove(id)

@@ -107,7 +107,7 @@ const BasicDataDropdown = () => (
 class NavBar extends React.Component {
 
   handleLogout = async () => {
-    await this.props.logout()
+    this.props.logout()
     this.props.history.push('/')
   }
 
@@ -137,9 +137,12 @@ class NavBar extends React.Component {
             </Menu.Item>
           }
           {this.props.loggedIn &&
-            <Menu.Item style={menuDropdownStyle}>
-              {`Hello, ${this.props.user.firstName} ${this.props.user.lastName}`}
-            </Menu.Item>
+            <Dropdown item text={`Hello, ${this.props.user.firstName} ${this.props.user.lastName}`} style={menuDropdownStyle}>
+              <Dropdown.Menu>
+                <Dropdown.Item><NavLink to='/rentals/self'>My rentals</NavLink></Dropdown.Item>
+                <Dropdown.Item><NavLink to='/customers/self'>My info</NavLink></Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
           }
           {this.props.loggedIn &&
             <Menu.Item style={menuDropdownStyle}>

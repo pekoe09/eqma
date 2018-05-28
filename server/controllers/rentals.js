@@ -18,6 +18,30 @@ rentalsRouter.get('/', async (req, res) => {
   res.json(rentals)
 })
 
+rentalsRouter.get('/mine', async (req, res) => {
+  try {
+    if (!req.user) {
+      handleException(res, null, 'rental', 'reserver', 403, 'Customer is not logged in')
+    } else {
+      const customer = await Customer.find({ userID: req.user._id })
+      console.log('found customer for my rentals', customer)
+      let rentals = await Rental
+        .find({ customer: customer })
+        .populate({
+          path: 'equipmentUnit customer',
+          populate: {
+            path: 'equipment'
+          }
+        })
+      console.log('found rentals for me', rentals)
+      rentals = rentals.map(r => Rental.format(r._doc))
+      res.json(rentals)
+    }
+  } catch (exception) {
+    handleException(res, exception, 'rental', 'get_mine', 500)
+  }
+})
+
 rentalsRouter.post('/', async (req, res) => {
   try {
     const body = req.body

@@ -17,6 +17,7 @@ import CustomerCreate from './components/customers/customerCreate'
 import CustomerEdit from './components/customers/customerEdit'
 import CustomerMessages from './components/customerMessages/customerMessages'
 import CustomerMessageEdit from './components/customerMessages/customerMessageEdit'
+import CustomerSelf from './components/customers/customerSelf'
 import Equipment from './components/equipment/equipment'
 import Equipments from './components/equipment/equipments'
 import EquipmentCreate from './components/equipment/equipmentCreate'
@@ -32,6 +33,7 @@ import EquipmentUnitEdit from './components/equipmentUnit/equipmentUnitEdit'
 import Registration from './components/customers/registration'
 import Rental from './components/rentals/rental'
 import Rentals from './components/rentals/rentals'
+import RentalsSelf from './components/rentals/rentalsSelf'
 import RentalEquipment from './components/equipment/rentalEquipment'
 import RentalEquipmentList from './components/equipment/rentalEquipmentList'
 import RentalCreate from './components/rentals/rentalCreate'
@@ -62,6 +64,7 @@ class App extends React.Component {
         <Route exact path='/customers/details/:id' render={() => <Customer />} />
         <Route exact path='/customers/edit/:id' render={() => <CustomerEdit />} />
         <Route exact path='/customers/register' render={() => <Registration />} />
+        <Route exact path='/customers/self' render={() => <CustomerSelf />} />
 
         <Route exact path='/customermessages' render={() => <CustomerMessages />} />
         <Route exact path='/customermessages/edit/:id' render={() => <CustomerMessageEdit />} />
@@ -86,6 +89,7 @@ class App extends React.Component {
         <Route exact path='/rentals' render={() => <Rentals />} />
         <Route exact path='/rentals/create' render={() => <RentalCreate />} />
         <Route exact path='/rentals/details/:id' render={() => <Rental />} />
+        <Route exact path='/rentals/self' render={() => <RentalsSelf />} />
 
       </Container>
     )

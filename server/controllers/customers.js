@@ -10,6 +10,19 @@ customerRouter.get('/', async (req, res) => {
   res.json(customers)
 })
 
+customerRouter.get('/self', async (req, res) => {
+  try {
+    if (!req.user) {
+      handleException(res, null, 'customer', 'get_self', 403, 'Customer is not logged in')
+    } else {
+      const customers = await Customer.find({ userID: req.user._id })
+      res.json(customers)
+    }
+  } catch (exception) {
+    handleException(res, exception, 'customer', 'get_self', 500, null)
+  }
+})
+
 customerRouter.post('/', async (req, res) => {
   try {
     const body = req.body

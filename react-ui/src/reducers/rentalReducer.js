@@ -33,6 +33,16 @@ export const initializeRentals = () => {
   }
 }
 
+export const initializeMyRentals = () => {
+  return async (dispatch) => {
+    const rentals = await rentalService.getMine()
+    dispatch({
+      type: 'INIT_RENTALS',
+      rentals
+    })
+  }
+}
+
 export const removeRental = (id) => {
   return async (dispatch) => {
     await rentalService.remove(id)
