@@ -80,7 +80,7 @@ class Rentals extends React.Component {
         accessor: 'price',
         Cell: row => Number(row.original.price).toFixed(2) + ' / ' + row.original.timeUnit,
         style: {
-          textAlign: 'center'
+          textAlign: 'right'
         },
         maxWidth: 150
       },
@@ -94,9 +94,26 @@ class Rentals extends React.Component {
             return 'n/a'
         },
         style: {
-          textAlign: 'center'
+          textAlign: 'right'
         },
         maxWidth: 150
+      },
+      {
+        Header: 'Reservation?',
+        accessor: 'isReservation',
+        Cell: (row) => {
+          return (
+            <input
+              type='checkbox'
+              checked={row.original.isReservation}
+              readOnly
+            />
+          )
+        },
+        style: {
+          textAlign: 'center'
+        },
+        maxWidth: 65
       },
       {
         Header: '',
@@ -175,7 +192,8 @@ const mapStateToProps = (store) => {
         end: r.end,
         price: r.price,
         timeUnit: r.timeUnit,
-        totalPrice: r.totalPrice
+        totalPrice: r.totalPrice,
+        isReservation: r.isReservation
       }
     })
   }

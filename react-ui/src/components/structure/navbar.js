@@ -136,13 +136,18 @@ class NavBar extends React.Component {
               <Login />
             </Menu.Item>
           }
-          {this.props.loggedIn &&
+          {this.props.loggedIn && this.props.isCustomer &&
             <Dropdown item text={`Hello, ${this.props.user.firstName} ${this.props.user.lastName}`} style={menuDropdownStyle}>
               <Dropdown.Menu>
                 <Dropdown.Item><NavLink to='/rentals/self'>My rentals</NavLink></Dropdown.Item>
                 <Dropdown.Item><NavLink to='/customers/self'>My info</NavLink></Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
+          }
+          {this.props.loggedIn && this.props.isStaff &&
+            <Menu.Item style={menuDropdownStyle}>
+              <div>{`Hello, ${this.props.user.firstName} ${this.props.user.lastName}`}</div>
+            </Menu.Item>
           }
           {this.props.loggedIn &&
             <Menu.Item style={menuDropdownStyle}>

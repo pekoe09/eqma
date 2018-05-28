@@ -4,7 +4,8 @@ import { withRouter } from 'react-router-dom'
 import moment from 'moment'
 import ViewHeader from '../structure/viewHeader'
 import LinkButton from '../structure/linkButton'
-import { Form } from 'semantic-ui-react'
+import { Form, Button } from 'semantic-ui-react'
+import { confirmRental } from '../../reducers/rentalReducer'
 
 const formStyle = {
   marginTop: 10
@@ -23,7 +24,11 @@ class Rental extends React.Component {
         <ViewHeader text='Rental details' />
         <LinkButton text='To rental list' to='/rentals' type='default' />
         <LinkButton text='Edit' to={`/rentals/edit/${rental._id}`} type='primary' />
+        {rental.isReservation &&
+          <Button primary onClick={() => this.props.confirmRental(this.props.rental)}>Confirm reservation into rental</Button>
+        }
         <Form style={formStyle}>
+          {rental.isReservation && <h3>This is a reservation</h3>}
           <Form.Field>
             <label>Customer</label>
             <p>{rental.customer.displayName}</p>
@@ -69,5 +74,8 @@ const mapStateToProps = (store, ownProps) => {
 }
 
 export default withRouter(connect(
-  mapStateToProps
+  mapStateToProps,
+  {
+    confirmRental
+  }
 )(Rental))

@@ -125,27 +125,23 @@ rentalsRouter.post('/reserve', async (req, res) => {
 })
 
 rentalsRouter.post('/confirm/:id', async (req, res) => {
+  console.log('confirming rental')
   try {
     const match = await Rental.findById(req.params.id)
     if (!match) {
       return res.status(400).json({ error: 'nonexistent id' })
     }
-    const body = req.body
-    const mandatories = ['equipmentUnit', 'customer', 'start', 'end', 'timeUnit', 'price']
-    validateMandatoryFields(req, res, mandatories, 'rental', 'confirm')
 
-    const rental = {
-      equipmentUnit: body.equipmentUnit,
-      customer: body.customer,
-      start: body.start,
-      end: body.end,
-      timeUnit: body.timeUnit,
-      price: body.price,
-      isReservation: false
-    }
-    const updatedRental = await Rental.findByIdAndUpdate(
-      req.params.id, rental, { new: true }
-    )
+    match.isReservation = false
+    const updatedRental = await Rental
+      .findByIdAndUpdate(req.params.id, match, { new: true })
+      .populate({
+        path: 'customer equipmentUnit',
+        populate: {
+          path: 'equipment'
+        }
+      })
+    console.log('confirned rental', updatedRental)
     res.json(updatedRental)
   } catch (exception) {
     handleException(res, exception, 'rental', 'confirm', 500)

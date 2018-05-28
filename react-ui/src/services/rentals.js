@@ -28,9 +28,17 @@ const createReservation = async (reservation) => {
   return response
 }
 
+const confirmRental = async (rental) => {
+  console.log('confirming rental by service')
+  console.log(getConfig())
+  const response = await axios.post(`${baseUrl}/confirm/${rental._id}`, rental, getConfig())
+  console.log('got updated', response.data)
+  return response.data
+}
+
 const remove = async (id) => {
   const response = await axios.delete(`${baseUrl}/${id}`, getConfig())
   return response.data
 }
 
-export default { getAll, getMine, createNew, createReservation, remove }
+export default { getAll, getMine, createNew, createReservation, confirmRental, remove }

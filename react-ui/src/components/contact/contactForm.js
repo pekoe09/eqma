@@ -18,10 +18,13 @@ const labelStyle = {
 
 class ContactForm extends React.Component {
 
-  state = {
-    name: '',
-    email: '',
-    message: ''
+  constructor(props) {
+    super(props)
+    this.state = {
+      name: this.props.user ? `${this.props.user.firstName} ${this.props.user.lastName}` : '',
+      email: this.props.user ? this.props.user.email : '',
+      message: ''
+    }
   }
 
   handleChange = (event, { value }) => {
@@ -54,9 +57,9 @@ class ContactForm extends React.Component {
       <div style={formStyle}>
         <ViewHeader text='Send us a message!' />
         <Form onSubmit={this.handleSubmit}>
-          <Form.Field control={Input} label='Your name' name='name'
+          <Form.Field required control={Input} label='Your name' name='name'
             value={this.state.name} onChange={this.handleChange} />
-          <Form.Field control={Input} label='Your email' name='email'
+          <Form.Field required control={Input} label='Your email' name='email'
             value={this.state.email} onChange={this.handleChange} />
           <Form.Field>
             <Label style={labelStyle}>Your message</Label>
