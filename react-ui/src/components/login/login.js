@@ -60,6 +60,7 @@ class Login extends React.Component {
     if (user.status === 'customer') {
       this.props.initializeSelfAsCustomer()
       this.props.initializeMyRentals()
+      this.props.initializeEquipmentTypes()
     }
   }
 

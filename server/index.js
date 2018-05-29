@@ -29,7 +29,7 @@ app.use('/api/assettransactions', permissionChecker(['user', 'admin'], []), asse
 app.use('/api/customers', permissionChecker(['user', 'admin'], ['POST:/register', '/self']), customersRouter)
 app.use('/api/customermessages', permissionChecker(['user', 'admin'], ['POST:/']), customerMessagesRouter)
 app.use('/api/equipment', permissionChecker(['user', 'admin'], ['/forrent']), equipmentsRouter)
-app.use('/api/equipmenttypes', permissionChecker(['user', 'admin'], []), equipmentTypeRouter)
+app.use('/api/equipmenttypes', permissionChecker(['user', 'admin'], ['GET:/']), equipmentTypeRouter)
 app.use('/api/equipmentunits', permissionChecker(['user', 'admin'], []), equipmentUnitsRouter)
 app.use('/api/rentals', permissionChecker(['user', 'admin'], ['POST:/reserve', '/mine']), rentalsRouter)
 app.use('/api/users', permissionChecker(['admin'], ['/login', '/logout']), usersRouter)
