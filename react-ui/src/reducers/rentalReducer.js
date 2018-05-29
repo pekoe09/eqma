@@ -45,6 +45,15 @@ export const initializeMyRentals = () => {
   }
 }
 
+export const reserveRental = (rentalReservation) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'CREATE_RENTAL',
+      newRental: rentalReservation
+    })
+  }
+}
+
 export const confirmRental = (rental) => {
   return async (dispatch) => {
     const confirmedRental = await rentalService.confirmRental(rental)

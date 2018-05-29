@@ -111,7 +111,7 @@ rentalsRouter.post('/reserve', async (req, res) => {
         const populatedRental = await Rental
           .findById(savedRental._id)
           .populate({
-            path: 'customerequipmentUnit',
+            path: 'customer equipmentUnit',
             populate: {
               path: 'equipment'
             }

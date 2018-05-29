@@ -9,7 +9,7 @@ const RentalSublistItem = ({ rental, handleRowClick }) => {
       <Table.Cell>{moment(rental.start).format('MM/DD/YYYY')}</Table.Cell>
       <Table.Cell>{rental.end ? moment(rental.end).format('MM/DD/YYYY') : ''}</Table.Cell>
       <Table.Cell>{rental.price}</Table.Cell>
-      <Table.Cell>{rental.isReservation}</Table.Cell>
+      <Table.Cell><input type='checkbox' checked={rental.isReservation} readOnly /></Table.Cell>
     </Table.Row>
   )
 }
