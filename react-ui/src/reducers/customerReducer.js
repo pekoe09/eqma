@@ -25,6 +25,16 @@ export const createCustomer = (customer) => {
   }
 }
 
+export const register = (customer) => {
+  return async (dispatch) => {
+    const newCustomer = await customerService.register(customer)
+    dispatch({
+      type: 'CREATE_CUSTOMER',
+      newCustomer
+    })
+  }
+}
+
 export const updateCustomer = (customer) => {
   return async (dispatch) => {
     const updatedCustomer = await customerService.update(customer)
@@ -38,6 +48,16 @@ export const updateCustomer = (customer) => {
 export const initializeCustomers = () => {
   return async (dispatch) => {
     const customers = await customerService.getAll()
+    dispatch({
+      type: 'INIT_CUSTOMERS',
+      customers
+    })
+  }
+}
+
+export const initializeSelfAsCustomer = () => {
+  return async (dispatch) => {
+    const customers = await customerService.getSelf()
     dispatch({
       type: 'INIT_CUSTOMERS',
       customers

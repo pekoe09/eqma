@@ -6,6 +6,8 @@ const rentalReducer = (store = [], action) => {
       return action.rentals
     case 'CREATE_RENTAL':
       return store.concat(action.newRental)
+    case 'CONFIRM_RENTAL':
+      return store.map(r => r._id !== action.confirmedRental._id ? r : action.confirmedRental)
     case 'REMOVE_RENTAL':
       return store.filter(r => r._id !== action.id)
     default:
@@ -29,6 +31,26 @@ export const initializeRentals = () => {
     dispatch({
       type: 'INIT_RENTALS',
       rentals
+    })
+  }
+}
+
+export const initializeMyRentals = () => {
+  return async (dispatch) => {
+    const rentals = await rentalService.getMine()
+    dispatch({
+      type: 'INIT_RENTALS',
+      rentals
+    })
+  }
+}
+
+export const confirmRental = (rental) => {
+  return async (dispatch) => {
+    const confirmedRental = await rentalService.confirmRental(rental)
+    dispatch({
+      type: 'CONFIRM_RENTAL',
+      confirmedRental
     })
   }
 }

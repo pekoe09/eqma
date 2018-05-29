@@ -17,6 +17,7 @@ import CustomerCreate from './components/customers/customerCreate'
 import CustomerEdit from './components/customers/customerEdit'
 import CustomerMessages from './components/customerMessages/customerMessages'
 import CustomerMessageEdit from './components/customerMessages/customerMessageEdit'
+import CustomerSelf from './components/customers/customerSelf'
 import Equipment from './components/equipment/equipment'
 import Equipments from './components/equipment/equipments'
 import EquipmentCreate from './components/equipment/equipmentCreate'
@@ -29,14 +30,15 @@ import EquipmentUnit from './components/equipmentUnit/equipmentUnit'
 import EquipmentUnits from './components/equipmentUnit/equipmentUnits'
 import EquipmentUnitCreate from './components/equipmentUnit/equipmentUnitCreate'
 import EquipmentUnitEdit from './components/equipmentUnit/equipmentUnitEdit'
+import Registration from './components/customers/registration'
 import Rental from './components/rentals/rental'
 import Rentals from './components/rentals/rentals'
+import RentalsSelf from './components/rentals/rentalsSelf'
+import RentalEquipment from './components/equipment/rentalEquipment'
+import RentalEquipmentList from './components/equipment/rentalEquipmentList'
 import RentalCreate from './components/rentals/rentalCreate'
 import ContactView from './components/contact/contactView'
 import StoreHome from './components/structure/storeHome'
-import equipmentUnitCreate from './components/equipmentUnit/equipmentUnitCreate';
-import equipmentUnitEdit from './components/equipmentUnit/equipmentUnitEdit';
-import equipmentUnit from './components/equipmentUnit/equipmentUnit';
 
 class App extends React.Component {
 
@@ -61,6 +63,8 @@ class App extends React.Component {
         <Route exact path='/customers/create' render={() => <CustomerCreate />} />
         <Route exact path='/customers/details/:id' render={() => <Customer />} />
         <Route exact path='/customers/edit/:id' render={() => <CustomerEdit />} />
+        <Route exact path='/customers/register' render={() => <Registration />} />
+        <Route exact path='/customers/self' render={() => <CustomerSelf />} />
 
         <Route exact path='/customermessages' render={() => <CustomerMessages />} />
         <Route exact path='/customermessages/edit/:id' render={() => <CustomerMessageEdit />} />
@@ -69,6 +73,8 @@ class App extends React.Component {
         <Route exact path='/equipment/create' render={() => <EquipmentCreate />} />
         <Route exact path='/equipment/edit/:id' render={() => <EquipmentEdit />} />
         <Route exact path='/equipment/details/:id' render={() => <Equipment />} />
+        <Route exact path='/equipment/forrent' render={() => <RentalEquipmentList />} />
+        <Route exact path='/equipment/rentdetails/:id' render={() => <RentalEquipment />} />
 
         <Route exact path='/equipmenttypes' render={() => <EquipmentTypes />} />
         <Route exact path='/equipmenttypes/create' render={() => <EquipmentTypeCreate />} />
@@ -83,6 +89,7 @@ class App extends React.Component {
         <Route exact path='/rentals' render={() => <Rentals />} />
         <Route exact path='/rentals/create' render={() => <RentalCreate />} />
         <Route exact path='/rentals/details/:id' render={() => <Rental />} />
+        <Route exact path='/rentals/self' render={() => <RentalsSelf />} />
 
       </Container>
     )

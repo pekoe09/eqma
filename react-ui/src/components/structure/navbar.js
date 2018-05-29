@@ -61,7 +61,7 @@ const EquipmentDropdownOther = () => (
   <Dropdown item text='Equipment' style={menuDropdownStyle}>
     <Dropdown.Menu>
       <Dropdown.Header content='Equipment' />
-      <Dropdown.Item><NavLink to='/equipment'>Browse</NavLink></Dropdown.Item>
+      <Dropdown.Item><NavLink to='/equipment/forrent'>Browse</NavLink></Dropdown.Item>
     </Dropdown.Menu>
   </Dropdown>
 )
@@ -107,7 +107,7 @@ const BasicDataDropdown = () => (
 class NavBar extends React.Component {
 
   handleLogout = async () => {
-    await this.props.logout()
+    this.props.logout()
     this.props.history.push('/')
   }
 
@@ -118,7 +118,7 @@ class NavBar extends React.Component {
           <NavLink to='/'><img src='/img/eqma-logo-80_85.png' /></NavLink>
         </Menu.Header>
 
-        {!this.props.loggedIn && <EquipmentDropdownOther />}
+        {(!this.props.loggedIn || this.props.isCustomer) && <EquipmentDropdownOther />}
         {(!this.props.loggedIn || (this.props.loggedIn && !this.props.isStaff)) && <ContactLink />}
         {this.props.loggedIn && this.props.isStaff && <EquipmentDropdownStaff />}
         {this.props.loggedIn && this.props.isStaff && <CustomerDropdown />}
@@ -128,7 +128,7 @@ class NavBar extends React.Component {
         <Menu.Menu position='right'>
           {!this.props.loggedIn &&
             <Menu.Item style={menuDropdownStyle}>
-              Register
+              <NavLink to='/customers/register'>Register</NavLink>
             </Menu.Item>
           }
           {!this.props.loggedIn &&
@@ -136,9 +136,17 @@ class NavBar extends React.Component {
               <Login />
             </Menu.Item>
           }
-          {this.props.loggedIn &&
+          {this.props.loggedIn && this.props.isCustomer &&
+            <Dropdown item text={`Hello, ${this.props.user.firstName} ${this.props.user.lastName}`} style={menuDropdownStyle}>
+              <Dropdown.Menu>
+                <Dropdown.Item><NavLink to='/rentals/self'>My rentals</NavLink></Dropdown.Item>
+                <Dropdown.Item><NavLink to='/customers/self'>My info</NavLink></Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          }
+          {this.props.loggedIn && this.props.isStaff &&
             <Menu.Item style={menuDropdownStyle}>
-              {`Hello, ${this.props.user.firstName} ${this.props.user.lastName}`}
+              <div>{`Hello, ${this.props.user.firstName} ${this.props.user.lastName}`}</div>
             </Menu.Item>
           }
           {this.props.loggedIn &&

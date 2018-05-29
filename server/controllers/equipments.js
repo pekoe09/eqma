@@ -11,6 +11,13 @@ equipmentRouter.get('/', async (req, res) => {
   res.json(equipments)
 })
 
+equipmentRouter.get('/forrent', async (req, res) => {
+  const equipments = await Equipment
+    .find({})
+    .populate('equipmentType')
+  res.json(equipments)
+})
+
 equipmentRouter.post('/', async (req, res) => {
   try {
     const body = req.body

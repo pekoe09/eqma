@@ -23,10 +23,9 @@ class Rentals extends React.Component {
 
   handleConfirmedRemove = async () => {
     const makeAndModel = this.state.rowToDelete.equipmentMakeAndModel
-    const customer = this.state.rowToDelete.customerName
     this.setState({ openDeleteConfirm: false, rowToDelete: null })
     await this.props.removeRental(this.state.rowToDelete._id)
-    this.props.addUIMessage(`Rental of ${makeAndModel} to ${customer} deleted`, 'success', 10)
+    this.props.addUIMessage(`Rental of ${makeAndModel} deleted`, 'success', 10)
   }
 
   handleCancelledRemove = () => {
@@ -37,22 +36,8 @@ class Rentals extends React.Component {
 
     const columns = [
       {
-        Header: 'Customer',
-        accessor: 'customerName',
-        headerStyle: {
-          textAlign: 'left'
-        }
-      },
-      {
         Header: 'Equipment',
         accessor: 'equipmentMakeAndModel',
-        headerStyle: {
-          textAlign: 'left'
-        }
-      },
-      {
-        Header: 'Asset ID',
-        accessor: 'equipmentUnitAssetID',
         headerStyle: {
           textAlign: 'left'
         }
@@ -80,7 +65,7 @@ class Rentals extends React.Component {
         accessor: 'price',
         Cell: row => Number(row.original.price).toFixed(2) + ' / ' + row.original.timeUnit,
         style: {
-          textAlign: 'right'
+          textAlign: 'center'
         },
         maxWidth: 150
       },
@@ -94,33 +79,22 @@ class Rentals extends React.Component {
             return 'n/a'
         },
         style: {
-          textAlign: 'right'
+          textAlign: 'center'
         },
         maxWidth: 150
       },
       {
         Header: 'Reservation?',
         accessor: 'isReservation',
-        Cell: (row) => {
-          return (
-            <input
-              type='checkbox'
-              checked={row.original.isReservation}
-              readOnly
-            />
-          )
-        },
-        style: {
-          textAlign: 'center'
-        },
-        maxWidth: 65
+        headerStyle: {
+          textAlign: 'left'
+        }
       },
       {
         Header: '',
         accessor: 'delete',
         Cell: (row) => (
-          <Button negative basic className='mini' onClick={(e) =>
-            this.handleRemove(row.original, e)}>Delete</Button>
+          <div></div>
         ),
         style: {
           textAlign: 'center'
@@ -150,17 +124,15 @@ class Rentals extends React.Component {
 
     return (
       <div>
-        <ViewHeader text={'Rentals'} />
-        <LinkButton text={'Rent equipment'} to={'/rentals/create'} />
+        <ViewHeader text={'My rentals'} />
+        <LinkButton text={'Browse equipment'} to={'/equipment/forrent'} />
+        <LinkButton text={'Home'} to={'/'} />
         <Confirm
           open={this.state.openDeleteConfirm}
-          header='Deleting a rental'
-          content={`Deleting rental of
+          header='Deleting a rental reservation'
+          content={`Deleting reservation of
           ${this.state.rowToDelete
               ? this.state.rowToDelete.equipmentMakeAndModel
-              : ''} to          
-          ${this.state.rowToDelete
-              ? this.state.rowToDelete.customerName
               : ''}. 
           The operation is permanent; are you sure?`}
           confirmButton='Yes, delete'
@@ -185,9 +157,7 @@ const mapStateToProps = (store) => {
     rentals: store.rentals.map(r => {
       return {
         _id: r._id,
-        customerName: r.customer.displayName,
         equipmentMakeAndModel: r.equipmentUnit.equipment.makeAndModel,
-        equipmentUnitAssetID: r.equipmentUnit.assetID,
         start: r.start,
         end: r.end,
         price: r.price,

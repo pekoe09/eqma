@@ -45,6 +45,16 @@ export const initializeEquipment = () => {
   }
 }
 
+export const initializeEquipmentForRent = () => {
+  return async (dispatch) => {
+    const equipments = await equipmentService.getForRent()
+    dispatch({
+      type: 'INIT_EQUIPMENT',
+      equipments
+    })
+  }
+}
+
 export const removeEquipment = (id) => {
   return async (dispatch) => {
     await equipmentService.remove(id)

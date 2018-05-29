@@ -5,12 +5,12 @@ import { Form, Input, Button } from 'semantic-ui-react'
 import { login } from '../../reducers/loginReducer'
 import { initializeUsers } from '../../reducers/userReducer'
 import { initializeAssetTransactions } from '../../reducers/assetTransactionReducer'
-import { initializeCustomers } from '../../reducers/customerReducer'
+import { initializeCustomers, initializeSelfAsCustomer } from '../../reducers/customerReducer'
 import { initializeCustomerMessages } from '../../reducers/customerMessageReducer'
 import { initializeEquipment } from '../../reducers/equipmentReducer'
 import { initializeEquipmentTypes } from '../../reducers/equipmentTypeReducer'
 import { initializeEquipmentUnits } from '../../reducers/equipmentUnitReducer'
-import { initializeRentals } from '../../reducers/rentalReducer'
+import { initializeRentals, initializeMyRentals } from '../../reducers/rentalReducer'
 
 const loginInputStyle = {
   maxWidth: 100
@@ -41,15 +41,27 @@ class Login extends React.Component {
       password: ''
     })
     await this.props.login(credentials)
+    let user = JSON.parse(localStorage.getItem('user'))
 
-    this.props.initializeUsers()
-    this.props.initializeEquipmentTypes()
-    this.props.initializeEquipment()
-    this.props.initializeEquipmentUnits()
-    this.props.initializeAssetTransactions()
-    this.props.initializeCustomers()
-    this.props.initializeCustomerMessages()
-    this.props.initializeRentals()
+    if (user.status === 'admin') {
+      this.props.initializeUsers()
+    }
+
+    if (user.status === 'admin' || user.status === 'user') {
+      this.props.initializeEquipmentTypes()
+      this.props.initializeEquipment()
+      this.props.initializeEquipmentUnits()
+      this.props.initializeAssetTransactions()
+      this.props.initializeCustomers()
+      this.props.initializeCustomerMessages()
+      this.props.initializeRentals()
+    }
+
+    if (user.status === 'customer') {
+      this.props.initializeSelfAsCustomer()
+      this.props.initializeMyRentals()
+      this.props.initializeEquipmentTypes()
+    }
   }
 
   render() {
@@ -77,11 +89,13 @@ export default withRouter(connect(
     login,
     initializeAssetTransactions,
     initializeCustomers,
+    initializeSelfAsCustomer,
     initializeCustomerMessages,
     initializeEquipment,
     initializeEquipmentTypes,
     initializeEquipmentUnits,
     initializeRentals,
+    initializeMyRentals,
     initializeUsers
   }
 )(Login))

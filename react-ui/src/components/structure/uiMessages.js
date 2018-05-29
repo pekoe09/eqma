@@ -6,7 +6,7 @@ import UIMessage from './uiMessage'
 const UIMessages = ({ uiMessages }) => {
   return (
     <div>
-      {uiMessages ? uiMessages.map(m => <UIMessage key={moment() + m.content} message={m} />) : ''}
+      {uiMessages ? uiMessages.map(m => <UIMessage key={m.timestamp + m.content} message={m} />) : ''}
     </div>
   )
 }

@@ -10,6 +10,7 @@ import customerMessageReducer from './reducers/customerMessageReducer'
 import equipmentReducer from './reducers/equipmentReducer'
 import equipmentTypeReducer from './reducers/equipmentTypeReducer'
 import equipmentUnitReducer from './reducers/equipmentUnitReducer'
+import filterReducer from './reducers/filterReducer'
 import loginReducer from './reducers/loginReducer'
 import rentalReducer from './reducers/rentalReducer'
 import uiMessageReducer from './reducers/uiMessageReducer'
@@ -22,6 +23,7 @@ const appReducer = combineReducers({
   equipments: equipmentReducer,
   equipmentTypes: equipmentTypeReducer,
   equipmentUnits: equipmentUnitReducer,
+  filters: filterReducer,
   login: loginReducer,
   rentals: rentalReducer,
   uiMessages: uiMessageReducer,

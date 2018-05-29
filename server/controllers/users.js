@@ -138,6 +138,9 @@ usersRouter.put('/:id', async (req, res) => {
 
 usersRouter.delete('/:id', async (req, res) => {
   try {
+    if(req.params.id === req.user._id) {
+      return res.status(403).json({ error: 'user cannot delete self' })
+    }
     const user = await User.findById(req.params.id)
     if (!user) {
       return res.status(400).json({ error: 'nonexistent id' })
