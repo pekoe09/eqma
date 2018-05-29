@@ -38,17 +38,14 @@ const EquipmentDropdownStaff = () => (
       <Dropdown.Header content='Equipment units' />
       <Dropdown.Item><NavLink to='/equipmentunits'>Browse</NavLink></Dropdown.Item>
       <Dropdown.Item><NavLink to='/equipmentunits/create'>Create new</NavLink></Dropdown.Item>
-      <Dropdown.Item><NavLink to='/equipmentunits/services'>Services</NavLink></Dropdown.Item>
       <Dropdown.Divider />
       <Dropdown.Header content='Equipment' />
       <Dropdown.Item><NavLink to='/equipment'>Browse</NavLink></Dropdown.Item>
       <Dropdown.Item><NavLink to='/equipment/create'>Create new</NavLink></Dropdown.Item>
-      <Dropdown.Item><NavLink to='/equipment/services'>Services</NavLink></Dropdown.Item>
       <Dropdown.Divider />
       <Dropdown.Header content='Equipment types' />
       <Dropdown.Item><NavLink to='/equipmenttypes'>Browse</NavLink></Dropdown.Item>
       <Dropdown.Item><NavLink to='/equipmenttypes/create'>Create new</NavLink></Dropdown.Item>
-      <Dropdown.Item><NavLink to='/equipmenttypes/services'>Services</NavLink></Dropdown.Item>
       <Dropdown.Divider />
       <Dropdown.Header content='Asset transactions' />
       <Dropdown.Item><NavLink to='/assettransactions'>Browse</NavLink></Dropdown.Item>
@@ -86,20 +83,11 @@ const CustomerDropdown = () => (
     </Dropdown.Menu>
   </Dropdown>
 )
-const ReportDropdown = () => (
-  <Dropdown item text='Reports' style={menuDropdownStyle}>
-    <Dropdown.Menu>
-      <Dropdown.Item><NavLink to='/reports/utilization'>Utilization</NavLink></Dropdown.Item>
-      <Dropdown.Item><NavLink to='/reports/profitability'>Profitability</NavLink></Dropdown.Item>
-    </Dropdown.Menu>
-  </Dropdown>
-)
 
 const BasicDataDropdown = () => (
   <Dropdown item text='Basic data' style={menuDropdownStyle}>
     <Dropdown.Menu>
       <Dropdown.Item><NavLink to='/users'>Users</NavLink></Dropdown.Item>
-      <Dropdown.Item><NavLink to='/branches'>Branches</NavLink></Dropdown.Item>
     </Dropdown.Menu>
   </Dropdown>
 )
@@ -122,7 +110,6 @@ class NavBar extends React.Component {
         {(!this.props.loggedIn || (this.props.loggedIn && !this.props.isStaff)) && <ContactLink />}
         {this.props.loggedIn && this.props.isStaff && <EquipmentDropdownStaff />}
         {this.props.loggedIn && this.props.isStaff && <CustomerDropdown />}
-        {this.props.loggedIn && this.props.isStaff && <ReportDropdown />}
         {this.props.loggedIn && this.props.isAdmin && <BasicDataDropdown />}
 
         <Menu.Menu position='right'>

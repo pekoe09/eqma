@@ -8,6 +8,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { Form, Button } from 'semantic-ui-react'
 import rentalService from '../../services/rentals'
 import { addUIMessage } from '../../reducers/uiMessageReducer'
+import { reserveRental } from '../../reducers/rentalReducer'
 
 const formStyle = {
   borderRadius: 4,
@@ -44,6 +45,7 @@ class RentalReservationForm extends React.Component {
         'success',
         10
       )
+      this.props.reserveRental(result.data)
       this.props.history.push('/equipment/forrent')
     } else {
       this.props.addUIMessage(`Reservation failed: ${this.props.makeAndModel} is not available for the period requested`, 'error', 10)
@@ -90,7 +92,8 @@ const mapStateToProps = (store, ownProps) => {
 export default withRouter(connect(
   mapStateToProps,
   {
-    addUIMessage
+    addUIMessage,
+    reserveRental
   }
 )(RentalReservationForm))
 

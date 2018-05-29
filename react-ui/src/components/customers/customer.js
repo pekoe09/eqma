@@ -6,6 +6,7 @@ import LinkButton from '../structure/linkButton'
 import { Form, Button, Confirm } from 'semantic-ui-react'
 import { removeCustomer } from '../../reducers/customerReducer'
 import { addUIMessage } from '../../reducers/uiMessageReducer'
+import RentalsSublist from '../rentals/rentalsSublist'
 
 const formStyle = {
   marginTop: 10
@@ -30,6 +31,10 @@ class Customer extends React.Component {
 
   handleCancelledRemove = () => {
     this.setState({ openDeleteConfirm: false })
+  }
+
+  handleRentalRowClick = (rentalID) => {
+    this.props.history.push(`/rentals/details/${rentalID}`)
   }
 
   render() {
@@ -92,6 +97,8 @@ class Customer extends React.Component {
               <p>{customer.billingAddress.country ? customer.billingAddress.country : '-'}</p>
             </Form.Field>
           </Form>
+          <h3>Customer's rentals</h3>
+          <RentalsSublist rentals={this.props.rentals} handleRowClick={this.handleRentalRowClick} />
         </div>
       )
     } else {
@@ -102,8 +109,21 @@ class Customer extends React.Component {
 
 const mapStateToProps = (store, ownProps) => {
   const customer = store.customers.find(c => c._id === ownProps.match.params.id)
+  const rentals = store.rentals
+    .filter(r => r.customer._id === ownProps.match.params.id)
+    .map(r => {
+      return {
+        _id: r._id,
+        makeAndModel: r.equipmentUnit.equipment.makeAndModel,
+        start: r.start,
+        end: r.end,
+        price: `${r.price} / ${r.timeUnit}`,
+        isReservation: r.isReservation
+      }
+    })
   return {
-    customer
+    customer,
+    rentals
   }
 }
 

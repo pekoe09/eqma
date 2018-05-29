@@ -86,9 +86,19 @@ class Rentals extends React.Component {
       {
         Header: 'Reservation?',
         accessor: 'isReservation',
-        headerStyle: {
-          textAlign: 'left'
-        }
+        Cell: (row) => {
+          return (
+            <input
+              type='checkbox'
+              checked={row.original.isReservation}
+              readOnly
+            />
+          )
+        },
+        style: {
+          textAlign: 'center'
+        },
+        maxWidth: 100
       },
       {
         Header: '',
