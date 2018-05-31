@@ -36,6 +36,7 @@ customerRouter.post('/', async (req, res) => {
       lastName: body.lastName,
       firstNames: body.firstNames,
       company: body.company,
+      email: body.email,
       billingAddress: {
         street1: body.billingAddress.street1,
         street2: body.billingAddress.street2,
@@ -65,6 +66,7 @@ customerRouter.post('/register', async (req, res) => {
       lastName: body.lastName,
       firstNames: body.firstNames,
       company: body.company,
+      email: body.email,
       billingAddress: {
         street1: body.billingAddress.street1,
         street2: body.billingAddress.street2,

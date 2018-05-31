@@ -7,10 +7,6 @@ class Map extends React.Component {
     this.loadMap()
   }
 
-  // componentDidUpdate() {
-  //   this.loadMap()
-  // }
-
   loadMap() {
     if (this.props && this.props.google) {
       const { google } = this.props
@@ -37,7 +33,7 @@ class Map extends React.Component {
 
   render() {
     const mapStyle = {
-      width: '40vw',
+      width: '100%',
       height: '40vw'
     }
 

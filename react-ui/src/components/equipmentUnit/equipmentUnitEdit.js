@@ -72,7 +72,7 @@ class EquipmentUnitEdit extends React.Component {
           />
           <Form style={formStyle} onSubmit={this.handleSubmit}>
             <Form.Field required control={Select} width={6} label='Equipment' name='equipment'
-              options={this.props.equipments} value={this.state.equipment} onChange={this.handleChange} />
+              options={this.props.equipments} value={this.state.equipment._id} onChange={this.handleChange} />
             <Form.Field control={Input} width={6} label='Registration' name='registration'
               value={this.state.registration} onChange={this.handleChange} />
             <Form.Field control={Input} width={6} label='VIN' name='VIN'

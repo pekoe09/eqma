@@ -79,14 +79,9 @@ equipmentUnitsRouter.put('/:id', async (req, res) => {
       assetID: body.assetID
     }
     if (match.equipment !== body.equipment) {
-      console.log('Differrent equipment - need to update')
       let oldEquipment = await Equipment.findById(match.equipment)
       if (oldEquipment) {
-        console.log('Removing old ref')
-        console.log(match._id)
-        console.log(oldEquipment.equipmentUnits)
         oldEquipment.equipmentUnits = oldEquipment.equipmentUnits.filter(e => e.toString() !== match._id.toString())
-        console.log(oldEquipment.equipmentUnits)
         await Equipment.findByIdAndUpdate(oldEquipment._id, oldEquipment)
       }
       let newEquipment = await Equipment.findById(body.equipment)
@@ -128,10 +123,8 @@ equipmentUnitsRouter.findAvailableUnits = async (startRequest, endRequest, equip
   // first, get all units for the requested equipment; then, for each unit,
   // find all rentals that conflict with the requested time period
   // finally, return the IDs of only those units that do not have conflicting rentals  
-  console.log('findavailableunits called wih ' + equipmentID)
   const availableUnits = []
   const equipmentUnits = await EquipmentUnit.find({ equipment: equipmentID })
-  console.log('found equipmentunits', equipmentUnits)
   for (let u of equipmentUnits) {
     const rentals = await Rental.find({
       $and: [
@@ -146,15 +139,9 @@ equipmentUnitsRouter.findAvailableUnits = async (startRequest, endRequest, equip
       ]
     })
     if (rentals.length === 0) {
-      console.log('adding unit ' + u._id)
       availableUnits.push(u._id)
     }
-    console.log('for equipment ' + u._id)
-    console.log('found rentals', rentals)
-    console.log('rentals length ' + rentals.length)
-    console.log('available so far', availableUnits)
   }
-  console.log('units available', availableUnits)
   return availableUnits
 }
 

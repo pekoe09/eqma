@@ -7,7 +7,7 @@ const customerReducer = (store = [], action) => {
     case 'CREATE_CUSTOMER':
       return store.concat(action.newCustomer)
     case 'UPDATE_CUSTOMER':
-      return store.map(c => c._id !== action.updatedCustomer.id ? c : action.updatedCustomer)
+      return store.map(c => c._id !== action.updatedCustomer._id ? c : action.updatedCustomer)
     case 'REMOVE_CUSTOMER':
       return store.filter(c => c._id !== action.id)
     default:

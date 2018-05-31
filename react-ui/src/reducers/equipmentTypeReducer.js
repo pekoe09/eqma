@@ -7,7 +7,7 @@ const equipmentTypeReducer = (store = [], action) => {
     case 'CREATE_EQUIPMENT_TYPE':
       return store.concat(action.newEquipmentType)
     case 'UPDATE_EQUIPMENT_TYPE':
-      return store.map(e => e._id !== action.updatedEquipmentType.id ? e : action.updatedEquipmentType)
+      return store.map(e => e._id !== action.updatedEquipmentType._id ? e : action.updatedEquipmentType)
     case 'REMOVE_EQUIPMENT_TYPE':
       return store.filter(e => e._id !== action.id)
     default:
