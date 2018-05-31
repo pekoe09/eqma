@@ -5,6 +5,7 @@ import { Form, Input, Select, Button } from 'semantic-ui-react'
 import ViewHeader from '../structure/viewHeader'
 import LinkButton from '../structure/linkButton'
 import { createUser } from '../../reducers/userReducer'
+import { addUIMessage } from '../../reducers/uiMessageReducer'
 
 const statusOptions = [
   { key: 'user', text: 'User', value: 'user' },
@@ -36,17 +37,22 @@ class UserCreate extends React.Component {
 
   handleSubmit = async (event) => {
     event.preventDefault()
-    const user = {
-      username: this.state.username,
-      password: this.state.password,
-      confirmPsw: this.state.confirmPsw,
-      firstName: this.state.firstName,
-      lastName: this.state.lastName,
-      email: this.state.email,
-      status: this.state.status
+    if (this.state.password !== this.state.confirmPsw) {
+      this.props.addUIMessage('"Password" and "Confirm password" fields do not match!', 'error', 10)
+    } else {
+      const user = {
+        username: this.state.username,
+        password: this.state.password,
+        confirmPsw: this.state.confirmPsw,
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        email: this.state.email,
+        status: this.state.status
+      }
+      this.props.createUser(user)
+      this.props.addUIMessage(`User ${user.firstName} ${user.lastName} created`, 'success', 10)
+      this.props.history.push('/users')
     }
-    this.props.createUser(user)
-    this.props.history.push('/users')
   }
 
   render() {
@@ -82,5 +88,8 @@ class UserCreate extends React.Component {
 
 export default withRouter(connect(
   null,
-  { createUser }
+  {
+    createUser,
+    addUIMessage
+  }
 )(UserCreate))

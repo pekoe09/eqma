@@ -30,7 +30,7 @@ class EquipmentTypeEdit extends React.Component {
     event.preventDefault()
     let equipmentType = this.props.initialEquipmentType
     equipmentType.name = this.state.name
-    equipmentType.parentType = this.state.parentType
+    equipmentType.parentType = this.state.parentType ? this.state.parentType : null
     await this.props.updateEquipmentType(equipmentType)
     this.props.history.push('/equipmenttypes')
   }
@@ -65,7 +65,7 @@ class EquipmentTypeEdit extends React.Component {
             <Form.Field required control={Input} width={6} label='Name' name='name'
               value={this.state.name} onChange={this.handleChange} />
             <Form.Field control={Select} width={6} label='Parent type' name='parentType'
-              options={this.props.equipmentTypes} value={this.state.parentType} onChange={this.handleChange} />
+              options={this.props.equipmentTypes} value={this.state.parentType ? this.state.parentType._id : ''} onChange={this.handleChange} />
             <Form.Field>
               <Button primary>
                 Save
@@ -88,7 +88,7 @@ const mapStateToProps = (store, ownProps) => {
       text: e.name,
       value: e._id
     }
-  })
+  }).sort().concat({ key: '', text: '<not selected>', value: '' })
   return {
     initialEquipmentType,
     equipmentTypes

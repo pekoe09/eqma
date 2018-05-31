@@ -9,6 +9,7 @@ import { updatedUser } from '../../reducers/userReducer'
 const statusOptions = [
   { key: 'user', text: 'User', value: 'user' },
   { key: 'admin', text: 'Admin', value: 'admin' },
+  { key: 'customer', text: 'Customer', value: 'customer' }
 ]
 
 const formStyle = {

@@ -5,6 +5,7 @@ import { Form, Input, Button } from 'semantic-ui-react'
 import ViewHeader from '../structure/viewHeader'
 import LinkButton from '../structure/linkButton'
 import { register } from '../../reducers/customerReducer'
+import { addUIMessage } from '../../reducers/uiMessageReducer'
 
 const formStyle = {
   marginTop: 10
@@ -32,25 +33,29 @@ class Registration extends React.Component {
 
   handleSubmit = async (event) => {
     event.preventDefault()
-    const customer = {
-      password: this.state.password,
-      confirmPsw: this.state.confirmPsw,
-      lastName: this.state.lastName,
-      firstNames: this.state.firstNames,
-      company: this.state.company,
-      email: this.state.email,
-      phone: this.state.phone,
-      billingAddress: {
-        street1: this.state.street1,
-        street2: this.state.street2,
-        zip: this.state.zip,
-        city: this.state.city,
-        country: this.state.country
+    if (this.state.password !== this.state.confirmPsw) {
+      this.props.addUIMessage('"Password" and "Confirm password" fields do not match!', 'error', 10)
+    } else {
+      const customer = {
+        password: this.state.password,
+        confirmPsw: this.state.confirmPsw,
+        lastName: this.state.lastName,
+        firstNames: this.state.firstNames,
+        company: this.state.company,
+        email: this.state.email,
+        phone: this.state.phone,
+        billingAddress: {
+          street1: this.state.street1,
+          street2: this.state.street2,
+          zip: this.state.zip,
+          city: this.state.city,
+          country: this.state.country
+        }
       }
+      this.props.register(customer)
+      this.props.addUIMessage(`Welcome to Eqma, ${customer.firstNames}! Please login with your new username and password.`, 'success', 10)
+      this.props.history.push('/')
     }
-    console.log('Registering', customer)
-    this.props.register(customer)
-    this.props.history.push('/')
   }
 
   render() {
@@ -98,5 +103,8 @@ class Registration extends React.Component {
 
 export default withRouter(connect(
   null,
-  { register }
+  {
+    register,
+    addUIMessage
+  }
 )(Registration))

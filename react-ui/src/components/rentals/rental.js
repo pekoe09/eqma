@@ -23,7 +23,6 @@ class Rental extends React.Component {
       <div>
         <ViewHeader text='Rental details' />
         <LinkButton text='To rental list' to='/rentals' type='default' />
-        <LinkButton text='Edit' to={`/rentals/edit/${rental._id}`} type='primary' />
         {rental.isReservation &&
           <Button primary onClick={() => this.props.confirmRental(this.props.rental)}>Confirm reservation into rental</Button>
         }

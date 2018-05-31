@@ -42,8 +42,8 @@ class Customers extends React.Component {
         }
       },
       {
-        Header: 'City',
-        accessor: 'billingAddress.city',
+        Header: 'Email',
+        accessor: 'email',
         headerStyle: {
           textAlign: 'left'
         }
@@ -51,6 +51,13 @@ class Customers extends React.Component {
       {
         Header: 'City',
         accessor: 'billingAddress.city',
+        headerStyle: {
+          textAlign: 'left'
+        }
+      },
+      {
+        Header: 'Country',
+        accessor: 'billingAddress.country',
         headerStyle: {
           textAlign: 'left'
         }
