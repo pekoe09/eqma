@@ -66,11 +66,17 @@ physical inventory is represented by "equipment units", e.g. a two-year-old Volv
 When customers view equipment available for rent, they are viewing, well, equipment. But when they make a reservation or when 
 the staff creates a rental, this is attached to an equipment unit.
 
-
+Logged-in staff have in the navbar links to browsing and creating equipment types, equipment and equipment units. The lists for each of them are clickable; clicking on a row shows the detail view of the item in question, where there is also an "Edit" button for accessing a view for editing the item. Both lists and detail views have a "Delete" button for removing the item.
 
 ### 3.2. Creating Asset Transactions
 
+Logged-in staff can create asset transactions (purchases, sales and scrappings) related to equipment units. The list of asset transactions and the view for creating new ones can be accessed from navbar under Equipment/Asset transactions.
+
 ### 3.3. Managing Customers
+
+Logged-in staff can view customers and create new ones from navbar under Customers/Customers. The list of customers is clickable: clicking on a row opens a detail view of the customer, showing also rentals (either confirmed or reservations) for the customer in question. Clickin on a row in the rentals table opens a detail view for the rental in question. 
+
+Customer details edit view can be accessed by clicking "Edit" in the detail view. Customers can be deleted from the list view or the detail view.
 
 ### 3.4. Managing Rentals
 
