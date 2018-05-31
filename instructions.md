@@ -2,6 +2,14 @@
 
 ## 1. Installation
 
+This repository contains both the front-end and the back-end for Eqma. Eqma can be installed on Heroku by cloning this repository to your local machine, navigating to the local repository folder and issuing the following commands (assuming Heroku client has been installed): `heroku create` and `git push heroku master`.
+
+Eqma requires access to a MongoDB database; this needs to be set up manually. In addition, first admin user needs to be created manually in the database, with the following fields: username, passwordHash, lastName, firstName, email and status; status must be 'admin'. 
+
+After installing Eqma, the following config vars need to be set:
+- MONGO_URI full URI, including username, password and database name to a MongoDB database
+- PORT port for the API
+- SECRET secret key for verifying jsonwebtokens
 
 ## 2. Functionality for customer
 
